@@ -1,2 +1,2 @@
 # olobase-admin
-Olobase vuetify admin submodule.
+Olobase admin submodule.
