@@ -1,5 +1,9 @@
-/**
- * @oloma.dev (c) 2023-2024
+/*!
+ * Oloma Dev.
+ * 
+ * [olobase-admin] <https://github.com/olomadev/olobase-ui-admin>
+ *
+ * Copyright (c) 2022-2024, Oloma Software.
  *
  * https://oloma.dev/end-user-license-agreement
  */
