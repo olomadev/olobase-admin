@@ -1,0 +1,43 @@
+/**
+ * @oloma.dev (c) 2023-2024
+ *
+ * https://oloma.dev/end-user-license-agreement
+ */
+/**
+ * All UI Vue Components
+ */
+import * as layout from "./components/layout";
+import * as ui from "./components/ui";
+/**
+ * Main JS App
+ */
+import Olobase from "olobase";
+/**
+ * Main admin entry
+ */
+export default Olobase;
+/**
+ * Set environment variables
+ */
+new Olobase(import.meta);
+/**
+ * Vue install plugin
+ */
+Olobase.install = (app) => {
+  /**
+   * Register Admin UI components
+   */
+  [layout, ui].forEach((c) => {
+    Object.keys(c).forEach((name) => {
+      app.component(`Va${name}`, c[name])
+    })
+  })
+  /**
+   * Inject global admin conf
+   */
+  app.mixin({
+    beforeCreate() {
+      this.$admin = this.$root.$options.admin
+    }
+  })
+}

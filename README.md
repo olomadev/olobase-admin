@@ -1,3 +1,4 @@
-# olobase-ui-admin
 
-Olobase UI Admin Submodule
+# Olobase UI Admin Submodule
+
+Olobase admin ui submodule.
