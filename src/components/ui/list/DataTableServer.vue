@@ -323,7 +323,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
-                color="blue-darken-1"
+                color="primary"
                 variant="text"
                 @click="dialog = false"
               >
