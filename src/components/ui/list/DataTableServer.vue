@@ -339,6 +339,7 @@
 </template>
 
 <script>
+import size from "lodash/size"
 import Resource from "../../../mixins/resource"
 import Search from "../../../mixins/search"
 import Utils from "../../../mixins/utils"
