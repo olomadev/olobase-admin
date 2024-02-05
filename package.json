@@ -1,6 +1,6 @@
 {
   "name": "olobase-admin",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "SPA admin framework for Vue.js running on top of REST APIs, built on Vuetify",
   "module": "src/index.js",
   "devDependencies": {
@@ -10,12 +10,12 @@
     "vite": "^5.0.0",
     "vite-plugin-vuetify": "^2.0.1",
     "@vitejs/plugin-vue": "^4.6.2",
-    "vuetify": "^3.4.9",
+    "vuetify": "^3.5.2",
     "portal-vue": "^3.0.0",
     "ejs": "^3.1.5"
   },
   "dependencies": {
-    "vuetify": "^3.4.9",
+    "vuetify": "^3.5.2",
     "portal-vue": "^3.0.0",
     "@tinymce/tinymce-vue": "^5.1.0",
     "@vuelidate/core": "^2.0.2",
