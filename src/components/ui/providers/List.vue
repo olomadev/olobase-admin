@@ -17,7 +17,7 @@
               color="primary"
               exact
             >
-              <v-icon size="small">mdi-settings</v-icon>
+              <v-icon size="small">mdi-cog</v-icon>
               <span v-if="lgAndUp" class="ml-2">
                 {{ $t("va.datatable.settings") }}
               </span>
