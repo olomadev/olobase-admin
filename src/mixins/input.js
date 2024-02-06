@@ -18,7 +18,7 @@ export default {
      * @model
      */
     modelValue: {
-      default: "",
+      default: null,
     },
     /**
      * By default, the source will be the final name that will be sent to the API for create/update.

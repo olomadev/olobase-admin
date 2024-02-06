@@ -50,7 +50,7 @@
           <template v-if="field.type == 'select'">
             <div>
               <component
-                :key="getKey(field, item.id)"
+                :key="getKey(field)"
                 :is="`va-select-input`"
                 :resource="listState.resource"
                 :source="field.source"
@@ -70,7 +70,7 @@
           <template v-else>
             <div>
               <component
-                :key="getKey(field, item.id)"
+                :key="getKey(field)"
                 :is="`va-${field.input || field.type || 'text'}-input`"
                 :resource="listState.resource"
                 :item="item"
@@ -306,7 +306,7 @@
           :height="rowSaveDialogHeight"
         >
           <v-card>
-            <v-card-title class="mt-2">
+            <v-card-title class="mt-2 ml-1">
               <span class="h2">{{ $t("titles." + resource) }}</span>
             </v-card-title>
             <v-card-text>
@@ -823,22 +823,23 @@ export default {
       return {};
     },   
     getKey(field) {
-      let key = field.source;
-      if (Object.prototype.hasOwnProperty.call(field, "key")) {
+      let key = "";
+      if (field && Object.hasOwnProperty(field, "key")) {
+        key = field.source;
         if (Array.isArray(field.key)) { // array key support
           let ids = []
           let keys = field.key;
           for (let i = 0; i < keys.length; i++) {
-            if (Object.prototype.hasOwnProperty.call(this.form, keys[i]) 
-              && Object.prototype.hasOwnProperty.call(this.form[keys[i]], "id")) {
+            if (Object.hasOwnProperty(this.form, keys[i]) 
+              && Object.hasOwnProperty(this.form[keys[i]], "id")) {
               ids.push(this.form[keys[i]].id); 
             } else {
               ids.push(this.form[keys[i]]);
             }
           }
           key = ids.join() + '-' + String(index)
-        } else if (Object.prototype.hasOwnProperty.call(this.form, field.key)) {
-          if (Object.prototype.hasOwnProperty.call(this.form[field.key], "id")) {
+        } else if (Object.hasOwnProperty(this.form, field.key)) {
+          if (Object.hasOwnProperty(this.form[field.key], "id")) {
             key = this.form[field.key].id;  
           } else {
             key = this.form[field.key]; 
