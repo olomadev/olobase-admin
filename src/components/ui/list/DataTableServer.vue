@@ -50,37 +50,32 @@
           <template v-if="field.type == 'select'">
             <div>
               <component
-                :key="form[field.key] ? getKey(form[field.key]) : field.source"
+                :key="getKey(field, item.id)"
                 :is="`va-select-input`"
                 :resource="listState.resource"
                 :source="field.source"
                 :item="item"
-                :reference="field.reference"
-                :filter="getComputedFilters(field)"
                 v-model="form[field.source]"
-                dense
+                :filter="getFieldFilters(field)"
                 v-bind="field.attributes"
                 :label="field.label"
-                :filled="field.filled ? field.filled : false"
                 variant="outlined"
                 :error-messages="getErrorMessages(field.source)"
                 clearable
                 class="mt-6"
+                @click.stop
               ></component>
             </div>
           </template>
           <template v-else>
             <div>
               <component
-                :key="form[field.key] ? getKey(form[field.key]) : field.source"
+                :key="getKey(field, item.id)"
                 :is="`va-${field.input || field.type || 'text'}-input`"
                 :resource="listState.resource"
                 :item="item"
-                :reference="field.reference"
-                :filter="getComputedFilters(field)"
-                v-model="form[field.source]"
-                dense
-                :filled="field.filled ? field.filled : false"
+                :filter="getFieldFilters(field)"
+                :modelValue="form[field.source]"
                 variant="outlined"
                 :label="(field.type == 'boolean') ? ' ' : field.label"
                 v-bind="checkProperty(field, 'options', 'source') ? getOptions(field.options, form[field.options.source]) : field.attributes"
@@ -810,7 +805,7 @@ export default {
         this.$emit("saved");
       }
     },
-    getComputedFilters(field) {
+    getFieldFilters(field) {
       let filters = field.filters
       if (filters) {
         let filterObject = {}
@@ -825,20 +820,32 @@ export default {
         }
         return filterObject;
       }
-      return {}     
+      return {};
     },   
-    getKey(keyValue, index = 0) {
-      if (Array.isArray(keyValue)) {
+    getKey(field) {
+      let key = field.source;
+      if (Object.prototype.hasOwnProperty.call(field, "key")) {
+        if (Array.isArray(field.key)) { // array key support
           let ids = []
-          for (let i = 0; i < keyValue.length; i++) {
-              ids.push(keyValue[i].id)
+          let keys = field.key;
+          for (let i = 0; i < keys.length; i++) {
+            if (Object.prototype.hasOwnProperty.call(this.form, keys[i]) 
+              && Object.prototype.hasOwnProperty.call(this.form[keys[i]], "id")) {
+              ids.push(this.form[keys[i]].id); 
+            } else {
+              ids.push(this.form[keys[i]]);
+            }
           }
-          return ids.join() + '-' + String(index)
+          key = ids.join() + '-' + String(index)
+        } else if (Object.prototype.hasOwnProperty.call(this.form, field.key)) {
+          if (Object.prototype.hasOwnProperty.call(this.form[field.key], "id")) {
+            key = this.form[field.key].id;  
+          } else {
+            key = this.form[field.key]; 
+          }
+        }
       }
-      if (typeof keyValue.id !== "undefined") { // if its select object { id:"" , name: ""}
-        keyValue = keyValue.id;
-      }
-      return keyValue + '-' + String(index)
+      return key;
     },
     checkProperty(field, prop1, prop2) {
       if (Object.prototype.hasOwnProperty.call(field, prop1)) {
