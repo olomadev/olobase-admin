@@ -811,7 +811,7 @@ export default {
         let filterObject = {}
         if (size(filters) > 0) {
           for (var k in filters) {
-            if (this.form[filters[k]] && typeof this.form[filters[k]].id !== 'undefined') {
+            if (this.form[filters[k]] && this.form[filters[k]]['id']) {
               filterObject[filters[k]] = this.form[filters[k]].id;
             } else {
               filterObject[filters[k]] = this.form[filters[k]];
@@ -823,23 +823,25 @@ export default {
       return {};
     },   
     getKey(field) {
-      let key = "";
-      if (field && Object.hasOwnProperty(field, "key")) {
+      let key = "null";
+      if (field['source']) {
         key = field.source;
+      }
+      if (field && field["key"]) {
         if (Array.isArray(field.key)) { // array key support
           let ids = []
           let keys = field.key;
           for (let i = 0; i < keys.length; i++) {
-            if (Object.hasOwnProperty(this.form, keys[i]) 
-              && Object.hasOwnProperty(this.form[keys[i]], "id")) {
+            if (this.form[keys[i]] 
+              && this.form[keys[i]]['id']) {
               ids.push(this.form[keys[i]].id); 
             } else {
               ids.push(this.form[keys[i]]);
             }
           }
-          key = ids.join() + '-' + String(index)
-        } else if (Object.hasOwnProperty(this.form, field.key)) {
-          if (Object.hasOwnProperty(this.form[field.key], "id")) {
+          key = ids.join() + '-' + String(index);
+        } else if (this.form[field.key]) {
+          if (this.form[field.key]['id']) {
             key = this.form[field.key].id;  
           } else {
             key = this.form[field.key]; 
