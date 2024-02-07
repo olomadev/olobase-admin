@@ -41,7 +41,6 @@
 
 <script>
 import Confirm from "../internal/Confirm";
-
 /**
  * Internal VaMessages system for snackbar infos and confirm dialog.
  * Integrated with all resource modules for message API calls.

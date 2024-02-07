@@ -1,7 +1,7 @@
 /*!
  * Oloma Dev.
  * 
- * [olobase-admin] <https://github.com/olomadev/olobase-ui-admin>
+ * [olobase-admin] <https://github.com/olomadev/olobase-admin>
  *
  * Copyright (c) 2022-2024, Oloma Software.
  *

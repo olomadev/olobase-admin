@@ -87,7 +87,7 @@ export default {
            */
           if (typeof this.formState.model[source] !== 'undefined' && this.id && this.item) {
             //
-            // Ersin: is something changed in the form ?
+            // Is something changed in the form ?
             // 
             let item = this.formItem;
             let oldValue = null;
@@ -104,7 +104,7 @@ export default {
               }
             }
           }
-          // Ersin: prevent multiple emit for some inputs like v-money
+          // Prevent multiple emit for some inputs like v-money
           // 
           if (lazy) {
               if (typeof this.fields[source] !== 'undefined') {  // prevent loop
@@ -127,7 +127,7 @@ export default {
           //
           this.formState.model = model;
 
-          // Ersin: JSON.stringify fields bug, every field add model object to current model
+          // JSON.stringify fields bug, every field add model object to current model
           // when we use the v-model attribue
           // 
           if (Object.prototype.hasOwnProperty.call(model, 'model')) {
@@ -281,7 +281,6 @@ export default {
         if (e.errors) {
           this.formState.errors = e.errors
         }
-
         /**
          * Create event after success saving.
          */

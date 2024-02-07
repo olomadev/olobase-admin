@@ -1,4 +1,6 @@
 
+import config from "@/_config";
+
 export default {
   namespaced: true,
   state: {
@@ -14,11 +16,11 @@ export default {
       timeout: 7500,
       title: null,
       visible: false
-    },
+    }
   },
   getters: {
     ['getSnackbar'](state) {
-      return state.snackbar
+      return state.snackbar;
     },
   },
   mutations: {
@@ -50,57 +52,19 @@ export default {
       }
     },
     show(state, { type, message }) {
-      if (!type) return;
-      switch (type) {
-        case "error":
-          state.snackbar = {
-            color: "error",
-            icon: "mdi-close-circle",
-            mode: "multi-line",
-            position: "top",
-            timeout: 7500,
-            title: "va.messages.error",
-            text: message,
-            visible: true
-          };
-          break;
-        case "info":
-          state.snackbar = {
-            color: "blue",
-            icon: "mdi-information",
-            mode: "multi-line",
-            position: "top",
-            timeout: 7500,
-            title: "va.messages.info",
-            text: message,
-            visible: true
-          };
-          break;
-        case "success":
-          state.snackbar = {
-            color: "success",
-            icon: "mdi-checkbox-marked-circle",
-            mode: "multi-line",
-            position: "top",
-            timeout: 7500,
-            title: "va.messages.success",
-            text: message,
-            visible: true
-          };
-          break;
-        case "warning":
-          state.snackbar = {
-            color: "warning",
-            icon: "mdi-alert-circle",
-            mode: "multi-line",
-            position: "top",
-            timeout: 7500,
-            title: "va.messages.warning",
-            text: message,
-            visible: true
-          };
-          break;
+      if (!type || !config.snackbar[type]) {
+        return;
       }
+      state.snackbar = {
+        color: config.snackbar[type].color,
+        icon: config.snackbar[type].icon,
+        mode: config.snackbar[type].mode,
+        position: config.snackbar[type].position,
+        timeout: config.snackbar[type].timeout,
+        title: config.snackbar[type].title,
+        text: message,
+        visible: config.snackbar[type].visible 
+      };
     },
   },
   actions: {

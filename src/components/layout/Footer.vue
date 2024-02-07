@@ -2,10 +2,10 @@
   <v-footer>
     <v-row :style="getLeftPadding" align="center" no-gutters>
       <v-col
-          v-for="(item, i) in menu"
-          :key="i"
-          class="text-center mb-sm-0 mb-5"
-          cols="auto"
+        v-for="(item, i) in menu"
+        :key="i"
+        class="text-center mb-sm-0 mb-5"
+        cols="auto"
         >
           <a :style="getAStyle()" 
             :href="item.href"
@@ -44,7 +44,7 @@ export default {
       default: () => [],
     },
   },
-  inject: ['vuetify'],
+  inject: ['vuetify', 'admin'],
   data() {
     return {
       leftPadding: "padding-left: 0px"
@@ -70,16 +70,8 @@ export default {
   methods: {
     getAStyle() {
       let themeColor = this.vuetify.theme.themes.value.defaultTheme.colors.primary;
-      return themeColor ? 'color: ' + themeColor + ';' : 'color: #000'
+      return 'color: ' + themeColor + ';';
     }
   }
 };
 </script>
-
-<style scoped>
-a {
-  font-size: 0.825rem;
-  font-weight: 500;
-  text-decoration: none;
-}
-</style>

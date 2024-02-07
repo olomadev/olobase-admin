@@ -48,18 +48,9 @@ export default {
           to: route.path === "" ? "/" : route.path,
         };
       });
-
-      // delete result['instances']
-      // console.error(result)
-
+      
       return result
     },
   },
 };
 </script>
-
-<style>
-.v-breadcrumbs {
-  background-color: #fff;
-}
-</style>
