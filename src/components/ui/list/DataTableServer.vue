@@ -52,8 +52,8 @@
               <component
                 :key="getKey(field)"
                 :is="`va-select-input`"
-                :resource="listState.resource"
                 :source="field.source"
+                :resource="listState.resource"
                 :item="item"
                 v-model="form[field.source]"
                 :filter="getFieldFilters(field)"
@@ -72,10 +72,11 @@
               <component
                 :key="getKey(field)"
                 :is="`va-${field.input || field.type || 'text'}-input`"
+                :source="field.source"
                 :resource="listState.resource"
                 :item="item"
                 :filter="getFieldFilters(field)"
-                :modelValue="form[field.source]"
+                v-model="form[field.source]"
                 variant="outlined"
                 :label="(field.type == 'boolean') ? ' ' : field.label"
                 v-bind="checkProperty(field, 'options', 'source') ? getOptions(field.options, form[field.options.source]) : field.attributes"
@@ -97,7 +98,7 @@
               v-bind="checkProperty(field, 'options', 'source') ? getOptions(field.options, item[field.options.source]) : field.attributes"
               :reference="field.reference"
               editable
-              :modelValue="item[field.source]"
+              v-model="form[field.source]"
               :filled="false"
               dense
               :label="field.label"
@@ -117,10 +118,10 @@
                 v-if="field.type"
                 :key="field.source"
                 :is="`va-${field.type}-field`"
+                :source="field.source"
                 :resource="listState.resource"
                 variant="outlined"
                 :item="item"
-                :source="field.source"
                 v-bind="checkProperty(field, 'options', 'source') ? getOptions(field.options, item[field.options.source]) : field.attributes"
                 v-slot="props"
               >
@@ -143,10 +144,10 @@
             <component
               :key="field.source"
               :is="`va-${field.type}-field`"
+              :source="field.sourceLabel ? field.sourceLabel : field.source"
               :resource="listState.resource"
               :item="item"
               variant="outlined"
-              :source="field.sourceLabel ? field.sourceLabel : field.source"
               v-bind="checkProperty(field, 'options', 'source') ? getOptions(field.options, item[field.options.source]) : field.attributes"
               v-slot="props"
             >
