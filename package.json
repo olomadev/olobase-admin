@@ -1,7 +1,7 @@
 {
   "name": "olobase-admin",
   "version": "1.0.3",
-  "description": "SPA admin framework for Vue.js running on top of REST APIs, built on Vuetify",
+  "description": "Create fast and easy admin panel apps with Vue and Php technologies ",
   "module": "src/index.js",
   "devDependencies": {
     "eslint": "^8.22.0",
