@@ -64,12 +64,12 @@
 
           <v-card min-width="300">
             <v-list nav>
-              <template v-if="getFirstName">
+              <template v-if="getFullname">
                 <v-list-item 
                   :prepend-avatar="getAvatar"
                 >
                   <div class="list-item-content">
-                    <v-list-item-title class="title">{{ getFirstName }} {{ getLastName }}</v-list-item-title>
+                    <v-list-item-title class="title">{{ getFullname }}</v-list-item-title>
                     <v-list-item-subtitle v-if="getEmail">{{
                       getEmail
                     }}</v-list-item-subtitle>
@@ -291,14 +291,11 @@ export default {
     this.sidebarMenu = await nav.build(this.$t, this.admin);
   },
   computed: {
-    getFirstName() {
-      return this.$store.getters["auth/getFirstName"];
-    },
-    getLastName() {
-      return this.$store.getters["auth/getLastName"];
-    },
     getEmail() {
       return this.$store.getters["auth/getEmail"];
+    },
+    getFullname() {
+      return this.$store.getters["auth/getFullname"];
     },
     getAvatar() {
       let base64AvatarImage = this.$store.getters["auth/getAvatar"];

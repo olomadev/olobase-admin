@@ -10,8 +10,7 @@ import {
   CHECK_AUTH,
   CHECK_ERROR,
   GET_ID,
-  GET_FIRSTNAME,
-  GET_LASTNAME,
+  GET_FULLNAME,
   GET_EMAIL,
   GET_AVATAR,
   GET_PERMISSIONS,
@@ -39,8 +38,7 @@ export default (httpClient, params = {}) => {
       };
     },
     getId: (u) => u.id,
-    getFirstName: (u) => u.firstname,
-    getLastName: (u) => u.lastname,
+    getFullname: (u) => u.fullname,
     getEmail: (u) => u.email,
     getAvatar: () => localStorage.getItem("avatar"),
     getPermissions: (u) => u.roles,
@@ -51,8 +49,7 @@ export default (httpClient, params = {}) => {
     routes,
     getCredentials,
     getId,
-    getFirstName,
-    getLastName,
+    getFullname,
     getEmail,
     getAvatar,
     getPermissions,
@@ -98,8 +95,7 @@ export default (httpClient, params = {}) => {
           return Promise.resolve({
             data: {
                 id: user.id,
-                firstname: user.firstname,
-                lastname: user.lastname,
+                fullname: user.fullname,
                 email: user.email,
                 avatar: localStorage.getItem("avatar"),
                 permissions: user.roles
@@ -118,8 +114,7 @@ export default (httpClient, params = {}) => {
       return Promise.resolve();
     },
     [GET_ID]: (user) => getId(user),
-    [GET_FIRSTNAME]: (user) => getFirstName(user),
-    [GET_LASTNAME]: (user) => getLastName(user),
+    [GET_FULLNAME]: (user) => getFullname(user),
     [GET_EMAIL]: (user) => getEmail(user),
     [GET_AVATAR]: (user) => getAvatar(),
     [GET_PERMISSIONS]: (user) => getPermissions(user),
