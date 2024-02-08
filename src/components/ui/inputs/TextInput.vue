@@ -31,7 +31,6 @@
 
 <script>
 import Input from "../../../mixins/input"
-import Editable from "../../../mixins/editable"
 
 /**
  * Text editing for text value type via a basic text input.
@@ -40,7 +39,7 @@ import Editable from "../../../mixins/editable"
  * Render will depend of browser support.
  */
 export default {
-  mixins: [Input, Editable],
+  mixins: [Input],
   props: {
     /**
      * Type of text input. All HTML type allowed.

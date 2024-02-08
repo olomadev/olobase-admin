@@ -10,10 +10,9 @@
 
 <script>
 import Input from "../../../mixins/input";
-import Editable from "../../../mixins/editable";
 
 export default {
-  mixins: [Input, Editable],
+  mixins: [Input],
   props: {
     /**
      * Currency options

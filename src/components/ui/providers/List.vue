@@ -257,7 +257,7 @@ export default {
     /**
      * List of columns for each property of resource data.
      * Each column can be a simple string or a full object with advanced field properties.
-     * Valid properties are `source`, `type`, `label`, `sortable`, `align`, `link`, `attributes`, `editable`.
+     * Valid properties are `source`, `type`, `label`, `sortable`, `align`, `link`, `attributes`.
      */
     fields: {
       type: Array,

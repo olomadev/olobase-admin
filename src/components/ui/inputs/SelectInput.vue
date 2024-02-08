@@ -32,7 +32,6 @@
 <script>
 import Input from "../../../mixins/input";
 import Multiple from "../../../mixins/multiple";
-import Editable from "../../../mixins/editable";
 import ReferenceInput from "../../../mixins/reference-input";
 
 /**
@@ -40,7 +39,7 @@ import ReferenceInput from "../../../mixins/reference-input";
  * If no choices, by default, takes localized enums with source as value from your VueI18n resources locales.
  */
 export default {
-  mixins: [Input, Multiple, Editable, ReferenceInput],
+  mixins: [Input, Multiple, ReferenceInput],
   props: {
     /**
      * Use different styles: 

@@ -87,26 +87,7 @@
           </template>
         </template>
         <template v-else>
-          <div v-if="field.editable">
-            <component
-              :key="field.source"
-              :is="`va-${field.input || field.type || 'text'}-input`"
-              :resource="listState.resource"
-              variant="outlined"
-              :item="item"
-              :source="field.source"
-              v-bind="checkProperty(field, 'options', 'source') ? getOptions(field.options, item[field.options.source]) : field.attributes"
-              :reference="field.reference"
-              editable
-              v-model="form[field.source]"
-              :filled="false"
-              dense
-              :label="field.label"
-              :hide-details="true"
-              class="mt-3 mb-3"
-            ></component>
-          </div>
-          <div v-else-if="field.link">
+          <div v-if="field.link">
             <router-link 
               :key="field.source"
               :to="{

@@ -15,13 +15,12 @@
 
 <script>
 import Input from "../../../mixins/input";
-import Editable from "../../../mixins/editable";
 
 /**
  * Edit value as boolean. Rendered as a switch.
  */
 export default {
-  mixins: [Input, Editable],
+  mixins: [Input],
   props: {
     /**
      * Integer to be edited.

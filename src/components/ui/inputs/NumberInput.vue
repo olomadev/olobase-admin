@@ -18,13 +18,12 @@
 
 <script>
 import Input from "../../../mixins/input";
-import Editable from "../../../mixins/editable";
 
 /**
  * Optimized for number editing. Just a type number input with step, min and max attribute behavior.
  */
 export default {
-  mixins: [Input, Editable],
+  mixins: [Input],
   props: {
     /**
      * Number to be edited.
