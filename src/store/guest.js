@@ -2,8 +2,7 @@ import {
   CHECK_AUTH,
   CHECK_ERROR,
   GET_ID,
-  GET_FIRSTNAME,
-  GET_LASTNAME,
+  GET_FULLNAME,
   GET_EMAIL,
   GET_AVATAR,
   GET_PERMISSIONS,
@@ -15,10 +14,7 @@ export default {
     [GET_ID]() {
       return null;
     },
-    [GET_FIRSTNAME]() {
-      return null;
-    },
-    [GET_LASTNAME]() {
+    [GET_FULLNAME]() {
       return null;
     },
     [GET_EMAIL]() {

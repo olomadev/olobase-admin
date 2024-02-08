@@ -10,8 +10,7 @@ import {
   CHECK_AUTH,
   CHECK_ERROR,
   GET_ID,
-  GET_FIRSTNAME,
-  GET_LASTNAME,
+  GET_FULLNAME,
   GET_EMAIL,
   GET_AVATAR,
   GET_PERMISSIONS,
@@ -32,14 +31,9 @@ export default (provider, router) => {
           return provider[GET_ID](state.user);
         }
       },
-      [GET_FIRSTNAME](state) {
-        if (state.user && provider[GET_FIRSTNAME]) {
-          return provider[GET_FIRSTNAME](state.user);
-        }
-      },
-      [GET_LASTNAME](state) {
-        if (state.user && provider[GET_LASTNAME]) {
-          return provider[GET_LASTNAME](state.user);
+      [GET_FULLNAME](state) {
+        if (state.user && provider[GET_FULLNAME]) {
+          return provider[GET_FULLNAME](state.user);
         }
       },
       [GET_EMAIL](state) {
