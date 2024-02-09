@@ -70,9 +70,7 @@
                 >
                   <div class="list-item-content">
                     <v-list-item-title class="title">{{ getFullname }}</v-list-item-title>
-                    <v-list-item-subtitle v-if="getEmail">{{
-                      getEmail
-                    }}</v-list-item-subtitle>
+                    <v-list-item-subtitle v-if="getEmail">{{ getEmail }}</v-list-item-subtitle>
                   </div>
                 </v-list-item>
                 <v-divider></v-divider>
@@ -277,6 +275,7 @@ export default {
   data() {
     return {
       drawer: true,
+      defaultAvatar: null,
       sidebarMenu: null,
     }
   },
@@ -298,15 +297,15 @@ export default {
       return this.$store.getters["auth/getFullname"];
     },
     getAvatar() {
-      let base64AvatarImage = this.$store.getters["auth/getAvatar"];
-      if (base64AvatarImage == "null" || isEmpty(base64AvatarImage)) { // default avatar image
-        base64AvatarImage = this.defaultAvatar;
+      let base64Image = this.$store.getters["auth/getAvatar"]; 
+      if (base64Image == "undefined" || base64Image == "null" || isEmpty(base64Image)) { 
+        base64Image = this.defaultAvatar; // default avatar image
       }
-      return "data:image/png;base64," + base64AvatarImage;
+      return "data:image/png;base64," + base64Image;
     },
     avatarExists() {
-      let avatar = this.$store.getters["auth/getAvatar"];
-      if (! avatar || avatar == "null") {
+      let base64Image = this.$store.getters["auth/getAvatar"];
+      if (base64Image == "undefined" || base64Image == "null" || isEmpty(base64Image)) { 
         return false;
       }
       return true;
