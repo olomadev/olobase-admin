@@ -6,16 +6,22 @@ import { parseDomain, ParseResultType } from "parse-domain";
  * Global cookie object
  */
 export default {
-  set: function(key, value) {
+  set: function(key, value, overrideAttributes = {}) {
+    let secure = this.getSecure();
+    let defaultAttributes = { 
+      expires: 1, 
+      path: "/", 
+      domain: this.getBaseHost(),
+      secure: secure
+    }
+    if (secure) { // add sameSite = "none" attribute if secure connection available
+      defaultAttributes['sameSite'] = 'None';  
+    }
+    const attributes = {...defaultAttributes, ...overrideAttributes};
     cookies.set(
       key,
       value, 
-      { 
-        expires: 1, 
-        path: "/", 
-        domain: this.getBaseHost(), 
-        secure: this.getSecure()
-      }
+      attributes
     );
   },
   get: function(key) {
