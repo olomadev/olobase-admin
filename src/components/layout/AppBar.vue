@@ -275,15 +275,10 @@ export default {
   data() {
     return {
       drawer: true,
-      defaultAvatar: null,
       sidebarMenu: null,
     }
   },
   async created() {
-    /**
-     * Get default avatar image
-     */
-    this.defaultAvatar = this.admin.getConfig().avatar.base64;
     /**
      * Build dynamic sidebar menu
      */
@@ -299,7 +294,7 @@ export default {
     getAvatar() {
       let base64Image = this.$store.getters["auth/getAvatar"]; 
       if (base64Image == "undefined" || base64Image == "null" || isEmpty(base64Image)) { 
-        return "data:image/png;base64," + this.defaultAvatar; // default avatar image
+        return this.admin.getConfig().avatar.base64; // default avatar image
       }
       return base64Image;
     },
