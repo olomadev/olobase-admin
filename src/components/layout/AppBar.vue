@@ -299,9 +299,9 @@ export default {
     getAvatar() {
       let base64Image = this.$store.getters["auth/getAvatar"]; 
       if (base64Image == "undefined" || base64Image == "null" || isEmpty(base64Image)) { 
-        base64Image = this.defaultAvatar; // default avatar image
+        return "data:image/png;base64," + this.defaultAvatar; // default avatar image
       }
-      return "data:image/png;base64," + base64Image;
+      return base64Image;
     },
     avatarExists() {
       let base64Image = this.$store.getters["auth/getAvatar"];
