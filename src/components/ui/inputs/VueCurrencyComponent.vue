@@ -1,7 +1,7 @@
 <template>
   <v-text-field
     density="compact"
-    :filled="filled"
+    :variant="variant"
     :modelValue="formattedValue"
     ref="inputRef" 
   ></v-text-field>
@@ -21,11 +21,13 @@ export default {
       default: "",
     },
     /**
-     * Use full filled background color style.
+     * Use different styles: 
+     * 
+     * | 'outlined' | 'plain' | 'underlined' | 'filled' | 'solo' | 'solo-inverted' | 'solo-filled'
      */
-    filled: {
-      type: Boolean,
-      default: true,
+    variant: {
+      type: String,
+      default: "outlined",
     },
     /**
      * Currency options
@@ -37,7 +39,6 @@ export default {
       inputRef,
       formattedValue
     } = useCurrencyInput(props.options)
-    // Ersin:
     // 
     // ! Warning:  don't uncomment here ...
     // 

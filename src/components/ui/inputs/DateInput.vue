@@ -185,9 +185,14 @@ export default {
      */
     inputPlaceholder: String,
     /**
-     * Applies a distinct style to the component
+     * Use different styles: 
+     * 
+     * | 'outlined' | 'plain' | 'underlined' | 'filled' | 'solo' | 'solo-inverted' | 'solo-filled'
      */
-    variant: String,
+    variant: {
+      type: String,
+      default: "outlined",
+    },
     /**
      * Month / year
      */

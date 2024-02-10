@@ -59,7 +59,7 @@ export default {
      */
     variant: {
       type: String,
-      default: "filled",
+      default: "outlined",
     },
   },
 };

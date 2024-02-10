@@ -127,9 +127,7 @@ export default {
     },
     variant: {
       type: String,
-      default() {
-        return "filled"
-      },
+      default: "outlined",
     },
     class: {
       type: String,
