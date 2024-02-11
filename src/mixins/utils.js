@@ -38,31 +38,10 @@ export default {
       });
       return invalid;
     },
-    findTotalMonths(startDate, endDate) {
-      startDate = new Date(startDate);
-      endDate = new Date(endDate);
-      var totalMonth = Math.max(
-        (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-          endDate.getMonth() -
-          startDate.getMonth(),
-        0
-      );
-      totalMonth = totalMonth + 1;
-      return totalMonth;
-    },
     dateAddMonth(date, numberOfMonth) {
       var currentDate = new Date(date);
       var newDate = currentDate.setMonth(currentDate.getMonth() + numberOfMonth);
       return new Date(newDate).toJSON().slice(0, 10);
-    },
-    generateColumnName(length) {
-      var result = "";
-      var characters = "abcdefghijklmnopqrstuvwxyz";
-      var charactersLength = characters.length;
-      for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      }
-      return result;
     },
     dayDiff(firstDate, secondDate = null) {
       let date1 = new Date(firstDate);
@@ -74,8 +53,17 @@ export default {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       return diffDays;
     },
-    isAlpha(str) {
-      return /[a-zA-Zğüçşıö]+$/.test(str);
+    monthDiff(firstDate, secondDate) {
+      firstDate = new Date(firstDate);
+      secondDate = new Date(secondDate);
+      var totalMonth = Math.max(
+        (secondDate.getFullYear() - secondDate.getFullYear()) * 12 +
+          secondDate.getMonth() -
+          firstDate.getMonth(),
+        0
+      );
+      totalMonth = totalMonth + 1;
+      return totalMonth;
     },
     arrayGroupBy(xs, key) {
       return xs.reduce(function (rv, x) {
@@ -115,35 +103,6 @@ export default {
       if (!results) return null;
       if (!results[2]) return "";
       return decodeURIComponent(results[2].replace(/\+/g, " "));
-    },
-    formatFileSize(value) {
-      if (value >= 1073741824) {
-        value = value / 1073741824;
-        value = Number.parseFloat(value).toFixed(2) + " gb";
-      } else if (value >= 1048576) {
-        value = value / 1048576;
-        value = Number.parseFloat(value).toFixed(2) + " mb";
-      } else if (value >= 1024) {
-        value = value / 1024;
-        value = Number.parseFloat(value).toFixed(2) + " kb";
-      } else if (value > 1) {
-        value = value + " b";
-      } else if (value == 1) {
-        value = value + " b";
-      } else {
-        value = "0 b";
-      }
-      return value;
-    },
-    requiredArray(value) {
-      let array = JSON.parse(value);
-      if (!Array.isArray(array)) {
-        return false;
-      }
-      if (array.length > 0) {
-        return true;
-      }
-      return false;
     }
   } 
 };
