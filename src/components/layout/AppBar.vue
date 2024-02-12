@@ -1,12 +1,12 @@
 <template>
   <div>
     <v-app-bar 
-    :clipped-left="lgAndUp"
-    :clipped-right="lgAndUp"
-    app
-    :density="density"
-    :color="color"
-    :flat="flat"
+      :clipped-left="lgAndUp"
+      :clipped-right="lgAndUp"
+      app
+      :density="density"
+      :color="color"
+      :flat="flat"
     >
       <!--
         Triggered on VAppBar icon click, use it for VaSidebar toggling or minimizing.
@@ -49,73 +49,15 @@
         </v-btn>
         
         <v-menu offset-y v-if="$store.state.auth.user">
-
+          <!-- user avatar -->
           <template v-slot:activator="{ props }">
             <v-btn icon small class="ml-1" v-bind="props">
-              <v-avatar v-if="avatarExists" size="24px">
-                <v-img 
-                  :src="getAvatar"
-                  alt="Avatar"
-                ></v-img>
-              </v-avatar>
-              <v-icon v-else>mdi-account-circle</v-icon>
+              <slot name="avatar"></slot>
             </v-btn>
           </template>
-
-          <v-card min-width="300">
-            <v-list nav>
-              <template v-if="getFullname">
-                <v-list-item 
-                  :prepend-avatar="getAvatar"
-                >
-                  <div class="list-item-content">
-                    <v-list-item-title class="title">{{ getFullname }}</v-list-item-title>
-                    <v-list-item-subtitle v-if="getEmail">{{ getEmail }}</v-list-item-subtitle>
-                  </div>
-                </v-list-item>
-                <v-divider></v-divider>
-              </template>
-              <v-card flat>
-                <v-card-text style="padding:9px">
-                <v-list-item
-                  v-for="(item, index) in profileMenu"
-                  :key="index"
-                  link
-                  :to="item.link"
-                  class=" mt-2"
-                >
-                  <template v-slot:prepend>
-                    <v-icon>{{ item.icon }}</v-icon>
-                  </template>
-                  <v-list-item-title>{{ item.text }}</v-list-item-title>
-                </v-list-item>
-
-                <v-list-item :to="{ name: `account` }">
-                  <template v-slot:prepend>
-                    <v-icon>mdi-account</v-icon>
-                  </template>
-                  <v-list-item-title>{{ $t("va.account") }}</v-list-item-title>
-                </v-list-item>
-
-                <v-list-item :to="{ name: `password` }">
-                  <template v-slot:prepend>
-                    <v-icon>mdi-key-variant</v-icon>
-                  </template>
-                  <v-list-item-title>{{ $t("va.changePassword") }}</v-list-item-title>
-                </v-list-item>
-
-                <v-list-item @click="logout()">
-                  <template v-slot:prepend>
-                    <v-icon>mdi-logout</v-icon>
-                  </template>
-                  <v-list-item-title>{{ $t("va.logout") }}</v-list-item-title>
-                </v-list-item>
-                </v-card-text>
-              </v-card>
-            </v-list>
-          </v-card>
+          <!-- user profile menu -->
+          <slot name="profile"></slot>
         </v-menu>
-
       </div>
     </v-app-bar>
 
@@ -190,17 +132,14 @@
             </template>
             <v-list-item-title v-text="item.text"></v-list-item-title>
           </v-list-item>
-
         </template>
       </v-list>
     </v-navigation-drawer>
-
   </div>
 </template>
 
 <script>
 import nav from "@/_nav";
-import isEmpty from "lodash/isEmpty"
 import { useDisplay } from 'vuetify';
 /**
  * Default customizable admin VAppBar.
@@ -223,13 +162,6 @@ export default {
      * Header links visible on left side.
      */
     headerMenu: {
-      type: Array,
-      default: () => [],
-    },
-    /**
-     * Profile related links, visible inside authenticated dropdown menu.
-     */
-    profileMenu: {
       type: Array,
       default: () => [],
     },
@@ -285,26 +217,6 @@ export default {
     this.sidebarMenu = await nav.build(this.$t, this.admin);
   },
   computed: {
-    getEmail() {
-      return this.$store.getters["auth/getEmail"];
-    },
-    getFullname() {
-      return this.$store.getters["auth/getFullname"];
-    },
-    getAvatar() {
-      let base64Image = this.$store.getters["auth/getAvatar"]; 
-      if (base64Image == "undefined" || base64Image == "null" || isEmpty(base64Image)) { 
-        return this.admin.getConfig().avatar.base64; // default avatar image
-      }
-      return base64Image;
-    },
-    avatarExists() {
-      let base64Image = this.$store.getters["auth/getAvatar"];
-      if (base64Image == "undefined" || base64Image == "null" || isEmpty(base64Image)) { 
-        return false;
-      }
-      return true;
-    },
     isRouteList() {
       if (typeof this.$route.meta.resource == 'undefined') {
         return false
@@ -324,10 +236,7 @@ export default {
       if (typeof this.$route.meta.resource !== 'undefined') {
         this.$store.dispatch("api/refresh", `${this.$route.meta.resource}`);  
       }
-    },
-    logout() {
-      this.$store.dispatch("auth/logout");
-    },
+    }
   },
 };
 </script>
