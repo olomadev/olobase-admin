@@ -10,7 +10,7 @@
         <v-col sm="8" class="text-right">
           <div class="d-flex justify-end">
             <v-btn 
-              v-if="!disableSettings"
+              v-if="!getDisableSettingsValue"
               variant="text"
               :icon="!lgAndUp"
               @click="toggleSettingsPanel"
@@ -43,7 +43,7 @@
         </v-col>
       </v-row>
 
-      <div v-if="!hideHeader">
+      <div v-if="getFilters.length != 0 && !hideHeader">
         <form-filter
           :filters="getFilters"
           v-model="currentFilter"
@@ -203,6 +203,7 @@ import Search from "../../../mixins/search";
 import FormFilter from "../../internal/FormFilter";
 import Draggable from 'vuedraggable'
 import isEmpty from "lodash/isEmpty";
+import config from "@/_config";
 import get from "lodash/get";
 /**
  * List data iterator component, perfect for list CRUD page as well as any resource browsing standalone component.
@@ -285,7 +286,10 @@ export default {
     /**
      * Disable settings button
      */
-    disableSettings: Boolean,
+    disableSettings: {
+      type: Boolean,
+      default: false,
+    },
     /**
      * Force disabling of create button, shown by default if create resource action available.
      */
@@ -315,7 +319,13 @@ export default {
     disableGlobalSearch: {
       type: Boolean,
       default() {
-        return false;
+        return null;
+      },
+    },
+    disableItemsPerPage: {
+      type: Boolean,
+      default() {
+        return null;
       },
     },
     /**
@@ -342,8 +352,10 @@ export default {
      */
     itemsPerPage: {
       type: Number,
-      default: 10,
-    }
+      default() {
+        return null;
+      },
+    },
   },
   data() {
     return {
@@ -388,6 +400,12 @@ export default {
     getTitle() {
       return (this.title) ? this.title : this.$t("titles." + this.resource);
     },
+    getDisableSettingsValue() {
+      if (this.hideHeader) {
+        return true;
+      }
+      return this.disableSettings;
+    },
     getCurrentFilter() {
       /**
        * Get clean filter, do not take empty value but booleans
@@ -410,11 +428,11 @@ export default {
       /**
        * Add global search filter
        */
-      if (!this.disableGlobalSearch) {
+      if (!this.getDisableGlobalSearchValue()) {
         filters = [
           {
             source: this.globalSearchQuery,
-            enabled: this.disableGlobalSearch ? false : true,
+            enabled: this.getDisableGlobalSearchValue() ? false : true,
             label: this.$t("va.datatable.search"),
             attributes: { appendInnerIcon: "mdi-magnify" },
           },
@@ -601,6 +619,24 @@ export default {
       }
       return validatedFields
     },
+    getItemsPerPageValue() {
+      if (this.itemsPerPage == null) {
+        return config.list.itemsPerPage
+      }
+      return this.itemsPerPage;
+    },
+    getDisableItemsPerPageValue() {
+      if (this.disableItemsPerPage == null) {
+        return config.list.disableItemsPerPage
+      }
+      return this.disableItemsPerPage;
+    },
+    getDisableGlobalSearchValue() {
+      if (this.disableGlobalSearch == null) {
+        return config.list.disableGlobalSearch
+      }
+      return this.disableGlobalSearch;
+    },
     fillSettings() {
       let Self = this;
       this.selectedHeaders = this.getSelectedHeaders();
@@ -629,7 +665,7 @@ export default {
     async initFiltersFromQuery() {
       let options = {
         page: 1,
-        itemsPerPage: this.itemsPerPage,
+        itemsPerPage: this.getItemsPerPageValue(),
         sortBy: this.sortBy
       }
       if (this.disableQueryString) {
@@ -676,7 +712,7 @@ export default {
       let { itemsPerPage, page, sortBy } = this.listState.options
       let query = {
         page,
-        ...(!this.disableItemsPerPage && { perPage: itemsPerPage }),
+        ...(!this.getDisableItemsPerPageValue() && { perPage: itemsPerPage }),
       }
       let newSortBy = []
       let newSortDesc = []
@@ -726,7 +762,7 @@ export default {
       if (!this.disablePagination) {
         params.pagination = {
           page,
-          ...(!this.disableItemsPerPage && { perPage: itemsPerPage }),
+          ...(!this.getDisableItemsPerPageValue() && { perPage: itemsPerPage }),
         };
       }
       /**

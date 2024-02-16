@@ -36,12 +36,12 @@ Olobase.install = (app) => {
       app.component(`Va${name}`, c[name])
     })
   })
-  /**
-   * Inject global admin conf
-   */
-  app.mixin({
-    beforeCreate() {
-      this.$admin = this.$root.$options.admin
-    }
-  })
+  // /**
+  //  * Inject global admin conf
+  //  */
+  // app.mixin({
+  //   beforeCreate() {
+  //     this.$admin = this.$root.$options.admin
+  //   }
+  // })
 }

@@ -21,7 +21,7 @@
       :show-expand="showExpand"
       :items-per-page="listState.options.itemsPerPage"
       :group-by="groupBy"
-      :items-per-page-options="itemsPerPageOptions"
+      :items-per-page-options="getItemsPerPageOptionsValue"
       :options.sync="listState.options"
       :sort-by.sync="listState.options.sortBy"
       @click:row="onRowClick"
@@ -325,6 +325,7 @@ import upperFirst from "lodash/upperFirst";
 import { useDisplay } from 'vuetify'
 import eventBus from "olobase-admin/src/utils/eventBus";
 import { useVuelidate } from "@vuelidate/core";
+import config from "@/_config";
 /**
  * Data table component, you will need data iterator as `VaList` in order to make it usable.
  * This component allows you to template all fields columns.
@@ -534,13 +535,7 @@ export default {
     itemsPerPageOptions: {
       type: Array,
       default() {
-        return [
-            10,
-            20,
-            50,
-            100,
-            -1,
-          ]
+        return []
       },
     },
   },
@@ -600,6 +595,14 @@ export default {
     getRowSaveComponentName() {
       return this.resource + "RowSave"
     },
+    getItemsPerPageOptionsValue() {
+      if (Array.isArray(this.itemsPerPageOptions) 
+        && this.itemsPerPageOptions.length == 0
+        ) {
+        return config.list.itemsPerPageOptions;
+      }
+      return this.itemsPerPageOptions;
+    }
   },
   watch: {
     multiSort: {
