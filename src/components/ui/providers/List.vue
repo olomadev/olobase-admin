@@ -43,7 +43,7 @@
         </v-col>
       </v-row>
 
-      <div v-if="getFilters.length != 0 && !hideHeader">
+      <div v-if="getFilters.length != 0 && !getHideHeaderValue">
         <form-filter
           :filters="getFilters"
           v-model="currentFilter"
@@ -273,7 +273,7 @@ export default {
      */
     hideHeader: {
       type: Boolean,
-      default: false
+      default: null
     },
     /**
      * Hide bulk delete button
@@ -399,6 +399,12 @@ export default {
   computed: {
     getTitle() {
       return (this.title) ? this.title : this.$t("titles." + this.resource);
+    },
+    getHideHeaderValue() {
+      if (this.hideHeader == null) {
+        return config.list.hideHeader;
+      }
+      return this.hideHeader;
     },
     getDisableSettingsValue() {
       if (this.hideHeader) {
@@ -621,19 +627,19 @@ export default {
     },
     getItemsPerPageValue() {
       if (this.itemsPerPage == null) {
-        return config.list.itemsPerPage
+        return config.list.itemsPerPage;
       }
       return this.itemsPerPage;
     },
     getDisableItemsPerPageValue() {
       if (this.disableItemsPerPage == null) {
-        return config.list.disableItemsPerPage
+        return config.list.disableItemsPerPage;
       }
       return this.disableItemsPerPage;
     },
     getDisableGlobalSearchValue() {
       if (this.disableGlobalSearch == null) {
-        return config.list.disableGlobalSearch
+        return config.list.disableGlobalSearch;
       }
       return this.disableGlobalSearch;
     },
