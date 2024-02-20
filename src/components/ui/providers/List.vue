@@ -43,8 +43,9 @@
         </v-col>
       </v-row>
 
-      <div v-if="getFilters.length != 0 && !getHideHeaderValue">
+      <div v-if="getFilters.length != 0">
         <form-filter
+          v-if="!getHideHeaderValue"
           :filters="getFilters"
           v-model="currentFilter"
           class="mb-3"
@@ -56,121 +57,122 @@
             <slot :name="`filter.${filter.source}`" v-bind="props"></slot>
           </template>
         </form-filter>
-
-        <div v-if="toggleSettings" id="toggleSettings" class="mb-3">
-          <v-row class="pt-3 pl-0 pb-3 pr-0">
-            <v-col class="pb-0 pt-0" cols="12">
-              <div class="align-center">
-                <v-row>
-                  <v-col cols="12">
-                    <v-table density="compact">
-                      <thead>
-                        <tr>
-                          <th style="border: none"></th>
-                          <template v-for="item in selectItems">
-                            <th style="color:#a5a5a5" >{{ item.title }}</th>
-                          </template>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-if="!disableVisibility">
-                          <td width="20%">{{ $t('va.datatable.visible') }}</td>
-                          <template v-for="item in selectItems">
-                            <td>
-                              <v-switch
-                                :key="settingsKey"
-                                v-model="visibilities[item.key]"
-                                @change="updateVisibility(item.key, visibilities[item.key])"
-                                color="primary"
-                                hide-details
-                              ></v-switch>
-                            </td>
-                          </template>
-                        </tr>
-                        <tr>
-                          <td>{{ $t('va.datatable.filterable') }}</td>
-                          <template v-for="item in selectItems">
-                            <td>
-                              <v-switch 
-                                v-if="item.key !== 'actions'"
-                                :key="settingsKey"
-                                v-model="filterabilities[item.key]"
-                                @change="updateFilterability(item.key, filterabilities[item.key])"
-                                color="primary"
-                                hide-details
-                              ></v-switch>
-                            </td>
-                          </template>
-                        </tr>
-                        <tr v-if="!disablePositioning">
-                          <td>{{ $t('va.datatable.positioning') }}</td>
-                          <td :colspan="selectItems.length" style="border-bottom: none">
-                            <v-table v-if="selectItems.length > 0" density="compact" class="mt-6 mb-6" width="%100">
-                              <draggable v-model="selectedHeaders" tag="tr" :item-key="key => key">
-                                <template #item="item">
-                                  <th style="cursor:pointer;padding:4px;" scope="col">
-                                    {{ item.element.title }}
-                                    <span class="circle">{{ item.index + 1 }}</span>
-                                  </th>
-                                </template>
-                              </draggable>
-                            </v-table>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td :colspan="selectItems.length" class="pt-2 pb-2">
-                            <v-btn
-                              class="mt-1 mb-1"
-                              color="primary"
-                              variant="tonal"
-                              type="button"
-                              :icon="!lgAndUp"
-                              @click="saveSettings"
-                            >
-                              <v-icon size="small">mdi-content-save</v-icon>
-                              <span v-if="lgAndUp" class="ml-2 pb-0 mb-0">{{
-                                $t("va.datatable.save_settings")
-                              }}</span>
-                            </v-btn>
-                            <v-btn
-                              class="ml-2 mt-1 mb-1"
-                              color="secondary"
-                              variant="flat"
-                              type="button"
-                              :icon="!lgAndUp"
-                              @click="restoreSettings"
-                            >
-                              <v-icon size="small">mdi-restore</v-icon>
-                              <span v-if="lgAndUp" class="ml-2 pb-0 mb-0">{{
-                                $t("va.datatable.restore_defaults")
-                              }}</span>
-                            </v-btn>
-                            <v-btn
-                              class="ml-2 mt-1 mb-1"
-                              color="secondary"
-                              variant="flat"
-                              type="button"
-                              :icon="!lgAndUp"
-                              @click="toggleSettingsPanel"
-                            >
-                              <v-icon size="small">mdi-close</v-icon>
-                              <span v-if="lgAndUp" class="ml-2 pb-0 mb-0">{{
-                                $t("va.datatable.close_settings")
-                              }}</span>
-                            </v-btn>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </v-table>
-
-                  </v-col>
-                </v-row>
-              </div>
-            </v-col>
-          </v-row>
-        </div>
       </div>
+
+      <div v-if="toggleSettings" id="toggleSettings" class="mb-3">
+        <v-row class="pt-3 pl-0 pb-3 pr-0">
+          <v-col class="pb-0 pt-0" cols="12">
+            <div class="align-center">
+              <v-row>
+                <v-col cols="12">
+                  <v-table density="compact">
+                    <thead>
+                      <tr>
+                        <th style="border: none"></th>
+                        <template v-for="item in selectItems">
+                          <th style="color:#a5a5a5" >{{ item.title }}</th>
+                        </template>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-if="!disableVisibility">
+                        <td width="20%">{{ $t('va.datatable.visible') }}</td>
+                        <template v-for="item in selectItems">
+                          <td>
+                            <v-switch
+                              :key="settingsKey"
+                              v-model="visibilities[item.key]"
+                              @change="updateVisibility(item.key, visibilities[item.key])"
+                              color="primary"
+                              hide-details
+                            ></v-switch>
+                          </td>
+                        </template>
+                      </tr>
+                      <tr>
+                        <td>{{ $t('va.datatable.filterable') }}</td>
+                        <template v-for="item in selectItems">
+                          <td>
+                            <v-switch 
+                              v-if="item.key !== 'actions'"
+                              :key="settingsKey"
+                              v-model="filterabilities[item.key]"
+                              @change="updateFilterability(item.key, filterabilities[item.key])"
+                              color="primary"
+                              hide-details
+                            ></v-switch>
+                          </td>
+                        </template>
+                      </tr>
+                      <tr v-if="!disablePositioning">
+                        <td>{{ $t('va.datatable.positioning') }}</td>
+                        <td :colspan="selectItems.length" style="border-bottom: none">
+                          <v-table v-if="selectItems.length > 0" density="compact" class="mt-6 mb-6" width="%100">
+                            <draggable v-model="selectedHeaders" tag="tr" :item-key="key => key">
+                              <template #item="item">
+                                <th style="cursor:pointer;padding:4px;" scope="col">
+                                  {{ item.element.title }}
+                                  <span class="circle">{{ item.index + 1 }}</span>
+                                </th>
+                              </template>
+                            </draggable>
+                          </v-table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td :colspan="selectItems.length" class="pt-2 pb-2">
+                          <v-btn
+                            class="mt-1 mb-1"
+                            color="primary"
+                            variant="tonal"
+                            type="button"
+                            :icon="!lgAndUp"
+                            @click="saveSettings"
+                          >
+                            <v-icon size="small">mdi-content-save</v-icon>
+                            <span v-if="lgAndUp" class="ml-2 pb-0 mb-0">{{
+                              $t("va.datatable.save_settings")
+                            }}</span>
+                          </v-btn>
+                          <v-btn
+                            class="ml-2 mt-1 mb-1"
+                            color="secondary"
+                            variant="flat"
+                            type="button"
+                            :icon="!lgAndUp"
+                            @click="restoreSettings"
+                          >
+                            <v-icon size="small">mdi-restore</v-icon>
+                            <span v-if="lgAndUp" class="ml-2 pb-0 mb-0">{{
+                              $t("va.datatable.restore_defaults")
+                            }}</span>
+                          </v-btn>
+                          <v-btn
+                            class="ml-2 mt-1 mb-1"
+                            color="secondary"
+                            variant="flat"
+                            type="button"
+                            :icon="!lgAndUp"
+                            @click="toggleSettingsPanel"
+                          >
+                            <v-icon size="small">mdi-close</v-icon>
+                            <span v-if="lgAndUp" class="ml-2 pb-0 mb-0">{{
+                              $t("va.datatable.close_settings")
+                            }}</span>
+                          </v-btn>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+
+                </v-col>
+              </v-row>
+            </div>
+          </v-col>
+        </v-row>
+      </div>
+
 
       <v-toolbar 
         height="45"
@@ -288,7 +290,7 @@ export default {
      */
     disableSettings: {
       type: Boolean,
-      default: false,
+      default: null,
     },
     /**
      * Force disabling of create button, shown by default if create resource action available.
@@ -407,8 +409,8 @@ export default {
       return this.hideHeader;
     },
     getDisableSettingsValue() {
-      if (this.hideHeader) {
-        return true;
+      if (this.disableSettings == null) {
+        return config.list.disableSettings;
       }
       return this.disableSettings;
     },
