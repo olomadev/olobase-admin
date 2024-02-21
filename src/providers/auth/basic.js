@@ -15,11 +15,11 @@ export default (axios, params = {}) => {
     routes: {
       user: null,
     },
-    getId: (u) => u.id,
-    getFullname: (u) => u.fullname,
-    getEmail: (u) => u.email,
+    getId: (r) => r.user.id,
+    getFullname: (r) => r.user.fullname,
+    getEmail: (r) => r.user.email,
     getAvatar: () => localStorage.getItem("avatar"),
-    getPermissions: (u) => u.permissions,
+    getPermissions: (r) => r.user.permissions,
     ...params,
   };
 
@@ -73,10 +73,10 @@ export default (axios, params = {}) => {
       }
       return Promise.resolve();
     },
-    [GET_ID]: (user) => getId(user),
-    [GET_FULLNAME]: (user) => getFullname(user),
-    [GET_EMAIL]: (user) => getEmail(user),
+    [GET_ID]: (r) => getId(r),
+    [GET_FULLNAME]: (r) => getFullname(r),
+    [GET_EMAIL]: (r) => getEmail(r),
     [GET_AVATAR]: () => getAvatar(),
-    [GET_PERMISSIONS]: (user) => getPermissions(user),
+    [GET_PERMISSIONS]: (r) => getPermissions(r),
   };
 };
