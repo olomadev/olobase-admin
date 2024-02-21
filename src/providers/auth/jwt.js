@@ -41,7 +41,7 @@ export default (httpClient, params = {}) => {
     getFullname: (u) => u.fullname,
     getEmail: (u) => u.email,
     getAvatar: () => localStorage.getItem("avatar"),
-    getPermissions: (u) => u.roles,
+    getPermissions: (u) => u.permissions,
     ...params,
   };
 
@@ -86,7 +86,7 @@ export default (httpClient, params = {}) => {
       return Promise.resolve();
     },
     [CHECK_AUTH]: async () => {
-        var token = cookies.get(cookieKey.token)
+        const token = cookies.get(cookieKey.token)
         if (typeof token == "undefined" || token == "undefined" || token == "") {
             return Promise.reject()
         }
@@ -94,11 +94,13 @@ export default (httpClient, params = {}) => {
         if (user) {
           return Promise.resolve({
             data: {
-                id: user.id,
-                fullname: user.fullname,
-                email: user.email,
                 avatar: localStorage.getItem("avatar"),
-                permissions: user.roles
+                token: token,
+                user: user,
+                cookieKey: {
+                  user:  cookieKey.user,
+                  token: cookieKey.token,
+                }
             },
           })
         } else {

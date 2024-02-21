@@ -19,7 +19,7 @@ export default (axios, params = {}) => {
     getFullname: (u) => u.fullname,
     getEmail: (u) => u.email,
     getAvatar: () => localStorage.getItem("avatar"),
-    getPermissions: (u) => u.roles,
+    getPermissions: (u) => u.permissions,
     ...params,
   };
 
