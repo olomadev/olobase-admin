@@ -31,7 +31,7 @@ import BulkActionButton from "./buttons/BulkActionButton";
 import BulkDeleteButton from "./buttons/BulkDeleteButton";
 import BulkCopyButton from "./buttons/BulkCopyButton";
 
-import AutocompleteField from "./fields/AutocompleteField";
+import AutoCompleteField from "./fields/AutoCompleteField";
 import TextField from "./fields/TextField";
 import NumberField from "./fields/NumberField";
 import RatingField from "./fields/RatingField";
@@ -59,7 +59,7 @@ import ColorPickerInput from "./inputs/ColorPickerInput";
 import RichTextInput from "./inputs/RichTextInput";
 import SelectInput from "./inputs/SelectInput";
 import RadioGroupInput from "./inputs/RadioGroupInput";
-import AutocompleteInput from "./inputs/AutocompleteInput";
+import AutoCompleteInput from "./inputs/AutoCompleteInput";
 import FileInput from "./inputs/FileInput";
 
 // Advanced components
@@ -101,7 +101,7 @@ export {
   BulkActionButton,
   BulkDeleteButton,
   BulkCopyButton,
-  AutocompleteField,
+  AutoCompleteField,
   TextField,
   NumberField,
   RatingField,
@@ -129,7 +129,7 @@ export {
   RichTextInput,
   SelectInput,
   RadioGroupInput,
-  AutocompleteInput,
+  AutoCompleteInput,
   FileInput,
   // advanced components
   ArrayTableInput,

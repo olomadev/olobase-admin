@@ -37,7 +37,8 @@ export default {
           "date",
           "rating",
           "select",
-          "autocomplete",
+          "auto-complete",
+          "autoComplete",
         ].includes(v),
     },
     /**
