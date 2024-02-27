@@ -544,7 +544,6 @@ export default {
       item: null,
       dialog: false,
       selected: [],
-      editRowId: null,
       saving: false,
       editRowId: null,
       rowIndex: null,
@@ -574,11 +573,13 @@ export default {
     },
     getItems() {
       if (this.form && !this.editRowId && this.rowIndex != null) {
-        let index = (this.rowIndex == 0) ? 0 : this.rowIndex - 1
-        if (this.rowIndex == 1) {
-          index = 1
+        let index = this.rowIndex;
+        if (this.rowIndex > 1) {
+          ++index;
         }
-        // add new empty record to above the selected index
+        //
+        // add new empty record to below the selected index
+        // adds to above if index == 0
         // 
         this.listState.items.splice(index, 0, { index: index, _new: true, id: null });
         // return [{ _new: true, id: null, moduleName: null }, ...this.listState.items]
@@ -766,11 +767,7 @@ export default {
           })
         } else { // create
           let newCreateData = {}
-          if (!this.disableGenerateUid) {
-            newCreateData.id = this.generateUid()
-          } else {
-            newCreateData.id = this.generateUid()
-          }
+          newCreateData.id = this.generateUid();
           Object.assign(newCreateData, this.createData)
           await this.$store.dispatch(`${this.listState.resource}/create`, {
               data: { ...this.form, ...newCreateData },

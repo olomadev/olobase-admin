@@ -1,10 +1,23 @@
+import config from "@/_config";
 
 /**
- * Common utility functions 
+ * Utility functions 
  */
 export default {
   methods: {
+    generateInt() {
+      const min = 999;
+      const max = 9223372036854775807;  // php max integer constant value
+      // Use Math.floor to round down to the nearest whole number
+      // Use Math.random() to generate a random decimal between 0 (inclusive) and 1 (exclusive)
+      // Multiply by the range (max - min + 1) to cover the entire range
+      // Add the minimum value to shift the range to [min, max]
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    },
     generateUid(uppercase = false) {
+      if (config.form.disableGenerateUid) {
+        return this.generateInt();
+      }
       return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
         var r = (Math.random() * 16) | 0,
           v = c == "x" ? r : (r & 0x3) | 0x8;
@@ -13,6 +26,9 @@ export default {
       });
     },
     generateId(object) {
+      if (config.form.disableGenerateUid) {
+        return object.$route.name.slice(-6) == "create" ? this.generateInt() : object.id;
+      }
       return object.$route.name.slice(-6) == "create" ? this.generateUid() : object.id;
     },
     generateKey(keyValue, index = 0) {

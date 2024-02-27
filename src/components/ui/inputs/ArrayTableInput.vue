@@ -129,6 +129,7 @@
 </template>
 
 <script>
+import Utils from "../../../mixins/utils";
 import Input from "../../../mixins/input";
 import Resource from "../../../mixins/resource";
 
@@ -136,7 +137,7 @@ import Resource from "../../../mixins/resource";
  * Array layout for array elements
  */
 export default {
-  mixins: [Input, Resource],
+  mixins: [Input, Resource, Utils],
   inject: {
     v$: {
       default: null
@@ -162,10 +163,6 @@ export default {
     },
     primaryKey: {
       type: String
-    },
-    generateUid: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -276,9 +273,7 @@ export default {
         }, {});
       if (action == "new") {
         this.editRowId = null;
-        if (this.generateUid) {
-          this.form[this.primaryKey] = this.createUid();
-        }
+        this.form[this.primaryKey] = this.generateUid();
       } else {
         this.editRowId = item ? item[this.primaryKey] : null;
       }
@@ -326,14 +321,7 @@ export default {
       this.form = null;
       this.editRowId = null;
       this.dialogDelete = false;
-    },
-    createUid() {
-      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-    },
+    }
   },
 
 };
