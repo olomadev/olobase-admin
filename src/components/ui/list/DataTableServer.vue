@@ -265,13 +265,6 @@
         </div>
       </template>
       <template v-slot:no-data>
-        <div v-if="rowCreate && !disableEmptyDataRowCreate" style="text-align:left;font-size: 12px;color: #7a7a7a; padding-top: 20px; padding-bottom: 20px">
-          <va-row-create-button
-            :disable-redirect="true"
-            :resource="listState.resource"
-            @click="() => createRowForm(null, 'new', 0)"
-          ></va-row-create-button>
-        </div>
         <template v-else>
           <div style="font-size: 12px;color: #7a7a7a; padding-top: 20px; padding-bottom: 20px">
             {{ $t("datatable.no_data_available") }}
@@ -453,13 +446,6 @@ export default {
     visible: {
       type: Boolean,
       default: true
-    },
-    /**
-     * Disable empty data row create button
-     */
-    disableEmptyDataRowCreate: {
-      type: Boolean,
-      default: false,
     }, 
     /**
      * Disable select feature.
@@ -557,6 +543,11 @@ export default {
       Self.dialog = dialog
       if (action == 'create') {
         Self.item = null // empty the item to create new record
+      }
+    });
+    eventBus.on('action', function (action) {
+      if (action == 'rowCreate') {
+        Self.createRowForm(null, 'new', 0);
       }
     });
   },
@@ -749,9 +740,6 @@ export default {
       }
       return val
     },
-    // hasAction(action) {
-    //   return this.admin.getResource(this.listState.resource).canAction(action)
-    // },
     async save() {
       this.v$.$touch();
       if (this.v$.$invalid) {

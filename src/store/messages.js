@@ -8,10 +8,12 @@ export default {
     resolve: null,
     reject: null,
     snackbar: {
+      class: null,
       color: null,
       icon: null,
-      mode: null,
-      position: "top",
+      location: "top",
+      variant: null,
+      rounded: 0,
       text: null,
       timeout: 7500,
       title: null,
@@ -41,10 +43,12 @@ export default {
     },
     cleanSnackbar(state) {
       state.snackbar = {
+        class: null,
         color: null,
         icon: null,
-        mode: null,
-        position: "top",
+        location: "top",
+        variant: null,
+        rounded: 0,
         text: null,
         timeout: 7500,
         title: null,
@@ -56,10 +60,12 @@ export default {
         return;
       }
       state.snackbar = {
+        class: config.snackbar[type].class,
         color: config.snackbar[type].color,
         icon: config.snackbar[type].icon,
-        mode: config.snackbar[type].mode,
-        position: config.snackbar[type].position,
+        location: config.snackbar[type].location,
+        variant: config.snackbar[type].variant,
+        rounded: config.snackbar[type].rounded,
         timeout: config.snackbar[type].timeout,
         title: config.snackbar[type].title,
         text: message,

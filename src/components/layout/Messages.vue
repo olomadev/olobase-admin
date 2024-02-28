@@ -1,14 +1,15 @@
 <template>
   <div>
     <v-snackbar 
-      class="mt-15"
       v-model="snackbar.visible" 
-      :location="snackbar.position"
+      :class="snackbar.class"
+      :location="snackbar.location"
       :color="snackbar.color"
       :timeout="snackbar.timeout"
-      transition="slide-y-transition"
+      :variant="snackbar.variant"
+      :rounded="snackbar.rounded"
+      :transition="false"
       :multi-line="true"
-      eager
       vertical
       style="padding:0;"
     >
@@ -19,6 +20,9 @@
               <v-icon class="pr-3" size="x-large">{{ snackbar.icon }}</v-icon>
             </td>
             <td style="border:none;">
+              <div v-if="snackbar.title">
+                <strong>{{ $t(snackbar.title) }}</strong>
+              </div>
               <div v-html="snackbar.text"></div>
             </td>
             <td width="10%" style="border:none;" align="right"> 
@@ -54,7 +58,7 @@ export default {
   },
   computed : {
     snackbar() {
-      return this.admin.store.getters['messages/getSnackbar']
+      return this.admin.store.getters['messages/getSnackbar'];
     }
   }
 };

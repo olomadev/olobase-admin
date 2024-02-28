@@ -30,11 +30,18 @@
               @click="onAction('create')"
             ></va-create-button>
 
+            <va-row-create-button
+              v-if="rowCreate"
+              :disable-redirect="true"
+              :resource="resource"
+              @click="onAction('rowCreate')"
+            ></va-row-create-button>
+
             <va-create-dialog-button
               v-if="enableSaveDialog"
               :disable-redirect="true"
               :resource="resource"
-              @click="() => onAction('rowSaveDialog')"
+              @click="onAction('rowSaveDialog')"
             ></va-create-dialog-button>
 
              <!-- @slot Put here some global action with components based on VaActionButton. -->
@@ -291,6 +298,13 @@ export default {
     disableSettings: {
       type: Boolean,
       default: null,
+    },
+    /**
+     * Editable create 
+     */
+    rowCreate: {
+      type: Boolean,
+      default: false,
     },
     /**
      * Force disabling of create button, shown by default if create resource action available.
@@ -827,12 +841,13 @@ export default {
       this.toggleSettings = this.toggleSettings ? false : true;
     },
     onAction(action) {
-      if (!this.disableCreateRedirect) {
-        return;
-      }
       if (action == 'rowSaveDialog') {
-        eventBus.emit("last-dialog", true)  // open save dialog window
+        eventBus.emit("last-dialog", true);  // open save dialog window
       }
+      /**
+       * Allows you to use global action in every where with eventBus object
+       */
+      eventBus.emit("action", action);
       /**
        * Allows you to use global action event for custom action on your side.
        */

@@ -64,6 +64,7 @@
 </template>
 
 <script>
+import config from "@/_config";
 import Input from "../../../mixins/input";
 
 /**
@@ -234,7 +235,7 @@ export default {
     },
     dateFormatted() {
       if (this.input) {
-        return [this.formatDate(this.input)]
+        return [this.formatDateForDisplay(this.input)]
       }
       return;
     }
@@ -251,9 +252,39 @@ export default {
     },
     /**
      * date format
-     * https://kazupon.github.io/vue-i18n/guide/datetime.html 
+     * 
+     * https://stackoverflow.com/questions/75592703/v-date-picker-date-format-to-dd-mm-yyyy-vuetify
      */
-    formatDate(val) {
+    formatDateForDisplay(val) {
+      const date = new Date(val);
+      let month = 1 + date.getMonth();
+      if (month < 10) {
+        month = `0${month}`;
+      }
+      let day = date.getDate();
+      if (day < 10) {
+        day = `0${day}`;
+      }
+      let year = date.getFullYear();
+      const dateFormat = config.i18n.datePickerFormat;
+      switch (dateFormat) {
+        case 'dd-mm-YYYY':
+          return `${day}-${month}-${year}`;
+          break;
+        case 'mm-dd-YYYY':
+          return `${month}-${day}-${year}`;
+          break;
+        case 'YYYY-mm-dd':
+          return `${year}-${month}-${day}`;
+          break;
+        case 'YYYY-dd-mm':
+          return `${year}-${day}-${month}`;
+          break;
+        default:
+          return `${day}-${month}-${year}`;
+      }
+    },
+    formatDateForDatabase(val) {
       const date = new Date(val);
       let month = 1 + date.getMonth();
       if (month < 10) {
@@ -267,7 +298,7 @@ export default {
     },
     updateDate(val) {
       this.menu = false;
-      this.update(this.formatDate(val));
+      this.update(this.formatDateForDatabase(val));
     },
   },
 };

@@ -3,7 +3,7 @@
     v-if="visible"
     :hide-label="icon"
     :item="item"
-    :label="$t('va.actions.create')"
+    :label="$t('va.actions.addRow')"
     icon="mdi-plus"
     :color="color || 'success'"
     text

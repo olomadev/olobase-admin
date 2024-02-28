@@ -38,6 +38,7 @@
     "q": "Search",
     "list": "List",
     "create": "Create",
+    "addRow": "Add Row",
     "copy": "Copy",
     "copied": "Copied",
     "copyNotSupported": "Copy function not supported",
