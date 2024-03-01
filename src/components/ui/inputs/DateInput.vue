@@ -1,12 +1,10 @@
 <template>
-  <div>
+  <div class="va-date-input">
     <v-menu
       v-model="menu"
       :close-on-content-click="false"
-      :nudge-right="40"
       transition="scale-transition"
       offset-y
-      min-width="290px"
     >
       <template v-for="(_, scopedSlotName) in $slots" v-slot:[scopedSlotName]="slotData">
         <slot :name="scopedSlotName" v-bind="slotData" />
@@ -18,6 +16,7 @@
           :modelValue="dateFormatted"
           :variant="variant"
           :readonly="true"
+          :hide-details="getHideDetailsValue"
           append-inner-icon="mdi-calendar"
           @click:clear="cleanInput"
           @change="change"
@@ -96,7 +95,12 @@ export default {
     /**
      * Sets elevation
      */
-    elevation: [String, Number],
+    elevation: {
+      type: [String, Number],
+      default() {
+        return 3
+      },
+    },
     /**
      * Restricts which dates can be selected.
      * @type Function|Array
@@ -117,7 +121,7 @@ export default {
     width: {
       type: [String, Number],
       default() {
-        return 375;
+        return null;
       },
     },
     /**
@@ -170,7 +174,7 @@ export default {
     hideHeader: {
       type: Boolean,
       default() {
-        return false;
+        return true;
       },
     },
     /**
@@ -207,22 +211,66 @@ export default {
      */
     landscape: Boolean,
     /**
+     * The date format to use. For example: (dd-mm-YYYY).
+     */
+    format: {
+      type: String,
+      default() {
+        return  null;
+      },
+    },
+    /**
      * Date on ISO format to be edited.
      * @model
      */
     value: {
       type: String,
       default() {
-        return "" // this.$d(new Date(), this.format)
+        return ""
       },
     }
   },
   data() {
     return {
       menu: false,
+      hideDetailsAction: false,
     };
   },
+  watch: {
+    menu: {
+      handler(val) {
+        if (val) {
+          //
+          // css :has() does not supported on some browsers
+          // if it were supported we could do this: table td + td:has(.v-input) { Vertical-align: top; }
+          // to fix date input hide details td vertical align = "top" problem 
+          // we assign dynamically vertical align
+          // 
+          var inputs = document.getElementsByClassName("va-date-input");
+          for (var i = 0; i < inputs.length; i++) {
+            if(inputs[i].closest('td')) {
+              inputs[i].closest('td').style.verticalAlign = 'top';
+            }
+          }
+        } else {
+           var inputs = document.getElementsByClassName("va-date-input");
+          for (var i = 0; i < inputs.length; i++) {
+            if(inputs[i].closest('td')) {
+              inputs[i].closest('td').style.verticalAlign = 'inherit';
+            }
+          }
+        }
+        this.hideDetailsAction = val
+      }
+    }
+  },
   computed: {
+    getHideDetailsValue() {
+      if (this.hideDetailsAction) {
+        return true;
+      }
+      return this.hideDetails;
+    },
     getLocale() {
       return this.i18n.global.locale.value;
     },
@@ -250,12 +298,25 @@ export default {
         this.cleanInput();
       }
     },
+    getSelectedFormat() {
+      if (this.format) {
+        return this.format;
+      }
+      return config.i18n[this.i18n.global.locale.value].dateFieldDisplayFormat;
+    },
     /**
      * date format
      * 
      * https://stackoverflow.com/questions/75592703/v-date-picker-date-format-to-dd-mm-yyyy-vuetify
      */
     formatDateForDisplay(val) {
+      const dateFormat = this.getSelectedFormat();
+      const seperatorArray = dateFormat.match(/(\.)|(-)|(\/)|(\\)/);
+      let s = "-"; // default seperator
+      if (Array.isArray(seperatorArray)) {
+        s = seperatorArray[0];
+      }
+      const locale = this.i18n.global.locale.value;
       const date = new Date(val);
       let month = 1 + date.getMonth();
       if (month < 10) {
@@ -266,22 +327,21 @@ export default {
         day = `0${day}`;
       }
       let year = date.getFullYear();
-      const dateFormat = config.i18n.datePickerFormat;
       switch (dateFormat) {
-        case 'dd-mm-YYYY':
-          return `${day}-${month}-${year}`;
+        case 'dd' + s + 'mm' + s + 'YYYY':
+          return `${day}${s}${month}${s}${year}`;
           break;
-        case 'mm-dd-YYYY':
-          return `${month}-${day}-${year}`;
+        case 'mm' + s + 'dd' + s + 'YYYY':
+          return `${month}${s}${day}${s}${year}`;
           break;
-        case 'YYYY-mm-dd':
-          return `${year}-${month}-${day}`;
+        case 'YYYY' + s + 'mm' + s + 'dd':
+          return `${year}${s}${month}${s}${day}`;
           break;
-        case 'YYYY-dd-mm':
-          return `${year}-${day}-${month}`;
+        case 'YYYY' + s + 'dd' + s + 'mm':
+          return `${year}${s}${day}${s}${month}`;
           break;
         default:
-          return `${day}-${month}-${year}`;
+          return `${day}${s}${month}${s}${year}`;
       }
     },
     formatDateForDatabase(val) {

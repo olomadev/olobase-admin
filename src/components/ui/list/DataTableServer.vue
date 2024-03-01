@@ -81,7 +81,7 @@
                 :label="(field.type == 'boolean') ? ' ' : field.label"
                 v-bind="checkProperty(field, 'options', 'source') ? getOptions(field.options, form[field.options.source]) : field.attributes"
                 :error-messages="getErrorMessages(field.source)"
-                :class="field.type == 'date' ? '' : 'mt-6'"
+                class="mt-6"
                 @click.stop
               ></component>
            </div>
