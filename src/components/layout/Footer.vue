@@ -1,10 +1,10 @@
 <template>
   <v-footer>
-    <v-row :style="getLeftPadding" align="center" no-gutters>
+    <v-row  align="center" no-gutters>
       <v-col
         v-for="(item, i) in menu"
         :key="i"
-        class="text-center mb-sm-0 mb-5"
+        class="text-center mb-sm-0"
         cols="auto"
         >
           <a :style="getAStyle()" 
@@ -17,7 +17,7 @@
       </v-col>
       <v-spacer class="hidden-xs-and-down" />
       <v-col cols="12" sm="auto">
-        <div class="font-weight-light pt-6 pt-sm-0 text-center">
+        <div class="font-weight-light pt-sm-0 text-center">
           <!-- @slot Right side information. -->
           <slot></slot>
         </div>
@@ -33,10 +33,6 @@
 export default {
   props: {
     /**
-     * theme font color
-     */
-    themeColor: null,
-    /**
      * Menu links.
      */
     menu: {
@@ -44,29 +40,7 @@ export default {
       default: () => [],
     },
   },
-  inject: ['vuetify', 'admin'],
-  data() {
-    return {
-      leftPadding: "padding-left: 0px"
-    }
-  },
-  computed: {
-    getLeftPadding() {
-      if (this.$store.getters['api/getToggleDrawer']) {
-        this.leftPadding = 'padding-left: 256px';
-      } else {
-        this.leftPadding = 'padding-left: 0px';
-      }
-      return this.leftPadding;
-    }
-  },
-  created() {
-    if (this.$store.getters['api/getToggleDrawer']) {
-      this.leftPadding = 'padding-left: 256px';
-    } else {
-      this.leftPadding = 'padding-left: 0px';
-    }
-  },
+  inject: ['vuetify'],
   methods: {
     getAStyle() {
       let themeColor = this.vuetify.theme.themes.value.defaultTheme.colors.primary;
