@@ -90,7 +90,7 @@
           :class="isSelected(item) ? 'v-data-table__selected' : ''"
           @click="toggle(item, isSelected(item), item[groupBy])"
         >
-          <td class="d-flex justify-end">
+          <td align="right">
             <div class="mt-1">
               <v-icon size="16" color="green" v-if="isSelected(item)"
                 >mdi-check</v-icon
@@ -249,6 +249,9 @@ export default {
     isSelected(item) { 
       let Self = this
       let id = item[this.primaryKey]
+      if (! Array.isArray(this.selected)) {
+        return false
+      }
       if (this.selected.length == 0) {
         return false
       }
@@ -330,7 +333,7 @@ export default {
     },
     toggleChildren(groupBy) {
       let Self = this;
-      if (this.parentChecked[groupBy]) { // mark child checkboxes
+      if (Array.isArray(this.selected) && this.parentChecked[groupBy]) { // mark child checkboxes
         let selectedIds = [];
         this.selected.forEach(function (val) {
           selectedIds.push(val[Self.primaryKey]);
@@ -345,7 +348,7 @@ export default {
         }
       } else {
         // unmark child checkboxes
-        if (typeof this.groupedItems[groupBy] != "undefined") {
+        if (Array.isArray(this.selected) && typeof this.groupedItems[groupBy] != "undefined") {
           this.groupedItems[groupBy].forEach(function (gVal) {
             Self.selected = Self.selected.filter(
               function(item) {

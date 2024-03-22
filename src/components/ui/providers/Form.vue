@@ -63,7 +63,11 @@ export default {
     /**
      * Disable default redirect behavior
      */
-    disableRedirect: Boolean
+    disableRedirect: Boolean,
+    /**
+     * Disable default save behavior
+     */
+    disableSaveMessage: Boolean,
   },
   validations: {},
   data() {
@@ -222,12 +226,10 @@ export default {
           }
       })
       this.formState.model = model
-
       /**
       * Create event before saving.
       */
-      this.$emit("save", this.formState)
-      
+      this.$emit("model", model);
       try {
         let { data } = this.id
           ? await this.$store.dispatch(`${this.resource}/update`, {
@@ -241,18 +243,19 @@ export default {
         /**
          * Sent after success saving.
          */
-        this.$emit("saved", this.formState)
+        this.$emit("saved", data);
         this.$store.commit("api/setFormSaved", true);
         this.formState.errors = null
         //
         // post process must be in a set timeout function
         // otherwise these functions does not work well !
         // 
-        let Self = this
-        setTimeout(function(){
-          Self.$store.commit("messages/show", { type: 'success', message: Self.$t("form.saved") });  
-        }, 100);
-
+        if (! this.disableSaveMessage) {
+          let Self = this;
+          setTimeout(function(){
+            Self.$store.commit("messages/show", { type: 'success', message: Self.$t("form.saved") });  
+          }, 100);
+        }
         switch (redirect) {
           case "list":
             this.$router.push({ name: `${this.resource}_list` })
@@ -284,7 +287,7 @@ export default {
         /**
          * Create event after success saving.
          */
-        this.$emit("saved", this.formState)
+        this.$emit("error", e.errors);
 
       } finally {
         this.formState.saving = false
