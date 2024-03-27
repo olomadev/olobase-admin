@@ -4,6 +4,7 @@ import config from "@/_config";
 export default {
   namespaced: true,
   state: {
+    hideApiErrors: false,
     confirm: null,
     resolve: null,
     reject: null,
@@ -24,8 +25,14 @@ export default {
     ['getSnackbar'](state) {
       return state.snackbar;
     },
+    ['getHideApiErrors'](state) {
+      return state.hideApiErrors;
+    },
   },
   mutations: {
+    hideApiErrors(state, status) {
+      state.hideApiErrors = status;
+    },
     showConfirm(state, { title, message }) {
       state.confirm = { title, message };
     },
