@@ -12,7 +12,7 @@ export default {
      */
     label: {
       type: String,
-      required: true,
+      required: false,
     },
     /**
      * Hide label next of icon. Will appear as tooltip.
