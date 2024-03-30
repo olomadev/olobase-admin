@@ -20,7 +20,7 @@
               <v-icon class="pr-3" size="x-large">{{ snackbar.icon }}</v-icon>
             </td>
             <td style="border:none;">
-              <div v-if="snackbar.title" style="text-transform: uppercase;" class="mb-1">
+              <div v-if="snackbar.title" class="mb-1">
                 <strong>{{ $t(snackbar.title) }}</strong>
               </div>
               <div v-html="snackbar.text"></div>
