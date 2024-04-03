@@ -1,6 +1,6 @@
 <template>
   <v-footer>
-    <v-row  align="center" no-gutters>
+    <v-row :style="getLeftPadding" align="center" no-gutters>
       <v-col
         v-for="(item, i) in menu"
         :key="i"
@@ -33,14 +33,36 @@
 export default {
   props: {
     /**
-     * Menu links.
+     * Menu links
      */
     menu: {
       type: Array,
       default: () => [],
     },
   },
-  inject: ['vuetify'],
+  inject: ['vuetify', 'admin'],
+  data() {
+    return {
+      leftPadding: "padding-left: 0px"
+    }
+  },
+  computed: {
+    getLeftPadding() {
+      if (this.$store.getters['api/getToggleDrawer']) {
+        this.leftPadding = 'padding-left: 256px';
+      } else {
+        this.leftPadding = 'padding-left: 0px';
+      }
+      return this.leftPadding;
+    }
+  },
+  created() {
+    if (this.$store.getters['api/getToggleDrawer']) {
+      this.leftPadding = 'padding-left: 256px';
+    } else {
+      this.leftPadding = 'padding-left: 0px';
+    }
+  },
   methods: {
     getAStyle() {
       let themeColor = this.vuetify.theme.themes.value.defaultTheme.colors.primary;
