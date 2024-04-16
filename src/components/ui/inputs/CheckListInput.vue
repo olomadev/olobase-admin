@@ -2,7 +2,7 @@
   <div :class="class">
     <v-data-table
       :color="color"
-      density="compact"
+      :density="density"
       :show-select="true"
       v-model="selected"
       :item-key="primaryKey"

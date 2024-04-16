@@ -1,7 +1,7 @@
 <template>
   <component
     :is="taggable ? 'v-combobox' : 'v-autocomplete'"
-    density="compact"
+    :density="density"
     v-bind="commonProps"
     :variant="variant"
     :multiple="multiple"

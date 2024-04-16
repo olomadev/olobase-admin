@@ -1,6 +1,6 @@
 <template>
   <va-vue-currency-component 
-    density="compact"
+    :density="density"
     v-bind="commonProps"
     :options="options"
     :variant="variant"

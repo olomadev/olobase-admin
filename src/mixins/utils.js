@@ -119,6 +119,43 @@ export default {
       if (!results) return null;
       if (!results[2]) return "";
       return decodeURIComponent(results[2].replace(/\+/g, " "));
+    },
+    formatDateForDisplay(val, locale) {
+      if (!val) {
+        return
+      }
+      const dateFormat = config.i18n[locale].dateFieldDisplayFormat;
+      const seperatorArray = dateFormat.match(/(\.)|(-)|(\/)|(\\)/);
+      let s = "-"; // default seperator
+      if (Array.isArray(seperatorArray)) {
+        s = seperatorArray[0];
+      }
+      const date = new Date(val);
+      let month = 1 + date.getMonth();
+      if (month < 10) {
+        month = `0${month}`;
+      }
+      let day = date.getDate();
+      if (day < 10) {
+        day = `0${day}`;
+      }
+      let year = date.getFullYear();
+      switch (dateFormat) {
+        case 'dd' + s + 'mm' + s + 'YYYY':
+          return `${day}${s}${month}${s}${year}`;
+          break;
+        case 'mm' + s + 'dd' + s + 'YYYY':
+          return `${month}${s}${day}${s}${year}`;
+          break;
+        case 'YYYY' + s + 'mm' + s + 'dd':
+          return `${year}${s}${month}${s}${day}`;
+          break;
+        case 'YYYY' + s + 'dd' + s + 'mm':
+          return `${year}${s}${day}${s}${month}`;
+          break;
+        default:
+          return `${day}${s}${month}${s}${year}`;
+      }
     }
   } 
 };

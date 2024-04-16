@@ -1,7 +1,7 @@
 <template>
   <v-select
     v-bind="commonProps"
-    density="compact"
+    :density="density"
     :variant="variant"
     :multiple="multiple"
     :chips="chips"

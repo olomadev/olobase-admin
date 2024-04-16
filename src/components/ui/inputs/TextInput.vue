@@ -1,7 +1,7 @@
 <template>
   <v-textarea
     v-if="multiline"
-    density="compact"
+    :density="density"
     v-bind="commonProps"
     color="primary"
     auto-grow
@@ -15,7 +15,7 @@
   </v-textarea>
   <v-text-field
     v-else
-    density="compact"
+    :density="density"
     v-bind="commonProps"
     :type="type"
     color="primary"

@@ -1,5 +1,5 @@
 <template>
-  <div class="va-date-input">
+  <div class="va-date-input mb-5">
     <v-menu
       v-model="menu"
       :close-on-content-click="false"
@@ -11,12 +11,12 @@
       </template>
       <template v-slot:activator="{ props }">
         <v-text-field
-          density="compact"
+          :density="density"
           v-bind="{ ...props, ...commonProps }"
           :modelValue="dateFormatted"
           :variant="variant"
           :readonly="true"
-          :hide-details="getHideDetailsValue"
+          :hide-details="true"
           append-inner-icon="mdi-calendar"
           @click:clear="cleanInput"
           @change="change"

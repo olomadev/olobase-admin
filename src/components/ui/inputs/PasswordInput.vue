@@ -1,5 +1,6 @@
 <template>
   <v-text-field
+    :density="density"
     :autocomplete="false"
     v-bind="commonProps"
     :variant="variant"

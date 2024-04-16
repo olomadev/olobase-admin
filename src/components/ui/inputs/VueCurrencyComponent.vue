@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    density="compact"
+    :density="density"
     :variant="variant"
     :modelValue="formattedValue"
     ref="inputRef" 
@@ -20,6 +20,10 @@ export default {
     modelValue: {
       default: "",
     },
+    /**
+     * Density
+     */
+    density: String,
     /**
      * Use different styles: 
      * 

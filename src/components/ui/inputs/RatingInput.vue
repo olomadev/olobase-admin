@@ -1,12 +1,11 @@
 <template>
   <va-input v-bind="$props">
     <v-rating
-      density="compact"
+      :density="density"
       v-bind="commonProps"
       :activeColor="activeColor"
       :clearable="clearable"
       :color="color"
-      :density="density"
       :disabled="disabled"
       :empty-icon="emptyIcon"
       :full-icon="fullIcon"

@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    density="compact"
+    :density="density"
     v-bind="commonProps"
     :variant="variant"
     type="number"

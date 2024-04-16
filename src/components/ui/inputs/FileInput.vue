@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-file-input
-      density="compact"
+      :density="density"
       prepend-icon=""
       prepend-inner-icon="mdi-attachment"
       v-bind="getCommonProps"

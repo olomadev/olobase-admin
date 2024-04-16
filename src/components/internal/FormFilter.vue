@@ -105,7 +105,10 @@ export default {
     /**
      * Apply current route query into options
      */
-    // const { filter } = this.$route.query;
+    const { filter } = this.$route.query;
+    if (filter) {
+      this.filterIds = this.parseFilterQuery(filter); // initialize for route filters
+    }
   },
   methods: {
     // @change="setFilter($event, field.filterId, source)"
@@ -144,6 +147,21 @@ export default {
       }
       this.$emit("update:modelValue", input)
     },
+    parseFilterQuery(filters){
+      try {
+          var data = JSON.parse(filters);
+          // Handle non-exception-throwing cases:
+          // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
+          // but... JSON.parse(null) returns null, and typeof null === "object", 
+          // so we must check for that, too. Thankfully, null is falsey, so this suffices:
+          if (data && typeof data === "object") {
+              return data;
+          }
+      }
+      catch (e) { }
+      return false;
+    }
+
   },
 };
 </script>

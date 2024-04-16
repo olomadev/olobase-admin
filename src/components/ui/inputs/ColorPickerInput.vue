@@ -2,6 +2,7 @@
   <v-text-field 
     :variant="variant"
     readonly 
+    :density="density"
     v-bind="commonProps" 
     @change="changeState"
     >
@@ -171,6 +172,7 @@ export default {
         cursor: 'pointer',
         height: '25px',
         width: '25px',
+        border:"1px solid #dddddd",
         borderRadius: '50%',
         transition: 'border-radius 200ms ease-in-out'
       }

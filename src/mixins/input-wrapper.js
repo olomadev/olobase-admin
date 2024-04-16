@@ -1,3 +1,5 @@
+import config from "@/_config";
+
 /**
  * Common props for all inputs.
  */
@@ -34,7 +36,10 @@ export default {
     /**
      * Reduces the input height.
      */
-    density: String,
+    density: {
+      type: String,
+      default: () => config.density,
+    },
     /**
      * Add default required client side rule.
      */

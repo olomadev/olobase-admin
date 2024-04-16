@@ -4,6 +4,7 @@
       :clipped-left="lgAndUp"
       :clipped-right="lgAndUp"
       app
+      :elevation="elevation"
       :density="density"
       :color="color"
       :flat="flat"
@@ -12,12 +13,16 @@
         Triggered on VAppBar icon click, use it for VaSidebar toggling or minimizing.
         @event toggle
       -->
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <template v-slot:prepend>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      </template>
+
       <v-toolbar-title class="ml-0 mt-1 pl-1" style="width: 274px">
         <!-- Logo image/svg content or any txt -->
         <slot name="logo"></slot>
         <!-- <span class="hidden-sm-and-down"> {{ title || $admin.title }}</span>-->
       </v-toolbar-title>
+
       <v-row v-if="headerMenu.length && lgAndUp">
         <v-col
           v-for="(item, i) in headerMenu"
@@ -35,7 +40,9 @@
           ></component>
         </v-col>
       </v-row>
-      <v-spacer />
+
+      <v-spacer></v-spacer>
+
       <div>
         <v-btn
           v-if="!disableReload && isRouteList"
@@ -72,7 +79,7 @@
       </template> -->
 
       <template v-slot:prepend>
-        <div class="mt-2"></div>
+        <slot name="navbar-logo"></slot>
       </template>
 
       <v-list v-if="Array.isArray(sidebarMenu)">
@@ -92,13 +99,15 @@
           >
             <template v-slot:activator="{ props }">
               <v-list-item
-                :color="color"
+                :density="listItemDensity"
+                :color="listItemColor"
                 v-bind="props"
                 :title="item.text"
               ></v-list-item>
             </template>
             <v-list-item
-              :color="color" 
+              :density="listItemDensity"
+              :color="listItemColor" 
               v-for="(child, i) in item.children"
               :key="'vlist-item_' + i"
               link
@@ -121,7 +130,8 @@
           </v-list-group>
 
           <v-list-item 
-            :color="color" 
+            :density="listItemDensity"
+            :color="listItemColor" 
             v-else-if="item.text" 
             :key="index" 
             link 
@@ -159,6 +169,14 @@ export default {
      */
     title: String,
     /**
+     * Elevation
+     * 
+     * https://vuetifyjs.com/en/styles/elevation/#dynamic-elevation
+     */
+    elevation:{
+      type: [Number, String]
+    },
+    /**
      * Header links visible on left side.
      */
     headerMenu: {
@@ -174,11 +192,18 @@ export default {
      */
     disableReload: Boolean,
     /**
-     * Density option: compact etc..
+     * Density option: default, compact, comfortable
      */
     density: {
       type: String,
       default: "compact",
+    },
+    /**
+     * List Item Density option: default, compact, comfortable
+     */
+    listItemDensity: {
+      type: String,
+      default: "default",
     },
     /**
      * Color for the VAppBar.
@@ -197,6 +222,13 @@ export default {
     sidebarColor: {
       type: String,
       default: "white",
+    },
+    /**
+     * Liste item color of VNavigationDrawer.
+     */
+    listItemColor: {
+      type: String,
+      default: "primary",
     }
   },
   watch: {

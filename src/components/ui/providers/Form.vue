@@ -194,7 +194,6 @@ export default {
           }        
         })
         if (invalid) {
-          this.$nextTick(() => this.scrollToFirstError());
           return;
         }
       }
@@ -292,19 +291,7 @@ export default {
       } finally {
         this.formState.saving = false
       }
-    },
-    scrollToFirstError(component = this) {
-      if (component.$el) {
-        component.$el.querySelector("input").focus();
-        return true;
-      }
-      let focused = false;
-      component.$children.some((childComponent) => {
-        focused = this.scrollToFirstError(childComponent);
-        return focused;
-      });
-      return focused;
-    },
+    }
 
   },
 };

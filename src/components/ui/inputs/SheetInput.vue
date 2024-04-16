@@ -70,7 +70,7 @@
       <div class="sheet-input-datatable">
         <v-data-table
           class="mt-4"
-          density="compact"
+          :density="density"
           v-if="headers && headers.length > 0 && items && items.length > 0"
           v-model:items-per-page="perPage"
           :headers="headers"
@@ -118,10 +118,12 @@
 
 <script>
 import axios from "axios";
+import InputWrapper from "../../../mixins/input-wrapper";
 import { mapActions } from "vuex"
 
 export default {
   inject: ['admin'],
+  mixins: [InputWrapper],
   props: {
     itemsPerPage: {
       type: [Number, String],

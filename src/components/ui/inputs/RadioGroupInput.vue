@@ -1,8 +1,8 @@
 <template>
   <v-radio-group
+    :density="density"
     :inline="inline"
     v-bind="commonProps"
-    density="compact"
     @update:modelValue="update"
   >
     <template v-for="(_, scopedSlotName) in $slots" v-slot:[scopedSlotName]="slotData">
