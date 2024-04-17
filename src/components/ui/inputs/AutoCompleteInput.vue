@@ -13,7 +13,7 @@
     :items="items || choices"
     v-on:keyup="asyncSearch($event)"
     @update:modelValue="update"
-    clearable
+    :clearable="clearable"
     return-object
   >
     <template v-for="(_, scopedSlotName) in $slots" v-slot:[scopedSlotName]="slotData">
