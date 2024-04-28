@@ -8,6 +8,7 @@
 <script>
 import Resource from "../../../mixins/resource"
 import set from "lodash/set"
+import isEmpty from "lodash/isEmpty"
 
 // import {required} from "vuelidate/lib/validators"
 // 
@@ -98,7 +99,12 @@ export default {
             if (item && typeof item[source] !== "undefined") {
               oldValue = item[source];
             }
-            if (Array.isArray(oldValue) || typeof oldValue === 'object') {  
+            if ((oldValue == null || oldValue == "") 
+              && Array.isArray(value) && value.length == 0) { // fixes empty array problems
+              value = null;
+              oldValue = null;
+            }
+            if (oldValue && (Array.isArray(oldValue) || typeof oldValue === 'object')) {  
               if (JSON.stringify(oldValue) != JSON.stringify(value)) {
                 this.$store.commit('api/setFormStatus', true); // true == form state changed  
               }

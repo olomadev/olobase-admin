@@ -5,9 +5,9 @@ import config from "@/_config";
  */
 export default {
   methods: {
-    generateInt() {
+    generateInt(maxInt = null) {
       const min = 999;
-      const max = 9223372036854775807;  // php max integer constant value
+      const max = (maxInt) ? maxInt : 9223372036854775807;  // php max integer constant value
       // Use Math.floor to round down to the nearest whole number
       // Use Math.random() to generate a random decimal between 0 (inclusive) and 1 (exclusive)
       // Multiply by the range (max - min + 1) to cover the entire range

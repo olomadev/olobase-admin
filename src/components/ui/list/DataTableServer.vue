@@ -79,7 +79,8 @@
                 v-model="form[field.source]"
                 variant="outlined"
                 :label="(field.type == 'boolean') ? ' ' : field.label"
-                v-bind="checkProperty(field, 'options', 'source') ? getOptions(field.options, form[field.options.source]) : field.attributes"
+                :options="getOptions(field)"
+                v-bind="field.attributes"
                 :error-messages="getErrorMessages(field.source)"
                 class="mt-6"
                 @click.stop
@@ -104,7 +105,8 @@
                 :resource="listState.resource"
                 variant="outlined"
                 :item="item"
-                v-bind="checkProperty(field, 'options', 'source') ? getOptions(field.options, item[field.options.source]) : field.attributes"
+                :options="getOptions(field)"
+                v-bind="field.attributes"
                 v-slot="props"
               >
                 <slot
@@ -130,7 +132,8 @@
               :resource="listState.resource"
               :item="item"
               variant="outlined"
-              v-bind="checkProperty(field, 'options', 'source') ? getOptions(field.options, item[field.options.source]) : field.attributes"
+              :options="getOptions(field)"
+              v-bind="field.attributes"
               v-slot="props"
             >
               <slot
@@ -265,11 +268,9 @@
         </div>
       </template>
       <template v-slot:no-data>
-        <template>
-          <div style="font-size: 12px;color: #7a7a7a; padding-top: 20px; padding-bottom: 20px">
-            {{ $t("datatable.no_data_available") }}
-          </div>
-        </template>
+        <div style="font-size: 12px;color: #7a7a7a; padding-top: 20px; padding-bottom: 20px">
+          {{ $t("datatable.no_data_available") }}
+        </div>
       </template>
     </v-data-table-server>
 
@@ -821,26 +822,11 @@ export default {
       }
       return key;
     },
-    checkProperty(field, prop1, prop2) {
-      if (Object.prototype.hasOwnProperty.call(field, prop1)) {
-        if (Object.prototype.hasOwnProperty.call(field[prop1], prop2)) {
-           return true
-        }
+    getOptions(field) {
+      if (field && Object.prototype.hasOwnProperty.call(field, "options")) {
+        return field.options;
       }
-      return false
-    },
-    getOptions(fieldOptions, fieldValue) {
-      let opt = { options: {} } // fieldOptions.id fieldValue
-      opt.options[fieldOptions.id] = fieldValue 
-      if (! fieldValue && typeof fieldOptions.default != 'undefined') {
-        opt.options[fieldOptions.id] = fieldOptions.default
-      }
-      if (Object.prototype.hasOwnProperty.call(fieldOptions, 'extra')) {
-          for (const [key, value] of Object.entries(fieldOptions.extra)) {
-            opt.options[key] = value
-          }
-      }
-      return opt
+      return
     },
   },
 };

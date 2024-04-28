@@ -60,15 +60,17 @@ export default (provider, router) => {
        */
       // eslint-disable-next-line no-empty-pattern
       [LOGIN]: async ({}, credentials) => {
-        await provider[LOGIN](credentials);
-        router.push({ name: "dashboard" });
+        let response = await provider[LOGIN](credentials);
+        return Promise.resolve(response);
+        // router.push({ name: "dashboard" });
       },
       /**
        * Explicit logout action, remove user from storage
        */
       [LOGOUT]: async () => {
-        await provider[LOGOUT]();
-        router.push({ name: "login" });
+        let response = await provider[LOGOUT]();
+        return Promise.resolve(response);
+        // router.push({ name: "login" });
       },
       /**
        * Check valid auth on target route server by retrieving user infos

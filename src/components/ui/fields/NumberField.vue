@@ -1,5 +1,5 @@
 <template>
-  <span>{{ numberFormatted(value) }}</span>
+  <span>{{ value }}</span>
 </template>
 
 <script>
@@ -12,22 +12,23 @@ import Field from "../../../mixins/field";
 export default {
   mixins: [Field],
   props: {
-    /**
-     * Name of number format to use. Must be predefined on your VueI18n plugin.
-     */
-    format: {
-      type: String,
-      default() {
-        return this.$admin.options.numberFormat;
-      },
-    },
+    // /**
+    //  * Name of number format to use. Must be predefined on your VueI18n plugin.
+    //  */
+    // format: {
+    //   type: String,
+    //   default() {
+    //     return null;
+    //   },
+    // },
   },
   methods: {
-    numberFormatted(val) {
-      if (val) {
-        return this.$n(val, this.format);
-      }
-    },
+    // numberFormatted(val) {
+    //   return val;
+    //   if (val) {
+    //     return this.$n(val, this.format);
+    //   }
+    // },
   },
 };
 </script>

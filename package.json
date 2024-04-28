@@ -18,7 +18,7 @@
     "portal-vue": "^3.0.0",
     "@vuelidate/core": "^2.0.2",
     "@vueuse/core": "^10.1.0",
-    "lodash": "^4.7.21",
+    "lodash": "^4.17.21",
     "papaparse": "^5.4.1",
     "qs": "^6.11.2"
   }

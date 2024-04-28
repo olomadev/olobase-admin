@@ -1,5 +1,5 @@
 <template>
-  <v-chip :color="getColor"></v-chip>
+  <div :style="getSwatchStyle"></div>
 </template>
 
 <script>
@@ -10,14 +10,30 @@ import Field from "../../../mixins/field";
 export default {
   mixins: [Field],
   props: {
-    /**
-     * Truncate text
-     */
-    truncate: Number,
+    width: {
+      type: String,
+      default() {
+        return  "20px";
+      },
+    },
+    height: {
+      type: String,
+      default() {
+        return  "20px";
+      },
+    },
   },
   computed: {
-    getColor() {
-      return this.value
+    getSwatchStyle(color) {
+      return {
+        marginRight: "10px",
+        backgroundColor: this.value,
+        height: this.height,
+        width: this.width,
+        border:"1px solid #dddddd",
+        borderRadius: '50%',
+        transition: 'border-radius 200ms ease-in-out'
+      }
     },
   },
 };

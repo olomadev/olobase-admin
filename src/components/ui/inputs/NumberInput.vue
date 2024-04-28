@@ -57,6 +57,22 @@ export default {
      * The maximum accepted value.
      */
     max: [Number, String],
+    /**
+     * Name of number format to use. Must be predefined on your VueI18n plugin.
+     */
+    // format: {
+    //   type: String,
+    //   default() {
+    //     return null;
+    //   },
+    // },
   },
+  methods: {
+    // numberFormatted() {
+    //   if (this.input) {
+    //     return this.$n(this.input, this.format);
+    //   }
+    // },
+  }
 };
 </script>

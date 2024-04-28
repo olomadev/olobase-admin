@@ -3,6 +3,7 @@
     <v-data-table
       :headers="headers"
       :items="getItems"
+      :density="density"
     >
       <template v-slot:top>
         <v-row no-gutters>
@@ -10,7 +11,7 @@
             <h4 class="h4 mb-2">{{ title }}</h4>
           </v-col>
           <v-col lg="6" align="right">
-            <v-btn variant="plain" @click="createRowForm()" color="success" icon>
+            <v-btn variant="plain" @click="createRowForm()" color="green-darken-1" icon>
               <v-icon>mdi-plus</v-icon>
             </v-btn>
           </v-col>
@@ -56,7 +57,8 @@
               :resource="resource"
               :item="item"
               variant="outlined"
-              v-bind="checkProperty(field, 'options', 'source') ? getOptions(field.options, item[field.options.source]) : field.attributes"
+              :options="getOptions(field)"
+              v-bind="field.attributes"
               v-slot="props"
             >
               <slot
@@ -78,6 +80,7 @@
         <v-icon
           size="small"
           class="mr-2"
+          color="green-darken-1"
           v-if="item._new || item[primaryKey] === editRowId"
           @click="saveItem()"
           style="font-size: 1.2rem !important;"
@@ -86,6 +89,7 @@
         </v-icon>
         <v-icon
           size="small"
+          color="red-darken-1"
           v-if="item._new || item[primaryKey] === editRowId"
           @click="cancel"
           style="font-size: 1.2rem !important;"
@@ -94,6 +98,7 @@
         </v-icon>
         <v-icon
           size="small"
+          color="blue-darken-1"
           v-if="!item._new && item[primaryKey] != editRowId"
           @click="editItem(item)"
           style="font-size: 1.2rem !important;"
@@ -102,6 +107,7 @@
         </v-icon>
         <v-icon
           size="small"
+          color="red-darken-1"
           v-if="!item._new && item[primaryKey] != editRowId"
           @click="deleteItem(item)"
           style="font-size: 1.2rem !important;"
@@ -110,7 +116,19 @@
         </v-icon>
       </template>
       <template #bottom></template>
+
+      <template v-slot:no-data>
+        <div style="font-size: 12px;color: #7a7a7a; padding-top: 20px; padding-bottom: 20px">
+          {{ $t("datatable.no_data_available") }}
+        </div>
+      </template>
     </v-data-table>
+
+    <div class="v-input__details" style="padding-top:1px;padding-bottom:6px;">
+      <div class="v-messages" style="color: rgb(var(--v-theme-error));" role="alert">
+        <div class="v-messages__message" v-if="hasValidateError">{{ getErrorMessages }}</div>
+      </div>
+    </div>
 
     <v-dialog v-model="dialogDelete" max-width="500">
       <v-card>
@@ -138,6 +156,7 @@ import Resource from "../../../mixins/resource";
  */
 export default {
   mixins: [Input, Resource, Utils],
+  emits: ['save', 'delete'],
   inject: {
     v$: {
       default: null
@@ -147,7 +166,7 @@ export default {
     class: {
       type: String,
       default() {
-        return "va-array-table-input mb-5"
+        return "va-array-table-input"
       },
     },
     title: {
@@ -163,6 +182,10 @@ export default {
     },
     primaryKey: {
       type: String
+    },
+    generateId: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -175,6 +198,17 @@ export default {
     }
   },
   computed: {
+    hasValidateError: {
+      get() {
+        return this.v$["model"] && this.v$["model"].$error;
+      }
+    },
+    getErrorMessages() {
+      if (Array.isArray(this.errorMessages) && this.errorMessages.length > 0) {
+        return this.errorMessages[0];  
+      }
+      return null;
+    },
     getItems() {
       if (this.form && !this.editRowId) {
         let items = [{ _new: true }, ...this.editItems];
@@ -221,26 +255,11 @@ export default {
     }
   },
   methods: {
-    checkProperty(field, prop1, prop2) {
-      if (Object.prototype.hasOwnProperty.call(field, prop1)) {
-        if (Object.prototype.hasOwnProperty.call(field[prop1], prop2)) {
-           return true
-        }
+    getOptions(field) {
+      if (field && Object.prototype.hasOwnProperty.call(field, "options")) {
+        return field.options;
       }
-      return false
-    },
-    getOptions(fieldOptions, fieldValue) {
-      let opt = { options: {} } // fieldOptions.id fieldValue
-      opt.options[fieldOptions.id] = fieldValue 
-      if (! fieldValue && typeof fieldOptions.default != 'undefined') {
-        opt.options[fieldOptions.id] = fieldOptions.default
-      }
-      if (Object.prototype.hasOwnProperty.call(fieldOptions, 'extra')) {
-          for (const [key, value] of Object.entries(fieldOptions.extra)) {
-            opt.options[key] = value
-          }
-      }
-      return opt
+      return
     },
     getTitleLabel(column) {
       if (column.title) {
@@ -264,29 +283,39 @@ export default {
     },
     createRowForm(action = "new", item = null) {
       this.form = this.fields
-        .map((f) => f.source)
-        .reduce((o, source) => {
+        .map((f) => f)
+        .reduce((o, f) => {
           return {
             ...o,
-            [source]: item ? item[source] : null,
+            [f.source]: this.getValue(f, item),  // defaılt value
           };
         }, {});
       if (action == "new") {
         this.editRowId = null;
-        this.form[this.primaryKey] = this.generateUid();
+        this.form[this.primaryKey] = this.generateId ? this.generateUid() : null;
       } else {
         this.editRowId = item ? item[this.primaryKey] : null;
       }
       this.$store.commit(`${this.resource}/setRow`, this.form);
     },
+    getValue(field, item) {
+      if (item && Object.prototype.hasOwnProperty.call(item, field.source)) {
+        return item[field.source];
+      }
+      if (field && Object.prototype.hasOwnProperty.call(field, "value")) {
+        return field.value;
+      }
+    },
     saveItem() {
       const Self = this;
       let invalid = false;
       this.getFields.forEach(function(val){
-        Self.v$['form'][val.source].$touch();
-        if (Self.v$['form'][val.source].$invalid) {
-          invalid = true
-        }  
+        if (Self.v$[Self.source + 'Form'][val.source]) {
+          Self.v$[Self.source + 'Form'][val.source].$touch();
+          if (Self.v$[Self.source + 'Form'][val.source].$invalid) {
+            invalid = true
+          }    
+        }
       })
       if (invalid) {
         return;
@@ -296,6 +325,7 @@ export default {
       } else {
         this.editItems.push(this.form);
       }
+      this.$emit("save", this.form);
       this.update(this.input);
       this.$store.commit(`${this.resource}/setRow`, null); // reset form variable
       this.close();
@@ -305,6 +335,7 @@ export default {
       this.dialogDelete = true;
     },
     deleteConfirm() {
+      this.$emit("delete", this.editItems[this.editedIndex]);
       this.editItems.splice(this.editedIndex, 1);
       this.$store.commit(`${this.resource}/setRow`, null); // reset form variable
       this.update(this.input);

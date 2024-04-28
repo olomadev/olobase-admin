@@ -223,6 +223,7 @@ import get from "lodash/get";
  */
 export default {
   mixins: [Resource, Search],
+  emits: ['action', 'update:options', 'update:filter'],
   setup () {
     // Destructure only the keys we want to use
     const { lgAndUp, mdAndUp } = useDisplay()

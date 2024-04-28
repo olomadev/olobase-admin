@@ -58,7 +58,7 @@ export default (httpClient, params = {}) => {
 
   return {
     [LOGIN]: async ({ username, password }) => {
-      let response = await httpClient.post(
+      const response = await httpClient.post(
         routes.login,
         getCredentials({ username, password })
       );
@@ -70,12 +70,13 @@ export default (httpClient, params = {}) => {
       cookies.set(cookieKey.user, JSON.stringify(response.data.data.user));
       cookies.set(cookieKey.token, getToken(response.data.data));
       localStorage.setItem("avatar", response.data.data.avatar);
-      return Promise.resolve();
+      return Promise.resolve(response);
     },
     [LOGOUT]: async () => {
+      let response = null;
       if (routes.logout) {
         try {
-          await httpClient.get(routes.logout)
+          response = await httpClient.get(routes.logout)
         }
         catch(err) {
           console.error(err)
@@ -83,7 +84,7 @@ export default (httpClient, params = {}) => {
       }
       cookies.remove(cookieKey.user)
       cookies.remove(cookieKey.token)
-      return Promise.resolve();
+      return Promise.resolve(response);
     },
     [CHECK_AUTH]: async () => {
         const token = cookies.get(cookieKey.token)

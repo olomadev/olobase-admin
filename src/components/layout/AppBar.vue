@@ -44,6 +44,12 @@
       <v-spacer></v-spacer>
 
       <div>
+        <!-- start header-buttons slot -->
+        
+        <slot name="header-buttons"></slot>
+
+        <!-- end header-buttons slot -->
+
         <v-btn
           v-if="!disableReload && isRouteList"
           icon
