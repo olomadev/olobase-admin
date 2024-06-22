@@ -17,6 +17,7 @@
       :loading="listState.loading"
       :loading-text="$t('va.datatable.loading_text')"
       :multi-sort="multiSort"
+      :expanded="expanded"
       :expand-on-click="expandOnClick"
       :show-expand="showExpand"
       :items-per-page="listState.options.itemsPerPage"
@@ -339,7 +340,7 @@ export default {
   },
   provide() {
     return {
-      admin: this.admin,
+      admin: this.admin
     };
   },
   setup () {
@@ -428,6 +429,13 @@ export default {
      * Use it for quick detail view.
      */
     showExpand: Boolean,
+    /**
+     * Expanded items
+     */
+    expanded: {
+      type: Array,
+      default: [],
+    },
     /**
      * Only one row can expanded at once
      */

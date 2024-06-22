@@ -106,6 +106,7 @@ import Input from "../../../mixins/input"
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 import Stencil from "../utils/Stencil";
+import AvatarDefaultSvg from '@/assets/avatar_default.svg';
 
 export default {
   mixins: [Input],
@@ -127,7 +128,7 @@ export default {
      */
     defaultSrc: {
       type: String,
-      default: "/src/assets/avatar_2x.png",
+      default: AvatarDefaultSvg,
     },
     /**
      * Value to be edited

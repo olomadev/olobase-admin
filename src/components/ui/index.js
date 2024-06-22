@@ -56,7 +56,6 @@ import RatingInput from "./inputs/RatingInput";
 import DateInput from "./inputs/DateInput";
 import BooleanInput from "./inputs/BooleanInput";
 import ColorPickerInput from "./inputs/ColorPickerInput";
-import RichTextInput from "./inputs/RichTextInput";
 import SelectInput from "./inputs/SelectInput";
 import RadioGroupInput from "./inputs/RadioGroupInput";
 import AutoCompleteInput from "./inputs/AutoCompleteInput";
@@ -126,7 +125,6 @@ export {
   DateInput,
   BooleanInput,
   ColorPickerInput,
-  RichTextInput,
   SelectInput,
   RadioGroupInput,
   AutoCompleteInput,

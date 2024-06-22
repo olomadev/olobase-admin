@@ -181,8 +181,7 @@
           </v-col>
         </v-row>
       </div>
-
-
+      
       <v-toolbar 
         height="45"
         color="blue lighten-5" 
@@ -223,7 +222,7 @@ import get from "lodash/get";
  */
 export default {
   mixins: [Resource, Search],
-  emits: ['action', 'update:options', 'update:filter'],
+  emits: ['listState', 'update:options', 'update:filter', 'action'],
   setup () {
     // Destructure only the keys we want to use
     const { lgAndUp, mdAndUp } = useDisplay()
@@ -812,7 +811,8 @@ export default {
         for (let key in newState) {
           this.listState[key] = newState[key]
         }
-        this.listState.loading = false
+        this.listState.loading = false;
+        this.$emit('listState', this.listState);
       }
     },
     getFieldsQuery(resource, sources, fields = {}) {

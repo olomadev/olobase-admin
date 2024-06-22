@@ -100,16 +100,17 @@
     "select": "Seç"
   },
   "sheetImport": {
+    "requiredField" : "Zorunlu alan",
     "remove": "Sİl",
     "preview": "Önİzleme",
     "clear": "Temİzle",
     "save": "Kaydet",
-    "errorMessage": "Bulduğumuz hatalar kırmızı ile işaretlenmiştir. Ayrıntılarını görmek için hataların üzerine gelin. Hataları düzeltmeyi deneyin ve dosyanızı yeniden yükleyin.",
+    "errorMessage": "Bulduğumuz hatalar kırmızı ile işaretlenmiştir. Ayrıntılarını görmek için hataların üzerine gelin. Hataları düzeltmeyi deneyin ve dosyanızı yeniden yükleyin",
     "loadingMessage": "Dosya işlenirken lütfen bekleyin, veri boyutuna bağlı olarak bu işlem zaman alabilir",
     "dragDropMessage": "Oluşturduğunuz excel dosyasını sürükleyip bırakın veya buraya tıklayın"
   },
   "forms": {
     "none": "Tanımsız",
-    "required_field": "{field] alanı zorunludur"
+    "required_field": "{field} alanı zorunludur"
   }
 }

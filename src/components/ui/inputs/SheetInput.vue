@@ -90,7 +90,8 @@
                         v-bind="props"
                         style="font-size: 11px;text-transform: none;font-weight:400;"
                       >
-                        {{ item[field.key].value }}
+                        <span v-if="item[field.key].value">{{ item[field.key].value }}</span>
+                        <span v-else>{{ $t("va.sheetImport.requiredField") }}</span>
                       </v-btn>
                     </template>
                     <v-list>
@@ -165,8 +166,6 @@ export default {
       sheets: [
         "xlsx",
         "xls",
-        "xml",
-        "csv"
       ],
       file: null,
     }
@@ -216,6 +215,9 @@ export default {
     },
     remove() {
       this.reset()
+      if (this.source) {
+        this.source.close();  
+      }
       let el = document.getElementById('sheetFileInputPreview_wrapper')
       el.classList.add('bg-gray-100');
       el.classList.remove('bg-green-300');
@@ -231,6 +233,9 @@ export default {
       this.header = [];
       this.loading = false;
       this.validationError = false;
+      if (this.source) {
+        this.source.close();  
+      }
       this.$emit("importedItems", this.items, this.validationError);
       document.getElementById('sheetFileInput').value = ""; // reset input
     },
@@ -279,7 +284,7 @@ export default {
         const user = await this.checkAuth();
         if (user) {
           const apiUrl = import.meta.env.VITE_API_URL;
-          this.source = new EventSource(apiUrl + '/stream/events?userId=' + user.id + '&route=upload');
+          this.source = new EventSource(apiUrl + '/stream/events?userId=' + user.user.id + '&route=upload');
           this.source.onmessage = function(e) {
             if (e.data) {
               let data = JSON.parse(e.data);

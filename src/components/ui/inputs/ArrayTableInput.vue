@@ -37,21 +37,23 @@
         v-slot:[`item.${field.source}`]="{ item }"
       >
         <template v-if="item._new || item[primaryKey] === editRowId">
-            <!-- input elements -->
           <div class="mt-5">
-            <slot name="edit" v-bind="{ field, editRowId }" />
+            <slot :name="`input.${field.source}`" v-bind="{ field, item, editRowId }"></slot>
           </div>
         </template>
         <template v-else>
+          <slot name="show" v-bind="{ field, item, editRowId }" />
           <span
             v-if="field.type == 'select'"
             :key="field.source"
             >
             {{ getSelectLabel(item, field.source) }}
           </span>
+          <span v-else-if="field.type == 'custom'">
+            <slot :name="`field.${field.source}`" v-bind="{ item }"></slot>
+          </span>
           <span v-else-if="field.type">
             <component
-              :key="field.source"
               :source="field.sourceLabel ? field.sourceLabel : field.source"
               :is="`va-${field.type}-field`"
               :resource="resource"
@@ -78,7 +80,7 @@
 
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon
-          size="small"
+          size="large"
           class="mr-2"
           color="green-darken-1"
           v-if="item._new || item[primaryKey] === editRowId"
@@ -88,7 +90,7 @@
           mdi-content-save
         </v-icon>
         <v-icon
-          size="small"
+          size="large"
           color="red-darken-1"
           v-if="item._new || item[primaryKey] === editRowId"
           @click="cancel"
@@ -124,9 +126,9 @@
       </template>
     </v-data-table>
 
-    <div class="v-input__details" style="padding-top:1px;padding-bottom:6px;">
+    <div class="v-input__details" v-for="error in getErrorMessages">
       <div class="v-messages" style="color: rgb(var(--v-theme-error));" role="alert">
-        <div class="v-messages__message" v-if="hasValidateError">{{ getErrorMessages }}</div>
+        <div class="v-messages__message">{{ error }}</div>
       </div>
     </div>
 
@@ -156,7 +158,7 @@ import Resource from "../../../mixins/resource";
  */
 export default {
   mixins: [Input, Resource, Utils],
-  emits: ['save', 'delete'],
+  emits: ['validate', 'save', 'delete'],
   inject: {
     v$: {
       default: null
@@ -166,7 +168,7 @@ export default {
     class: {
       type: String,
       default() {
-        return "va-array-table-input"
+        return "va-array-table-input mb-5"
       },
     },
     title: {
@@ -183,7 +185,7 @@ export default {
     primaryKey: {
       type: String
     },
-    generateId: {
+    createId: {
       type: Boolean,
       default: false
     }
@@ -198,14 +200,10 @@ export default {
     }
   },
   computed: {
-    hasValidateError: {
-      get() {
-        return this.v$["model"] && this.v$["model"].$error;
-      }
-    },
     getErrorMessages() {
-      if (Array.isArray(this.errorMessages) && this.errorMessages.length > 0) {
-        return this.errorMessages[0];  
+      if (Array.isArray(this.errorMessages) 
+        && this.errorMessages.length > 0) {
+        return this.errorMessages;  
       }
       return null;
     },
@@ -235,7 +233,9 @@ export default {
             ),
           };
         });
-      fields[this.primaryKey] = null;
+      if (this.primaryKey) {
+        fields[this.primaryKey] = null;  
+      }
       return fields;
     },
   },
@@ -282,34 +282,62 @@ export default {
       this.editedIndex = this.editItems.indexOf(item);
     },
     createRowForm(action = "new", item = null) {
+      const Self = this;
+      this.$emit("validate", false);
       this.form = this.fields
         .map((f) => f)
-        .reduce((o, f) => {
+        .reduce(function(o, f) {
           return {
             ...o,
-            [f.source]: this.getValue(f, item),  // defaılt value
+            [f.source]: Self.getValue(action, f, item),  // default value
           };
         }, {});
       if (action == "new") {
         this.editRowId = null;
-        this.form[this.primaryKey] = this.generateId ? this.generateUid() : null;
+        this.form[this.primaryKey] = this.createId ? this.generateUid() : null;
       } else {
         this.editRowId = item ? item[this.primaryKey] : null;
       }
       this.$store.commit(`${this.resource}/setRow`, this.form);
     },
-    getValue(field, item) {
-      if (item && Object.prototype.hasOwnProperty.call(item, field.source)) {
-        return item[field.source];
+    getValue(action, f, item) {
+      if (f && Object.prototype.hasOwnProperty.call(f, "value")) {
+        return f.value;
       }
-      if (field && Object.prototype.hasOwnProperty.call(field, "value")) {
-        return field.value;
+      if (f['type'] && f['type'] == 'custom') {
+        let values = [];
+        if (action == "new" && f['items']) { // array values
+          for (let key in f['items']) {
+            values[key] = null;
+          }
+          return values;
+        } else if (action == "edit" && f['items']) {
+          if (! item[f.source]) { // empty edit case
+            item[f.source] = [];
+            for (let key in f['items']) {
+              item[f.source][key] = null;
+            }
+          } else {
+            return item[f.source];
+          }
+          return item[f.source];
+        }
+      } else if (item) {
+        return item[f.source];
       }
+      return null;
     },
     saveItem() {
       const Self = this;
       let invalid = false;
+      this.$emit("validate", this.form);
+      if (this.v$['$externalInvalid'] && this.v$.$externalInvalid) {
+        invalid = true;
+      }
       this.getFields.forEach(function(val){
+        if (! Self.v$[Self.source + 'Form']) {
+          return;
+        }
         if (Self.v$[Self.source + 'Form'][val.source]) {
           Self.v$[Self.source + 'Form'][val.source].$touch();
           if (Self.v$[Self.source + 'Form'][val.source].$invalid) {
@@ -326,8 +354,8 @@ export default {
         this.editItems.push(this.form);
       }
       this.$emit("save", this.form);
+      this.$emit("validate", false);
       this.update(this.input);
-      this.$store.commit(`${this.resource}/setRow`, null); // reset form variable
       this.close();
     },
     deleteItem(item) {
@@ -337,7 +365,6 @@ export default {
     deleteConfirm() {
       this.$emit("delete", this.editItems[this.editedIndex]);
       this.editItems.splice(this.editedIndex, 1);
-      this.$store.commit(`${this.resource}/setRow`, null); // reset form variable
       this.update(this.input);
       this.close();
     },
@@ -351,9 +378,9 @@ export default {
       });
       this.form = null;
       this.editRowId = null;
+      this.$store.commit(`${this.resource}/setRow`, null); // reset form variable
       this.dialogDelete = false;
     }
   },
-
 };
 </script>

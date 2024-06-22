@@ -19,23 +19,10 @@
     <template v-for="(_, scopedSlotName) in $slots" v-slot:[scopedSlotName]="slotData">
       <slot :name="scopedSlotName" v-bind="slotData" />
     </template>
-   <template v-slot:chip="{ props, item }">
-      <v-chip v-if="item.raw.name"
-        class="cursor-pointer"
-        v-bind="props"
-        :text="item.raw.name"
-      ></v-chip>
-    </template>
-    <template v-slot:item="{ props, item }">
-      <v-list-item
-        v-bind="props"
-        :title="item?.raw?.name"
-      ></v-list-item>
-    </template>
   </component>
 </template>
-    <!-- https://blog.devgenius.io/vuetify-customize-autocomplete-c298033784d2 -->
-    <!-- https://codepen.io/cenozoic/pen/xxbBOYj -->
+<!-- https://blog.devgenius.io/vuetify-customize-autocomplete-c298033784d2 -->
+<!-- https://codepen.io/cenozoic/pen/xxbBOYj -->
 <script>
 import Input from "../../../mixins/input";
 import Multiple from "../../../mixins/multiple";

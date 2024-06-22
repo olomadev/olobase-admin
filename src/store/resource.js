@@ -45,6 +45,10 @@ export default ({ provider, resource, i18n }) => {
             ...params,
           });
 
+          if (action == DELETE) { // remove current item if delete
+            state.item = null;
+          }
+          
           commit("api/setLoading", false, {
             root: true,
           })

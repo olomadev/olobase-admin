@@ -1,6 +1,9 @@
 <template>
   <v-footer>
     <v-row :style="getLeftPadding" align="center" no-gutters>
+      <v-col>
+        <slot name="left"></slot>
+      </v-col>
       <v-col
         v-for="(item, i) in menu"
         :key="i"
@@ -19,7 +22,7 @@
       <v-col cols="12" sm="auto">
         <div class="font-weight-light pt-sm-0 text-center">
           <!-- @slot Right side information. -->
-          <slot></slot>
+          <slot name="right"></slot>
         </div>
       </v-col>
     </v-row>

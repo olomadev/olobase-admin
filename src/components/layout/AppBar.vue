@@ -61,16 +61,7 @@
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
         
-        <v-menu offset-y v-if="$store.state.auth.user">
-          <!-- user avatar -->
-          <template v-slot:activator="{ props }">
-            <v-btn icon small class="ml-1" v-bind="props">
-              <slot name="avatar"></slot>
-            </v-btn>
-          </template>
-          <!-- user profile menu -->
-          <slot name="profile"></slot>
-        </v-menu>
+        <slot name="profile"></slot>
       </div>
     </v-app-bar>
 

@@ -1,7 +1,7 @@
 <template>
   <form>
     <div id="va-list-filters">
-       <v-row v-if="lgAndUp || mdAndUp" class="pt-4 pl-3 pb-8 pr-3">
+       <v-row v-if="lgAndUp || mdAndUp" class="pb-8">
         <template v-for="(item, index) in filters" :key="'filter_' + index">
           <v-col v-if="item.enabled" :cols="item.col" class="pb-0 pt-4" style="min-width:110px;">
               <div class="align-center">

@@ -81,6 +81,9 @@ export default {
       totalMonth = totalMonth + 1;
       return totalMonth;
     },
+    arrayRange(start, stop, step = 1) {
+      return Array.from({ length: (stop - start) / step + 1 }, (value, index) => start + index * step);
+    },
     arrayGroupBy(xs, key) {
       return xs.reduce(function (rv, x) {
         (rv[x[key]] = rv[x[key]] || []).push(x);

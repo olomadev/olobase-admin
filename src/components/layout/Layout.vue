@@ -13,7 +13,9 @@
 
           <v-container fluid class="flex mb-10">
 	          <!-- New Vue 3 code -->
+            <div style="margin-bottom: 80px;">
               <router-view v-slot="{ Component }"></router-view>
+            </div>
           </v-container>
 
           <footer>
