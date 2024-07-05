@@ -3,7 +3,7 @@
     :hide-label="icon"
     :label="label || defaultLabel"
     :item="item"
-    icon="mdi-floppy"
+    icon="mdi-content-save"
     :color="color || 'primary'"
     :type="redirect ? 'button' : 'submit'"
     :loading="formState && formState.saving"

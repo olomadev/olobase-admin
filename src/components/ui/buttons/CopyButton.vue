@@ -4,6 +4,7 @@
     :hide-label="icon"
     :label="$t('va.actions.copy')"
     icon="mdi-content-copy"
+    icon-size="x-small"
     :color="color || 'green'"
     text
     @click="onCopy"

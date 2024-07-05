@@ -5,6 +5,7 @@
     :item="item"
     :label="$t('va.actions.create')"
     icon="mdi-plus"
+    icon-size="default"
     :color="color || 'success'"
     text
     :to="getRoute('create')"

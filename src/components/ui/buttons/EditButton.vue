@@ -5,6 +5,7 @@
     :item="item"
     :label="$t('va.actions.edit')"
     icon="mdi-pencil"
+    icon-size="x-small"
     :color="color || 'blue'"
     variant="text"
     exact
@@ -27,6 +28,13 @@ export default {
     }
   },
   async created() {
+    //  
+    //  store list redirect query params we will use it for save
+    //  operations which is located
+    //  in form provider / this.formState.submit(redirect?querParams)
+    //  
+    localStorage.setItem("listQuery", JSON.stringify(this.$route.query));
+
     this.visible = await this.canShow('edit')
   },
 };

@@ -263,7 +263,15 @@ export default {
         }
         switch (redirect) {
           case "list":
-            this.$router.push({ name: `${this.resource}_list` })
+            let listQuery = null;
+            if (localStorage.getItem("listQuery")) {
+              listQuery = JSON.parse(localStorage.getItem("listQuery"));  
+            }
+            if (listQuery && listQuery['filter']) {
+              this.$router.push({ name: `${this.resource}_list`, query: { filter: listQuery['filter'] } })  
+            } else {
+              this.$router.push({ name: `${this.resource}_list` })
+            }
             break;
           case "create":
             // Reset form in case of same route

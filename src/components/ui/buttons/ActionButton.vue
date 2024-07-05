@@ -14,7 +14,7 @@
       :type="type"
       :loading="loading"
     >
-      <v-icon size="xsmall">{{ icon }}</v-icon>
+      <v-icon :size="iconSize">{{ icon }}</v-icon>
       <span v-if="!hideLabel && lgAndUp" class="ml-2">
         {{ label }}
       </span>
@@ -31,7 +31,7 @@
       :type="type"
       :loading="loading"
     >
-      <v-icon size="xsmall">{{ icon }}</v-icon>
+      <v-icon :size="iconSize">{{ icon }}</v-icon>
       <span v-if="!hideLabel && lgAndUp" class="ml-2">
         {{ label }}
       </span>
@@ -74,6 +74,13 @@ export default {
     variant: {
       type: String,
       default: "text",
+    },
+    /**
+     * Set icon size
+     */
+    iconSize: {
+      type: String,
+      default: "default",
     },
     /**
      * Set the button's type attribute.

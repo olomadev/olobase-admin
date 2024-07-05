@@ -158,7 +158,7 @@ import Resource from "../../../mixins/resource";
  */
 export default {
   mixins: [Input, Resource, Utils],
-  emits: ['validate', 'save', 'delete'],
+  emits: ['validate', 'save', 'delete', 'edit'],
   inject: {
     v$: {
       default: null
@@ -278,6 +278,7 @@ export default {
       return null
     },
     editItem(item) {
+      this.$emit("edit", item);
       this.createRowForm("edit", item);
       this.editedIndex = this.editItems.indexOf(item);
     },
@@ -305,17 +306,17 @@ export default {
         return f.value;
       }
       if (f['type'] && f['type'] == 'custom') {
-        let values = [];
-        if (action == "new" && f['items']) { // array values
+        let values = {};
+        if (action == "new" && f['items']) { // object values
           for (let key in f['items']) {
-            values[key] = null;
+            values[f['items'][key]['id']] = null;
           }
           return values;
         } else if (action == "edit" && f['items']) {
           if (! item[f.source]) { // empty edit case
-            item[f.source] = [];
+            item[f.source] = {};
             for (let key in f['items']) {
-              item[f.source][key] = null;
+              item[f.source][f['items'][key]['id']] = null;
             }
           } else {
             return item[f.source];

@@ -186,8 +186,15 @@ export default (httpClient) => {
         params.ids.map((id) => httpClient.put(`${resource}/update/${id}`, params.data))
       ).then(() => Promise.resolve()),
 
-    [DELETE]: (resource, params) =>
-      httpClient.delete(`${resource}/delete/${params.id}`),
+    [DELETE]: (resource, params) => {
+      if (params['query'] && typeof params['query'] === 'object') {
+        const queryString = Object.entries(params['query']).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
+        httpClient.delete(`${resource}/delete/${params.id}?` + queryString);
+      } else {
+        httpClient.delete(`${resource}/delete/${params.id}`);  
+      }
+    },
+
     [DELETE_MANY]: (resource, params) =>
       Promise.all(
         params.ids.map((id) => httpClient.delete(`${resource}/delete/${id}`))

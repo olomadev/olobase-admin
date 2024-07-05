@@ -4,6 +4,7 @@
     :hide-label="icon"
     :label="$t('va.actions.delete')"
     icon="mdi-delete-forever"
+    icon-size="x-small"
     :color="color || 'red'"
     text
     @click="onDelete"
@@ -27,6 +28,10 @@ export default {
      * Default redirect active if current page is resource being deleted.
      */
     redirect: Boolean,
+    /**
+     * Router queries
+     */
+    query: Object,
   },
   data() {
     return {
@@ -87,11 +92,13 @@ export default {
         // not work as we expected
         // 
         let Self = this;
+
         await this.$store.dispatch(`${this.resource}/delete`, {
           id: this.item.id,
+          query: this.query 
         }).then(function(){
             if (Self.redirect) {
-              Self.$router.push({ name: `${Self.resource}_list` })
+              Self.$router.push({ name: `${Self.resource}_list`})
               return
             }
             Self.$store.dispatch("api/refresh", Self.resource)

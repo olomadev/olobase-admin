@@ -145,6 +145,12 @@ export default {
         ...this.modelValue,
         [item.source]: value,
       }
+      //
+      //  store list redirect query params we will use it for save
+      //  operations which is located
+      //  in form provider / this.formState.submit(redirect?querParams)
+      //  
+      localStorage.setItem("listQuery", JSON.stringify(this.$route.query));
       this.$emit("update:modelValue", input)
     },
     parseFilterQuery(filters){
