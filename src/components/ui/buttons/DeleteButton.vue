@@ -97,11 +97,14 @@ export default {
           id: this.item.id,
           query: this.query 
         }).then(function(){
+
             if (Self.redirect) {
               Self.$router.push({ name: `${Self.resource}_list`})
               return
             }
-            Self.$store.dispatch("api/refresh", Self.resource)
+            setTimeout(function(){
+              Self.$store.dispatch("api/refresh", Self.resource); 
+            }, 200);
             
             /**
              * Triggered on successful deletion of resource item.

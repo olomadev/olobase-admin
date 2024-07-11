@@ -12,7 +12,7 @@
     <slot></slot>
   </div>
   <div v-else>
-    <v-card variant="flat">
+    <v-card variant="flat" :border="border">
       <v-card-text>
         <div class="d-flex align-center mb-2">
           <h1 class="h1 mb-1">
@@ -38,6 +38,7 @@ import Page from "../../mixins/page";
 export default {
   mixins: [Page],
   props: {
+    border: Boolean,
     disableCard: Boolean,
   }
 };

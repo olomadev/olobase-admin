@@ -1,5 +1,5 @@
 <template>
-  <v-card variant="flat">
+  <v-card variant="flat" :border="border">
     <v-card-text>
       <v-row :class="class">
         <v-col sm="4" v-if="!hideTitle">
@@ -246,6 +246,10 @@ export default {
       default() {
         return "mb-0"
       },
+    },
+    border: {
+      type: Boolean,
+      default: false
     },
     /**
      * Grid title

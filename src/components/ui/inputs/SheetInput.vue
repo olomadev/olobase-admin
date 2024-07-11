@@ -120,7 +120,10 @@
 <script>
 import axios from "axios";
 import InputWrapper from "../../../mixins/input-wrapper";
-import { mapActions } from "vuex"
+import { mapActions } from "vuex";
+import { EventSourcePolyfill } from 'event-source-polyfill';
+import cookies from "olobase-admin/src/utils/cookies";
+const cookieKey = JSON.parse(import.meta.env.VITE_COOKIE);
 
 export default {
   inject: ['admin'],
@@ -157,6 +160,7 @@ export default {
   data() {
     return {
       cancel: false,
+      eventSource: null,
       loading: false,
       loadingPreview: false,
       validationError: false,
@@ -215,8 +219,8 @@ export default {
     },
     remove() {
       this.reset()
-      if (this.source) {
-        this.source.close();  
+      if (this.eventSource) {
+        this.eventSource.close();  
       }
       let el = document.getElementById('sheetFileInputPreview_wrapper')
       el.classList.add('bg-gray-100');
@@ -233,8 +237,8 @@ export default {
       this.header = [];
       this.loading = false;
       this.validationError = false;
-      if (this.source) {
-        this.source.close();  
+      if (this.eventSource) {
+        this.eventSource.close();  
       }
       this.$emit("importedItems", this.items, this.validationError);
       document.getElementById('sheetFileInput').value = ""; // reset input
@@ -248,13 +252,12 @@ export default {
       this.file = this.$refs.file.files[0];
       let formData = new FormData();
       formData.append('file', this.file);
-      // change default content type as multipart
-      axios.defaults.headers.common['Content-Type'] = "multipart/form-data";
+      axios.defaults.headers.common['Content-Type'] = "multipart/form-data"; // change default content type as multipart
       let errorMessage = "";
       try {
         let response = await axios.post(this.uploadUrl, formData);
         if (response && response["status"] && response.status === 200) {
-          this.importPreview()
+          this.importPreview();
         }
       } catch (e) {
         if (e && e.response && e.response["status"] && e.response.status === 400) {
@@ -271,56 +274,10 @@ export default {
       this.loading = false;
       el.classList.add('bg-gray-100');
       el.classList.remove('bg-green-300');
-      // restore default content type
-      axios.defaults.headers.common['Content-Type'] = "application/json";
+      axios.defaults.headers.common['Content-Type'] = "application/json"; // restore default content type
     },
     async importPreview() {
-      let Self = this
-      this.loadingPreview = true;
-      try {
-        //
-        // get status with EventSource
-        // 
-        const user = await this.checkAuth();
-        if (user) {
-          const apiUrl = import.meta.env.VITE_API_URL;
-          this.source = new EventSource(apiUrl + '/stream/events?userId=' + user.user.id + '&route=upload');
-          this.source.onmessage = function(e) {
-            if (e.data) {
-              let data = JSON.parse(e.data);
-              if (data.status == 1 || data.status == true) {
-                Self.source.close(); // lets close it when the process is done !
-                //
-                // get results with Axios
-                //
-                axios.get(Self.previewUrl).then((response) => {
-                  if (response 
-                    && response["status"] 
-                    && response.status === 200 
-                    && response.data.data.status) {
-                    let results = response.data.data.results;
-                    Self.validationError = response.data.data.validationError
-                    Self.headers = results[0];
-                    results.shift(); // remove header
-                    Self.items = results;
-                    Self.$emit("importedItems", results, Self.validationError);
-                    Self.loadingPreview = false
-                  }
-                });                
-              }
-            }
-          };
-        } // end user
-
-      } catch (e) {
-        if (e["response"] 
-          && e["response"]["status"]
-          && e.response.status === 400
-        ) {
-          this.admin.message('error', e.response.data.data.error);
-        }
-      }
-      // end try catch
+      await this.createEventSource();
     },
     cancelPreview() {
       this.cancel = true;
@@ -330,8 +287,57 @@ export default {
       this.validationError = false;
       this.$emit("importedItems", [], false);
       this.loadingPreview = false;
-    }
-
+      if (this.eventSource) {
+        this.eventSource.close();
+      }
+    },
+    async createEventSource() {
+      this.loadingPreview = true;
+      const Self = this;
+      const auth = await this.checkAuth();
+      const API_BASE_URL = import.meta.env.VITE_API_URL;
+      this.eventSource = new EventSourcePolyfill(API_BASE_URL + '/stream/events?userId=' + auth.user.id + '&route=upload', 
+          {
+              headers: {
+                'Authorization': 'Bearer ' + cookies.get(cookieKey.token)
+              }
+          }
+      );
+      this.eventSource.onerror = function (event) {
+        if (event.status == 401) { // token expired
+          Self.eventSource.close(); // close current event
+          setTimeout(function() {
+            Self.createEventSource();
+          }, 3000);
+          Self.admin.http.post("/auth/session"); // refresh token
+        }        
+      };
+      this.eventSource.onmessage = (e) => {
+        if (e.data) {
+          let data = JSON.parse(e.data);
+          if (data.status == 1 || data.status == true) {
+            Self.eventSource.close(); // lets close it when the process is done !
+            //
+            // get results with Axios
+            //
+            axios.get(Self.previewUrl).then((response) => {
+              if (response 
+                && response["status"] 
+                && response.status === 200 
+                && response.data.data.status) {
+                  let results = response.data.data.results;
+                  Self.validationError = response.data.data.validationError
+                  Self.headers = results[0];
+                  results.shift(); // remove header
+                  Self.items = results;
+                  Self.$emit("importedItems", results, Self.validationError);
+                  Self.loadingPreview = false
+              }
+            });                
+          }
+        }
+      }; 
+    },
   }
 }
 </script>

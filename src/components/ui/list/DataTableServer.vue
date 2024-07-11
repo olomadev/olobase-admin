@@ -259,7 +259,7 @@
               -->
               <va-delete-button
                 v-if="!disableDelete"
-                :disable-redirect="disableDeleteRedirect"
+                :redirect="enableDeleteRedirect"
                 :resource="listState.resource"
                 :item="item"
                 icon
@@ -501,9 +501,9 @@ export default {
      */
     disableEditRedirect: Boolean,
     /**
-     * Disable delete redirection. Will force delete button to show.
+     * Enable delete redirection.
      */
-    disableDeleteRedirect: Boolean,
+    enableDeleteRedirect: Boolean,
     /**
      * Disable select feature.
      */
