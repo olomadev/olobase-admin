@@ -1,55 +1,57 @@
-
+import { defineStore } from "pinia";
 import config from "@/_config";
+import useStore from "@/store"
 
-export default {
-  namespaced: true,
-  state: {
-    hideApiErrors: false,
-    confirm: null,
-    resolve: null,
-    reject: null,
-    snackbar: {
-      class: null,
-      color: null,
-      icon: null,
-      location: "top",
-      variant: null,
-      rounded: 0,
-      text: null,
-      timeout: 7500,
-      title: null,
-      visible: false
+const messages = defineStore('messages', {
+  state: () => {
+    return { 
+      hideApiErrors: false,
+      confirmObject: null,
+      resolve: null,
+      reject: null,
+      snackbar: {
+        class: null,
+        color: null,
+        icon: null,
+        location: "top",
+        variant: null,
+        rounded: 0,
+        text: null,
+        timeout: 7500,
+        title: null,
+        visible: false
+      }
     }
   },
   getters: {
-    ['getSnackbar'](state) {
+    getSnackbar(state) {
       return state.snackbar;
     },
-    ['getHideApiErrors'](state) {
+    getHideApiErrors(state) {
       return state.hideApiErrors;
     },
   },
-  mutations: {
-    hideApiErrors(state, status) {
-      state.hideApiErrors = status;
+  actions: {
+    hideApiErrors(status) {
+      this.hideApiErrors = status;
     },
     showConfirm(state, { title, message }) {
-      state.confirm = { title, message };
+      this.confirmObject = { title, message };
     },
     hideConfirm(state) {
-      state.confirm = null;
+      this.confirmObject = null;
     },
     setResolve(state, resolve) {
-      state.resolve = resolve;
+      this.resolve = resolve;
     },
     setReject(state, reject) {
-      state.reject = reject;
+      this.reject = reject;
     },
-    cleanError(state) {
-      state.error = null;
+    cleanError() {
+      this.error = null;
     },
-    cleanSnackbar(state) {
-      state.snackbar = {
+    cleanSnackbar() {
+      this.snackbar = {
         class: null,
         color: null,
         icon: null,
@@ -62,11 +64,11 @@ export default {
         visible: false
       }
     },
-    show(state, { type, message }) {
+    show({ type, message }) {
       if (!type || !config.snackbar[type]) {
         return;
       }
-      state.snackbar = {
+      this.snackbar = {
         class: config.snackbar[type].class,
         color: config.snackbar[type].color,
         icon: config.snackbar[type].icon,
@@ -79,23 +81,22 @@ export default {
         visible: config.snackbar[type].visible 
       };
     },
-  },
-  actions: {
-    confirm({ commit }, { title, message }) {
-      commit("showConfirm", { title, message });
-
+    confirm({ title, message }) {
+      this.confirmObject = { title, message };
       return new Promise((resolve, reject) => {
-        commit("setResolve", resolve)
-        commit("setReject", reject)
+        this.resolve = resolve;
+        this.reject = reject;
       })
     },
-    agree({ state, commit }) {
-      state.resolve(true);
-      commit("hideConfirm");
+    agree() {
+      this.resolve(true);
+      this.confirmObject = null;
     },
-    cancel({ state, commit }) {
-      state.resolve(false);
-      commit("hideConfirm");
+    cancel() {
+      this.resolve(false);
+      this.confirmObject = null;
     },
-  },
-};
+  }
+});
+
+export default messages;

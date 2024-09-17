@@ -12,7 +12,7 @@ import isObject from "lodash/isObject";
  */
 export default {
   mixins: [Field],
-  inject: ['admin', 'i18n'],
+  inject: ['i18n'],
   props: {
     /**
      * Truncate text

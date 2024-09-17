@@ -1,12 +1,13 @@
-import * as methods from "../providers/data/actions";
+import { defineStore } from "pinia"
+import * as methods from "../providers/data/actions"
+import useStore from "@/store"
 
 let storeActions = {};
-
 Object.values(methods).forEach((action) => {
-  storeActions[action] = ({ dispatch }, { resource, params }) => {
-    return dispatch(`${resource}/${action}`, params, {
-      root: true,
-    })
+  storeActions[action] = ({ resource, params }) => {
+    const store = useStore();
+    const method = action.charAt(0).toUpperCase() + action.slice(1);
+    return store.getModule(resource)[method](params, { root: true });
   }
 });
 /**
@@ -14,86 +15,73 @@ Object.values(methods).forEach((action) => {
  * If you change some method names of variables accidentally, 
  * the application may not work properly.
  */
-export default {
-  namespaced: true,
-  state: {
-    fields: null,
-    headers: null,
-    drawer: true,
-    saved: false,
-    status: false,
-    toggle: false,
-    loading: false,
-    refresh: false,
-    rowForm: null,
-    filterValues: null,
-  },
-  mutations: {
-    setHeaders(state, headers) {
-      state.headers = headers;
-    },
-    setFields(state, fields) {
-      state.fields = fields;
-    },
-    setFilterValues(state, values) {
-      state.filterValues = values;
-    },
-    setToggleDrawer(state, toggle) {
-      state.drawer = toggle;
-    },
-    setFormSaved(state, saved) {
-      state.saved = saved;
-    },
-    setFormStatus(state, changed) {
-      state.status = changed
-    },
-    setLoading(state, loading) {
-      state.loading = loading;
-      if (!loading) {
-        state.refresh = false;
-      }
-    },
-    setRefresh(state, refresh) {
-      state.refresh = refresh;
-    },
-    setRowForm(state, item) {
-      state.rowForm = item;
-    },
+const api = defineStore('api', {
+  state: () => {
+    return { 
+      fields: null,
+      headers: null,
+      saved: false,
+      status: false,
+      loading: false,
+      refresh: false,
+      rowForm: null,
+      filterValues: null,
+    }
   },
   getters: {
-    ['getHeaders'](state) {
-      return state.headers
+    getHeaders() {
+      return this.headers;
     },
-    ['getFields'](state) {
-      return state.fields
+    getFields() {
+      return this.fields
     },
-    ['getFilterValues'](state) {
-      return state.filterValues
+    getLoading() {
+      return this.loading
     },
-    ['getLoading'](state) {
-      return state.loading
+    getFilterValues() {
+      return this.filterValues
     },
-    ['getToggleDrawer'](state) {
-      return state.drawer
+    getFormSaved() {
+      return this.saved
     },
-    ['getFormSaved'](state) {
-      return state.saved
+    getFormStatus() {
+      return this.status
     },
-    ['getFormStatus'](state) {
-      return state.status
-    },
-    ["getRowForm"](state) {
-      return state.rowForm;
+    getRowForm() {
+      return this.rowForm;
     },
   },
   actions: {
     ...storeActions,
-    refresh({ commit, dispatch }, resource) {
-      if (!resource) {
-        return;
+    setHeaders(headers) {
+      this.headers = headers;
+    },
+    setFields(fields) {
+      this.fields = fields;
+    },
+    setFilterValues(values) {
+      this.filterValues = values;
+    },
+    setFormSaved(saved) {
+      this.saved = saved;
+    },
+    setFormStatus(changed) {
+      this.status = changed
+    },
+    setLoading(loading) {
+      this.loading = loading;
+      if (!loading) {
+        this.refresh = false;
       }
-      commit("setRefresh", true);
-      return dispatch(`${resource}/refresh`, {}, { root: true, })
+    },
+    setRefresh(refresh) {
+      this.refresh = refresh;
+    },
+    setRowForm(item) {
+      this.rowForm = item;
     },
   },
-};
+
+});
+
+export default api;

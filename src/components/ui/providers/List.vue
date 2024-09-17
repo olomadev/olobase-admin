@@ -409,9 +409,7 @@ export default {
     this.headers = this.getHeadersMap()
     this.selectItems = this.headers.filter((f) => f.key !== "data-table-group");
     this.fillSettings();
-    this.$store.commit('api/setFields', 
-      this.getFields().filter((f) => f.source !== "data-table-group")
-    );
+    this.$store.getModule("api").setFields(this.getFields().filter((f) => f.source !== "data-table-group"));
   },
   async mounted() {
     await this.initFiltersFromQuery();
@@ -492,7 +490,7 @@ export default {
             col: (f.col || 2),
             label:
               f.label ||
-              this.admin.getSourceLabel(this.resource, f.labelKey || f.source),
+              this.$admin.getSourceLabel(this.resource, f.labelKey || f.source),
           };
       });
       return mappedFilters
@@ -506,11 +504,11 @@ export default {
       immediate: true,
       deep: true,
     },
-    "$store.state.api.refresh"(newVal) {
-      if (newVal) {
-        this.fetchData()
-      }
-    },
+    // "$store.state.api.refresh"(newVal) {
+    //   if (newVal) {
+    //     this.fetchData()
+    //   }
+    // },
     "listState.options"(val) {
       /**
        * Triggered on pagination change.
@@ -526,7 +524,7 @@ export default {
       this.$emit("update:filter", newVal);
     },
     selectedHeaders(newVal) {
-      this.$store.commit('api/setHeaders', newVal);
+      this.$store.getModule("api").setHeaders(newVal);
     }
   },
   methods: {
@@ -608,7 +606,7 @@ export default {
             type: f.type,
             label:
               f.label ||
-              this.admin.getSourceLabel(
+              this.$admin.getSourceLabel(
                 this.listState.resource,
                 f.labelKey || f.source
               ),
@@ -668,7 +666,7 @@ export default {
     fillSettings() {
       let Self = this;
       this.selectedHeaders = this.getSelectedHeaders();
-      this.$store.commit('api/setHeaders', this.selectedHeaders);
+      this.$store.getModule("api").setHeaders(this.selectedHeaders);
       this.headers.forEach(function(item){
         for (let i = 0; i < Self.selectedHeaders.length; i++) {
           if (Self.selectedHeaders[i].key == item.key) {
@@ -680,15 +678,15 @@ export default {
     },
     saveSettings() {
       localStorage.setItem('col_' + this.resource, JSON.stringify(this.selectedHeaders));
-      this.$store.commit("messages/show", { type: 'info', message: this.$t("va.messages.datatable_settings_saved"), });
+      this.$store.getModule("messages").show({ type: 'info', message: this.$t("va.messages.datatable_settings_saved") });
     },
-    restoreSettings(){
+    restoreSettings() {
       localStorage.removeItem('col_' + this.resource);
       this.selectedHeaders = this.getSelectedHeaders();
-      this.$store.commit('api/setHeaders', this.selectedHeaders);
+      this.$store.getModule("api").setHeaders(this.selectedHeaders);
       this.fillSettings();
       ++this.settingsKey;
-      this.$store.commit("messages/show", { type: 'info', message: this.$t("va.messages.datatable_settings_reset"), });
+      this.$store.getModule("messages").show({ type: 'info', message: this.$t("va.messages.datatable_settings_reset"), });
     },
     async initFiltersFromQuery() {
       let options = {
@@ -796,10 +794,7 @@ export default {
       /**
        * Load paginated and sorted data list
        */
-      let response = await this.$store.dispatch(
-        `${this.resource}/getList`,
-        params
-      )
+      let response = await this.$store.getResource(this.resource).getList(params);
       if (response && response["data"]) {
         let data = response.data.data
         let total = response.data.totalItems

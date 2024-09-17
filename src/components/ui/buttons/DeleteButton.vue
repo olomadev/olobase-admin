@@ -13,15 +13,13 @@
 
 <script>
 import Button from "../../../mixins/button";
-import { mapActions } from "vuex";
-
 /**
  * Button for all delete resource action. Comes with confirm dialog.
  * Auto hide if no delete action available unless show prop is active.
  */
 export default {
   mixins: [Button],
-  inject: ['admin'],
+  inject: [],
   props: {
     /**
      * Redirect to resource list after successful deletion.
@@ -42,7 +40,7 @@ export default {
     }
   },
   async created() {
-    let user = await this.checkAuth();
+    let user = await this.$store.getModule("auth").checkAuth();
     this.user.id = user.id;
     this.visible = await this.hasAction('delete');
   },
@@ -61,9 +59,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      checkAuth: "auth/checkAuth",
-    }),
     async onDelete() {
 
       if (!this.item) {
@@ -76,7 +71,7 @@ export default {
       }
 
       if (
-        await this.admin.confirm(
+        await this.$admin.confirm(
           this.$t("va.confirm.delete_title", {
             resource: this.currentResource.singularName.toLowerCase(),
             id: this.item.id,
@@ -93,7 +88,7 @@ export default {
         // 
         let Self = this;
 
-        await this.$store.dispatch(`${this.resource}/delete`, {
+        await this.$store.getModule(this.resource).delete({
           id: this.item.id,
           query: this.query 
         }).then(function(){
@@ -103,7 +98,7 @@ export default {
               return
             }
             setTimeout(function(){
-              Self.$store.dispatch("api/refresh", Self.resource); 
+              Self.$store.getResource(Self.resource).refresh(); 
             }, 200);
             
             /**

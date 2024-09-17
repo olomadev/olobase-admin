@@ -80,23 +80,23 @@ export default {
       e.stopPropagation();
     },
     readFileWithIndex(index) {
-      let url = this.admin.apiUrl + this.admin.readFileUrl + String(this.value[index].id) + '?tableName=' + this.tableName
+      let url = this.$admin.apiUrl + this.$admin.readFileUrl + String(this.value[index].id) + '?tableName=' + this.tableName
       this.testFile(url, this.value[index].id)
     },
     downloadFileWithIndex(index) {
-      let url = this.admin.apiUrl + this.admin.downloadUrl + String(this.value[index].id) + '?tableName=' + this.tableName
+      let url = this.$admin.apiUrl + this.$admin.downloadUrl + String(this.value[index].id) + '?tableName=' + this.tableName
       this.testFile(url, this.value[index].id)
     },
     async testFile(url, fileId) {
       let response = null
       try {
-        response = await this.admin.http.get(url)
+        response = await this.$admin.http.get(url)
         if (response.status == 200 && typeof fileId != "undefined") {
           location.href = url
         }
       } catch (e) {
         console.log(e)
-        this.$store.commit("messages/show", { type: 'warning', message: this.$t("error.fileNotFound") });  
+        this.$store.getModule("messages").show({ type: 'warning', message: this.$t("error.fileNotFound") });  
       }
     },
   }

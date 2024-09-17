@@ -98,7 +98,7 @@ export default {
         label = ''
       } else if (typeof this.source != 'undefined' && typeof this.resource != 'undefined') {
         // label = this.$t(this.resource + "." + this.source)
-        label = this.admin.getSourceLabel(this.resource, this.source);
+        label = this.$admin.getSourceLabel(this.resource, this.source);
       }
       if (this.label) {
         label = this.label

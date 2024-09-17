@@ -227,7 +227,7 @@ export default {
           return {
             ...f,
             type: f.type,
-            label: f.label || this.admin.getSourceLabel(
+            label: f.label || this.$admin.getSourceLabel(
               this.resource,
               f.labelKey || f.source
             ),
@@ -265,7 +265,7 @@ export default {
       if (column.title) {
         return column.title;
       } else if (column.key) {
-        return this.admin.getSourceLabel(this.resource, column.key);  
+        return this.$admin.getSourceLabel(this.resource, column.key);  
       }
       return
     },
@@ -299,7 +299,7 @@ export default {
       } else {
         this.editRowId = item ? item[this.primaryKey] : null;
       }
-      this.$store.commit(`${this.resource}/setRow`, this.form);
+      this.$store.getResource(this.resource).setRow(this.form);
     },
     getValue(action, f, item) {
       if (f && Object.prototype.hasOwnProperty.call(f, "value")) {
@@ -379,7 +379,7 @@ export default {
       });
       this.form = null;
       this.editRowId = null;
-      this.$store.commit(`${this.resource}/setRow`, null); // reset form variable
+      this.$store.getResource(this.resource).setRow(null);  // reset form variable
       this.dialogDelete = false;
     }
   },

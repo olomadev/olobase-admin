@@ -20,7 +20,7 @@ import Button from "../../../mixins/button";
  */
 export default {
   mixins: [Button],
-  inject: ['admin'],
+  inject: [],
   props: {
     /**
      * Redirect to resource list after successful deletion.
@@ -65,14 +65,14 @@ export default {
         // not work as we expected
         // 
         let Self = this;
-        await this.$store.dispatch(`${this.resource}/copy`, {
+        await this.$store.getResource(this.resource).copy({
           id: this.item.id,
         }).then(function(){
           if (Self.redirect) {
             Self.$router.push({ name: `${Self.resource}_list` })
             return
           }
-          Self.$store.dispatch("api/refresh", Self.resource)
+          Self.$store.getResource(Self.resource).refresh();
         });
 
         /**

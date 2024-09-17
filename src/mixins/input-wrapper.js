@@ -90,7 +90,7 @@ export default {
         source = `${this.parentSource}.${this.source}`;
       }
 
-      return this.admin.getSourceLabel(this.resource, source);
+      return this.$admin.getSourceLabel(this.resource, source);
     },
   },
 };

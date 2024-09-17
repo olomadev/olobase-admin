@@ -116,7 +116,7 @@ import Utils from "../../../mixins/utils"
 import remove from "lodash/remove";
 
 export default {
-  inject: ["admin"],
+  inject: [],
   mixins: [Input, Utils],
   props: {
     color: {
@@ -215,7 +215,7 @@ export default {
           return {
             ...f,
             // type: f.type,
-            label: f.label || this.admin.getSourceLabel(
+            label: f.label || this.$admin.getSourceLabel(
               this.resource,
               f.labelKey || f.key || f.source
             ),
@@ -231,7 +231,7 @@ export default {
       if (column.title) {
         return column.title;
       } else if (column.key) {
-        return this.admin.getSourceLabel(this.resource, column.key);  
+        return this.$admin.getSourceLabel(this.resource, column.key);  
       }
       return
     },
@@ -267,7 +267,7 @@ export default {
       return result
     },
     async initializeItems() {
-      let response = await this.admin.http.get(this.initUrl)
+      let response = await this.$admin.http.get(this.initUrl)
       if (response) {
         this.items = response.data.data
         this.groupedItems = this.arrayGroupBy(this.items, this.groupBy)

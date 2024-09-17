@@ -13,28 +13,29 @@ export default {
       let crumbs = []
       let result = this.$route.matched.map((route) => {
         let length = 0;
-        let myArray;
+        let myArray = [];
         if (typeof route.meta.title !== 'undefined') {
             myArray = route.meta.title.split(" ")
             if (route.meta.title.indexOf("#") > 0) {
                 myArray.pop()  // remome #id source 
             }
-        } else {
+        } else if (route['name']) {
             myArray = route.name.split(" ")
             if (route.name.indexOf("#") > 0) {
                 myArray.pop()  // remome #id source 
             }
         }
-        let breadCrumb = myArray.join(" ")
-        let item = breadCrumb.toLowerCase()
-
         let actionArray = "";
-        crumbs.push(item)
-        crumbs.forEach(function(val, index) {
-          if (val && val.indexOf("_")) {
-            actionArray = val.split("_");
-          }
-        })
+        if (myArray.length > 0) {
+          let breadCrumb = myArray.join(" ")  
+          let item = breadCrumb.toLowerCase()
+          crumbs.push(item)
+          crumbs.forEach(function(val, index) {
+            if (val && val.indexOf("_")) {
+              actionArray = val.split("_");
+            }
+          })
+        }
         let text = "";
         if (Array.isArray(actionArray) && actionArray.length > 0) {  // do not repat index list
             text = this.$t("crumbs." + actionArray[actionArray.length - 1]);

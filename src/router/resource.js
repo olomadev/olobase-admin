@@ -37,8 +37,8 @@ export default ({ app, admin, store, i18n, resource, title }) => {
             id: this.id,
             title: this.$route.meta.title,
             resource: resource.name,
-            item: store.state[name].item,
-            roles: store.getters["auth/getRoles"],
+            item: store.getResource(name).item,
+            roles: store.getModule("auth").getPermissions,
           }
           //
           // https://stackoverflow.com/questions/72975779/vuejs-3-see-all-globally-registered-components-this-options-components-is-empt
@@ -58,7 +58,7 @@ export default ({ app, admin, store, i18n, resource, title }) => {
           }
         },
         async beforeRouteEnter(to, from, next) {
-            
+          
           /**
            * Initialize from query if available
            */
@@ -69,15 +69,15 @@ export default ({ app, admin, store, i18n, resource, title }) => {
              * Route model binding
              */
             try {
-              let { data } = await store.dispatch(`${name}/getOne`, {
+              let { data } = await store.getResource(name).getOne({
                 id,
                 include,
               });
               /**
                * Insert model into route & resource store
                */
-              store.commit(`${name}/setItem`, data);
-              store.commit(`${name}/setFormItem`, JSON.stringify(data));
+              store.getResource(name).setItem(data);
+              store.getResource(name).setFormItem(JSON.stringify(data));
               
               if (to.params.id) {
                 setTitle(to, action, data);
@@ -98,34 +98,33 @@ export default ({ app, admin, store, i18n, resource, title }) => {
           let strArray = this.$route.name.split("_"); // check the current route is edit
           if (Array.isArray(strArray) && strArray.length > 0) {
               let lastItem = strArray[strArray.length - 1]
-
               if (lastItem.trim() == "edit") {
-                let formSaved = store.getters['api/getFormSaved']; // if form had already saved
+                let formSaved = store.getModule("api").getFormSaved(); // if form had already saved
                 if (formSaved) {
-                  store.commit("api/setFormSaved", false);
-                  store.commit("api/setFormStatus", false);
+                  store.getModule("api").setFormSaved(false);
+                  store.getModule("api").setFormStatus(false);
                   return next()
                 }
                 let disableExitWithoutSave = get(admin.options, "form.disableExitWithoutSave");
-                let formStateChanged = store.getters['api/getFormStatus'];
+                let formStateChanged = store.getModule("api").getFormStatus();
                 if (formStateChanged && !disableExitWithoutSave) {
-                  let confirm = await store.dispatch('openDialog')
+                  let confirm = await store.openDialog();
                   if (confirm) {
-                    store.commit(`${name}/removeItem`)
-                    store.commit("api/setFormStatus", false);
+                    store.getResource(name).removeItem();
+                    store.getModule("api").setFormStatus(false);
                     return next();
                   } else {
                     return next(false);
                   }  
                 } else {
-                  store.commit(`${name}/removeItem`)
+                  store.getResource(name).removeItem();
                   return next();
                 }
               }
 
           } // end checking edit route 
           
-          store.commit(`${name}/removeItem`)
+          store.getResource(name).removeItem();
           return next()
         },
       },

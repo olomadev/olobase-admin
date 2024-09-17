@@ -341,7 +341,7 @@ export default {
   },
   provide() {
     return {
-      admin: this.admin
+      admin: this.$admin
     };
   },
   setup () {
@@ -568,12 +568,12 @@ export default {
   computed: {
     getHeaders: {
       get() {
-        return this.$store.getters['api/getHeaders'];
+        return this.$store.getModule("api").getHeaders;
       }
     },
     getFields: {
       get() {
-        return this.$store.getters['api/getFields'];
+        return this.$store.getModule("api").getFields;
       }
     },
     getItems() {
@@ -663,20 +663,15 @@ export default {
       }
       let hasItem = action !== "create";
 
-      let title = this.admin
+      let title = this.$admin
         .getResource(this.listState.resource)
         .getTitle(action, hasItem ? item : null);
       let id = hasItem ? item.id : null;
       /**
        * Get freshed item
        */
-      let { data } = await this.$store.dispatch(
-        `${this.listState.resource}/getOne`,
-        {
-          id: item.id,
-        }
-      );
-      this.$store.commit(`${this.listState.resource}/setItem`, data);
+      let { data } = await this.$store.getModule(this.listState.resource).getOne({id: item.id});
+      this.$store.getModule(this.listState.resource).setItem(data)
       /**
        * Triggered on action on specific row.
        * This event will return a freshed item Object from your API.
@@ -763,16 +758,16 @@ export default {
       this.$emit("save");
       try {
         if (this.editRowId) { // update
-          await this.$store.dispatch(`${this.listState.resource}/update`, {
+          await this.$store.getModule(this.listState.resource).update({
               id: this.editRowId,
               data: { ...this.form, ...this.updateData },
-          })
+          });
         } else { // create
           let newCreateData = {}
           newCreateData.id = this.generateUid();
           Object.assign(newCreateData, this.createData)
-          await this.$store.dispatch(`${this.listState.resource}/create`, {
-              data: { ...this.form, ...newCreateData },
+          await this.$store.getModule(this.listState.resource).create({
+            data: { ...this.form, ...newCreateData },
           });
         }
         this.v$.$reset() // clear the validation error messages

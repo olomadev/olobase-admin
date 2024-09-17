@@ -15,7 +15,7 @@ import * as ui from "./components/ui";
 /**
  * Main JS App
  */
-import Olobase from "olobase";
+import Olobase from "olobase-admin/src/olobase"
 /**
  * Main admin entry
  */

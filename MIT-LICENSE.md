@@ -1,7 +1,7 @@
 
 MIT License
 
-Copyright (c) 2023-2024 Oloma Dev
+Copyright (c) 2023-2025 Oloma Dev
 
 Every change made and published in the Olobase version is covered by the MIT License.
 

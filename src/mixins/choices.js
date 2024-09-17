@@ -2,11 +2,10 @@
  * Common props for all choices based fields or inputs.
  */
 export default {
-  inject: ['admin'],
   created() {
     let results = []
     let enumKey = `resources.${this.resource}.enums.${this.source}`;
-    let enums = this.admin.i18n.global.tm(enumKey)
+    let enums = this.$admin.i18n.global.tm(enumKey)
     if (!enums) {
       return;
     }

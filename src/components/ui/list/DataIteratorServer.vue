@@ -93,7 +93,7 @@ export default {
   },
   provide() {
     return {
-      admin: this.admin,
+      admin: this.$admin,
     };
   },
   props: {

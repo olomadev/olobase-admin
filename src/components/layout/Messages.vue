@@ -52,13 +52,13 @@ import Confirm from "../internal/Confirm";
  * Already included in main admin layout, use it only if you need total custom layout.
  */
 export default {
-  inject: ["admin"],
+  inject: [],
   components: {
     Confirm,
   },
   computed : {
     snackbar() {
-      return this.admin.store.getters['messages/getSnackbar'];
+      return this.$store.getModule('messages').getSnackbar;
     }
   }
 };

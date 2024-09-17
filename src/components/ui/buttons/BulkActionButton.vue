@@ -40,7 +40,7 @@ export default {
       let value = this.value || this.listState.selected;
 
       let Self = this;
-      await this.$store.dispatch(`${this.listState.resource}/updateMany`, {
+      await this.$store.getResource(this.listState.resource).updateMany({
         ids: value.map(({ id }) => id),
         data: Self.action,
       }).then(function() {
@@ -49,7 +49,7 @@ export default {
          */
         Self.$emit("input", []);
         Self.listState.selected = [];
-        Self.$store.dispatch("api/refresh", Self.listState.resource);
+        Self.$store.getResource(Self.listState.resource).refresh();
       });
     
     },

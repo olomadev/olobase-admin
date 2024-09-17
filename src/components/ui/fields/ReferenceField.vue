@@ -86,11 +86,7 @@ export default {
 
         if (this.fetch) {
           this.loading = true;
-          let { data } = await this.$store.dispatch(
-            `${this.reference}/getOne`,
-            { id: newVal }
-          );
-
+          let { data } = await this.$store.getResource(this.reference).getOne({ id: newVal });
           this.referenceItem = data;
           this.loading = false;
         }

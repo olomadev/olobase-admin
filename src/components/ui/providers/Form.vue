@@ -75,7 +75,7 @@ export default {
     return {
       fields: { },
       originalValue: this.modelValue,
-      formItem: (this.$store.getters[`${this.resource}/getFormItem`]) ? JSON.parse(this.$store.getters[`${this.resource}/getFormItem`]) : null,
+      formItem: (this.$store.getResource(this.resource).getFormItem()) ? JSON.parse(this.$store.getResource(this.resource).getFormItem()) : null,
       formState: {
         edit: !!this.id,
         item: this.item,
@@ -106,11 +106,11 @@ export default {
             }
             if (oldValue && (Array.isArray(oldValue) || typeof oldValue === 'object')) {  
               if (JSON.stringify(oldValue) != JSON.stringify(value)) {
-                this.$store.commit('api/setFormStatus', true); // true == form state changed  
+                this.$store.getModule("api").setFormStatus(true); // true == form state changed    
               }
             } else {
               if (oldValue != value) {
-                this.$store.commit('api/setFormStatus', true); // true == form state changed  
+                this.$store.getModule("api").setFormStatus(true); // true == form state changed  
               }
             }
           }
@@ -237,19 +237,18 @@ export default {
       this.$emit("model", model);
       try {
         let { data } = this.id
-          ? await this.$store.dispatch(`${this.resource}/update`, {
+          ? await this.$store.getResource(this.resource).update({
               id: this.id,
               data: this.formState.model,
             })
-          : await this.$store.dispatch(`${this.resource}/create`, {
+          : await this.$store.getResource(this.resource).create({
               data: this.formState.model,
             });
-
         /**
          * Sent after success saving.
          */
         this.$emit("saved", data);
-        this.$store.commit("api/setFormSaved", true);
+        this.$store.getModule("api").setFormSaved(true);
         this.formState.errors = null
         //
         // post process must be in a set timeout function
@@ -258,7 +257,7 @@ export default {
         if (! this.disableSaveMessage) {
           let Self = this;
           setTimeout(function(){
-            Self.$store.commit("messages/show", { type: 'success', message: Self.$t("form.saved") });  
+            Self.$store.getModule("messages").show({ type: 'success', message: Self.$t("form.saved") });
           }, 100);
         }
         switch (redirect) {

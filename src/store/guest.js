@@ -1,34 +1,31 @@
-import {
-  CHECK_AUTH,
-  CHECK_ERROR,
-  GET_ID,
-  GET_FULLNAME,
-  GET_EMAIL,
-  GET_AVATAR,
-  GET_PERMISSIONS,
-} from "../providers/auth/actions";
+import { defineStore } from "pinia";
 
-export default {
-  namespaced: true,
-  getters: {
-    [GET_ID]() {
-      return null;
+const guest = defineStore('guest', {
+    state: () => {
+      return { }
     },
-    [GET_FULLNAME]() {
-      return null;
+    getters: {
+      getId() {
+        return null;
+      },
+      getFullname() {
+        return null;
+      },
+      getEmail() {
+        return null;
+      },
+      getAvatar() {
+        return null;
+      },
+      getPermissions() {
+        return [];
+      },
     },
-    [GET_EMAIL]() {
-      return null;
-    },
-    [GET_AVATAR]() {
-      return null;
-    },
-    [GET_PERMISSIONS]() {
-      return [];
-    },
-  },
-  actions: {
-    [CHECK_AUTH]: () => Promise.resolve(true),
-    [CHECK_ERROR]: () => {},
-  },
-};
+    actions: {
+      checkAuth() { return Promise.resolve(true) },
+      checkError() {},
+    }, 
+  }
+);
+
+export default guest;

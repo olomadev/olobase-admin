@@ -55,7 +55,7 @@
           icon
           small
           class="ml-1"
-          :loading="$store.state.api.loading"
+          :loading="getLoading"
           @click="refresh"
         >
           <v-icon>mdi-refresh</v-icon>
@@ -148,13 +148,14 @@
 <script>
 import nav from "@/_nav";
 import { useDisplay } from 'vuetify';
+import { storeToRefs } from 'pinia';
 /**
  * Default customizable admin VAppBar.
  * Contains main app title, header menus, direct resource creation links, global refresh action, profile menu.
  * Profile user dropdown will not appear on guest mode.
  */
 export default {
-  inject: ["admin"],
+  inject: [],
   setup () {
     // Destructure only the keys we want to use
     const { lgAndUp } = useDisplay()
@@ -230,7 +231,7 @@ export default {
   },
   watch: {
     drawer(val) {
-      this.$store.commit('api/setToggleDrawer', val)
+      this.$store.setDrawer(val);
     },
   },
   data() {
@@ -243,9 +244,12 @@ export default {
     /**
      * Build dynamic sidebar menu
      */
-    this.sidebarMenu = await nav.build(this.$t, this.admin);
+    this.sidebarMenu = await nav.build(this.$t, this.$admin);
   },
   computed: {
+    getLoading() {
+      return this.$store.getModule("api").getLoading;
+    },
     isRouteList() {
       if (typeof this.$route.meta.resource == 'undefined') {
         return false
@@ -263,7 +267,7 @@ export default {
   methods: {
     refresh() {
       if (typeof this.$route.meta.resource !== 'undefined') {
-        this.$store.dispatch("api/refresh", `${this.$route.meta.resource}`);  
+        this.$store.getResource(this.$route.meta.resource).refresh();  
       }
     }
   },

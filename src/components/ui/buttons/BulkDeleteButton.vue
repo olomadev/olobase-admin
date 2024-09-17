@@ -23,14 +23,14 @@ export default {
   },
   computed: {
     currentResource() {
-      return this.admin.getResource(this.listState.resource);
+      return this.$admin.getResource(this.listState.resource);
     },
   },
   methods: {
     async onBulkDelete() {
       let value = this.value;
 
-      let confirm = await this.admin.confirm(
+      let confirm = await this.$admin.confirm(
           this.$t("va.confirm.delete_many_title", {
             resource: this.currentResource.getName(value.length).toLowerCase(),
             count: value.length,
@@ -43,7 +43,8 @@ export default {
     
       if (confirm) {
         let Self = this;
-        await this.$store.dispatch(`${this.listState.resource}/deleteMany`, {
+
+        await this.$store.getResource(this.listState.resource).deleteMany({
           ids: value, // value.map(({ id }) => id)
         }).then(function(){
           /**
@@ -51,7 +52,7 @@ export default {
            */
           Self.$emit("input", []);
           Self.listState.selected = [];
-          Self.$store.dispatch("api/refresh", Self.listState.resource);
+          Self.$store.getResource(Self.listState.resource).refresh();
         });
       }
     },

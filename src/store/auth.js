@@ -1,95 +1,96 @@
-
+import { defineStore } from "pinia";
 import cookies from "olobase-admin/src/utils/cookies";
+import useStore from "@/store"
 /**
  * Get cookie constants object
  */
 const cookieKey = JSON.parse(import.meta.env.VITE_COOKIE);
-import {
-  LOGIN,
-  LOGOUT,
-  CHECK_AUTH,
-  CHECK_ERROR,
-  GET_ID,
-  GET_FULLNAME,
-  GET_EMAIL,
-  GET_AVATAR,
-  GET_PERMISSIONS,
-} from "../providers/auth/actions";
-
-export default (provider, router) => {
-  return {
-    namespaced: true,
-    state: { user: null },
-    mutations: {
-      setUser(state, user) {
-        state.user = user;
-      },
+//
+// export factory function 
+// 
+// https://stackoverflow.com/questions/71583063/how-to-pass-an-argument-to-pinia-store
+// https://stackoverflow.com/questions/74936421/how-do-i-pass-a-parameter-to-pinia-getter-in-vue
+// 
+const auth = defineStore('auth', {
+    state: () => {
+      return { 
+        response: null,
+        provider: null,
+      }
     },
     getters: {
-      [GET_ID](state) {
-        if (state.user && provider[GET_ID]) {
-          return provider[GET_ID](state.user);
+      getEmail() {
+        if (this.response && this.provider['getEmail']) {
+          return this.provider.getEmail(this.response);
         }
       },
-      [GET_FULLNAME](state) {
-        if (state.user && provider[GET_FULLNAME]) {
-          return provider[GET_FULLNAME](state.user);
+      getFullname() {
+        if (this.response && this.provider['getFullname']) {
+          return this.provider.getFullname(this.response);
         }
       },
-      [GET_EMAIL](state) {
-        if (state.user && provider[GET_EMAIL]) {
-          return provider[GET_EMAIL](state.user);
+      getAvatar() {
+        if (this.response && this.provider['getAvatar']) {
+          return this.provider.getAvatar(this.response);
         }
       },
-      [GET_AVATAR](state) {
-        if (state.user && provider[GET_AVATAR]) {
-          return provider[GET_AVATAR](state.user);
+      getId() {
+        if (this.response && this.provider['getId']) {
+          return this.provider.getId(this.response);
         }
       },
-      [GET_PERMISSIONS](state) {
-        if (state.user && provider[GET_PERMISSIONS]) {
-          return provider[GET_PERMISSIONS](state.user) || [];
+      getPermissions() {
+        if (this.response && this.provider['getPermissions']) {
+          return this.provider.getPermissions(this.response) || [];
         }
         return [];
       },
     },
     actions: {
       /**
+       * Initialize with given auth provider
+       */
+      init(provider) {
+        this.provider = provider;
+      },
+      /**
        * Server login with given credentials
        * checkAuth action will set fresh user infos on store automatically
        */
-      // eslint-disable-next-line no-empty-pattern
-      [LOGIN]: async ({}, credentials) => {
-        let response = await provider[LOGIN](credentials);
+      async login(credentials) {
+        let response = await this.provider.login(credentials);
+        if (response 
+          && response['data'] 
+          && response['data']['data']) {
+          this.response = response['data']['data'];
+        }
         return Promise.resolve(response);
-        // router.push({ name: "dashboard" });
       },
       /**
-       * Explicit logout action, remove user from storage
+       * Server logout
        */
-      [LOGOUT]: async () => {
-        let response = await provider[LOGOUT]();
+      async logout() {
+        let response = await this.provider.logout();
         return Promise.resolve(response);
-        // router.push({ name: "login" });
       },
       /**
        * Check valid auth on target route server by retrieving user infos
        * Set fresh user infos on store
        * Called after each URL navigation
        */
-      [CHECK_AUTH]: async ({ commit }) => {
+      async checkAuth() {
         if (! cookies.get(cookieKey.token)) {
-          commit("setUser", null);
+          this.response = null;
           return false
         }
         try {
-          let response = await provider[CHECK_AUTH]();
+          let response = await this.provider.checkAuth();
           if (response) {
-            commit("setUser", response.data);
+            this.response = response.data;
           }
           return response.data;
         } catch (e) {
-          commit("setUser", null);
+          this.response = null;
         }
       },
       /**
@@ -97,13 +98,15 @@ export default (provider, router) => {
        * Called after each API error (4xx, 5xx)
        * Do automatic logout if reject promise returned
        */
-      [CHECK_ERROR]: async ({ dispatch }, error) => {
+      async checkError(error) {
         try {
-          await provider[CHECK_ERROR](error);
+          await this.provider.checkError(error);
         } catch (e) {
-          dispatch("logout");
+          await this.logout();
         }
       },
     },
-  };
-};
+  }
+);
+
+export default auth;

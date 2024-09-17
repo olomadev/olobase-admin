@@ -64,7 +64,6 @@ export default {
          */
         return;
       }
-
       // Explicit submit call
       await this.formState.submit(this.redirect);
     },

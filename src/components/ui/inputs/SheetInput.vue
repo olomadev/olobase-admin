@@ -120,13 +120,12 @@
 <script>
 import axios from "axios";
 import InputWrapper from "../../../mixins/input-wrapper";
-import { mapActions } from "vuex";
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import cookies from "olobase-admin/src/utils/cookies";
 const cookieKey = JSON.parse(import.meta.env.VITE_COOKIE);
 
 export default {
-  inject: ['admin'],
+  inject: [],
   mixins: [InputWrapper],
   props: {
     itemsPerPage: {
@@ -178,9 +177,6 @@ export default {
     this.perPage = 20;
   },
   methods: {
-    ...mapActions({
-      checkAuth: "auth/checkAuth",
-    }),
     hasError(field, item) {
       if (typeof field.key == "undefined") {
         return false;
@@ -229,7 +225,7 @@ export default {
     },
     cancelUpload() {
       this.remove();
-      this.admin.http({ method: "DELETE", url: this.removeUrl });
+      this.$admin.http({ method: "DELETE", url: this.removeUrl });
     },
     reset() {
       this.file = null;
@@ -266,7 +262,7 @@ export default {
           } else if (typeof e.response.data.data.error.file[0] !== "undefined") { // application errors
             errorMessage = e.response.data.data.error.file[0];
           }
-          this.$store.commit("messages/show", { type: 'error', message: errorMessage });
+          this.$store.getModule("messages").show({ type: 'error', message: errorMessage });
           this.loading = false;
           this.remove();
         }
@@ -294,7 +290,7 @@ export default {
     async createEventSource() {
       this.loadingPreview = true;
       const Self = this;
-      const auth = await this.checkAuth();
+      const auth = await this.$store.getModule("auth").checkAuth();
       const API_BASE_URL = import.meta.env.VITE_API_URL;
       this.eventSource = new EventSourcePolyfill(API_BASE_URL + '/stream/events?userId=' + auth.user.id + '&route=upload', 
           {
@@ -309,7 +305,7 @@ export default {
           setTimeout(function() {
             Self.createEventSource();
           }, 3000);
-          Self.admin.http.post("/auth/session"); // refresh token
+          Self.$admin.http.post("/auth/session"); // refresh token
         }        
       };
       this.eventSource.onmessage = (e) => {

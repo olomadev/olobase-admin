@@ -43,7 +43,7 @@ export default {
       default: () => [],
     },
   },
-  inject: ['vuetify', 'admin'],
+  inject: [],
   data() {
     return {
       leftPadding: "padding-left: 0px"
@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     getLeftPadding() {
-      if (this.$store.getters['api/getToggleDrawer']) {
+      if (this.$store.getDrawer) {
         this.leftPadding = 'padding-left: 256px';
       } else {
         this.leftPadding = 'padding-left: 0px';
@@ -60,7 +60,7 @@ export default {
     }
   },
   created() {
-    if (this.$store.getters['api/getToggleDrawer']) {
+    if (this.$store.getDrawer) {
       this.leftPadding = 'padding-left: 256px';
     } else {
       this.leftPadding = 'padding-left: 0px';
@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     getAStyle() {
-      let themeColor = this.vuetify.theme.themes.value.defaultTheme.colors.primary;
+      let themeColor = this.$vuetify.theme.themes.defaultTheme.colors.primary;
       return 'color: ' + themeColor + ';';
     }
   }

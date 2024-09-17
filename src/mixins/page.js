@@ -13,7 +13,7 @@ export default {
   },
   computed: {
     item() {
-      return this.$store.state[this.resource].item
+      return this.$store.getResource(this.resource).item
     },
   },
 };

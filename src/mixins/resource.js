@@ -8,7 +8,7 @@ import { useRoute } from 'vue-router'
  * For any resource related components.
  */
 export default {
-  inject: ['admin'],
+  inject: [],
   props: {
     /**
      * Name of the resource to use.
@@ -27,7 +27,7 @@ export default {
       return useRoute().meta.translatable
     },
     currentResource() {
-      return this.admin.getResource(this.resource)
+      return this.$admin.getResource(this.resource)
     },
   },
   methods: {

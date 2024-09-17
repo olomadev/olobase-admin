@@ -1,23 +1,7 @@
 
 import cookies from "olobase-admin/src/utils/cookies";
-/**
- * Get cookie constants object
- */
-const cookieKey = JSON.parse(import.meta.env.VITE_COOKIE);
-import {
-  LOGIN,
-  LOGOUT,
-  CHECK_AUTH,
-  CHECK_ERROR,
-  GET_ID,
-  GET_FULLNAME,
-  GET_EMAIL,
-  GET_AVATAR,
-  GET_PERMISSIONS,
-} from "./actions";
-
 import FetchHydra from "../utils/fetchHydra";
-// import {isAuthenticated} from "../utils/auth";
+const cookieKey = JSON.parse(import.meta.env.VITE_COOKIE);
 
 export default (httpClient, params = {}) => {
   if (typeof httpClient === "string") {
@@ -57,7 +41,7 @@ export default (httpClient, params = {}) => {
   } = params;
 
   return {
-    [LOGIN]: async ({ username, password }) => {
+    async login({ username, password }) { 
       const response = await httpClient.post(
         routes.login,
         getCredentials({ username, password })
@@ -72,7 +56,7 @@ export default (httpClient, params = {}) => {
       localStorage.setItem("avatar", response.data.data.avatar);
       return Promise.resolve(response);
     },
-    [LOGOUT]: async () => {
+    async logout() {
       let response = null;
       if (routes.logout) {
         try {
@@ -86,29 +70,29 @@ export default (httpClient, params = {}) => {
       cookies.remove(cookieKey.token)
       return Promise.resolve(response);
     },
-    [CHECK_AUTH]: async () => {
-        const token = cookies.get(cookieKey.token)
-        if (typeof token == "undefined" || token == "undefined" || token == "") {
-            return Promise.reject()
-        }
-        let user = JSON.parse(cookies.get(cookieKey.user))
-        if (user) {
-          return Promise.resolve({
-            data: {
-                avatar: localStorage.getItem("avatar"),
-                token: token,
-                user: user,
-                cookieKey: {
-                  user:  cookieKey.user,
-                  token: cookieKey.token,
-                }
-            },
-          })
-        } else {
-            return Promise.reject()
-        }
+    async checkAuth() {
+      const token = cookies.get(cookieKey.token)
+      if (typeof token == "undefined" || token == "undefined" || token == "") {
+          return Promise.reject()
+      }
+      let user = JSON.parse(cookies.get(cookieKey.user))
+      if (user) {
+        return Promise.resolve({
+          data: {
+              avatar: localStorage.getItem("avatar"),
+              token: token,
+              user: user,
+              cookieKey: {
+                user:  cookieKey.user,
+                token: cookieKey.token,
+              }
+          },
+        })
+      } else {
+          return Promise.reject()
+      }
     },
-    [CHECK_ERROR]: ({ status }) => {
+    checkError({ status }) {
       if (status === 401 || status === 403) {
         cookies.remove(cookieKey.user)
         cookies.remove(cookieKey.token);
@@ -116,11 +100,21 @@ export default (httpClient, params = {}) => {
       }
       return Promise.resolve();
     },
-    [GET_ID]: (r) => getId(r),
-    [GET_FULLNAME]: (r) => getFullname(r),
-    [GET_EMAIL]: (r) => getEmail(r),
-    [GET_AVATAR]: () => getAvatar(),
-    [GET_PERMISSIONS]: (r) => getPermissions(r),
+    getId(response) { 
+      return getId(response);
+    },
+    getFullname(response) {
+      return getFullname(response)
+    },
+    getEmail(response) {
+      return getEmail(response);
+    },
+    getAvatar() { 
+      return getAvatar();
+    },
+    getPermissions(response) {
+      return getPermissions(response);
+    },
 
   };
 };

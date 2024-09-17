@@ -25,7 +25,7 @@ import Field from "../../../mixins/field";
  */
 export default {
   mixins: [Field],
-  inject: ['admin'],
+  inject: [],
   props: {
     /**
      * Override default label behavior.
@@ -48,7 +48,7 @@ export default {
     getLabel() {
       return (
         this.label ||
-        this.admin.getSourceLabel(this.resource, this.labelKey || this.source)
+        this.$admin.getSourceLabel(this.resource, this.labelKey || this.source)
       );
     },
   },

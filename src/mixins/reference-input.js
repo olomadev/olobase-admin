@@ -6,7 +6,7 @@ import Search from "./search";
  * For all input components that support resource reference, as `VaSelectInput`, `VaRadioGroupInput` or `VaAutocompleteInput`.
  */
 export default {
-  inject: ['admin'],
+  inject: [],
   mixins: [Choices, Search],
   props: {
     /**
@@ -34,7 +34,7 @@ export default {
         return this.itemText;
       }
       if (this.reference) {
-        let resource = this.admin.getResource(this.reference);
+        let resource = this.$admin.getResource(this.reference);
         return resource.label || "label";
       }
       return this.itemText;
@@ -52,7 +52,7 @@ export default {
       if (!isEmpty(this.fields)) {
         return this.fields;
       }
-      let resource = this.admin.getResource(this.reference);
+      let resource = this.$admin.getResource(this.reference);
       return (
         (resource && typeof resource.autocompleteFields !== 'undefined') ||
         (typeof this.getItemText === "string"
@@ -83,7 +83,7 @@ export default {
       /**
        * Load paginated and sorted data list
        */
-      let { data } = await this.$store.dispatch(`${this.reference}/getListAll`, {
+      let { data } = await this.$store.getResource(this.reference).getListAll({
 
         fields: {
           [this.reference]: this.getFields,
@@ -101,11 +101,9 @@ export default {
           ...(this.searchQuery && search && { [this.searchQuery]: search }),
         },
       });
-
-      if (typeof data.error != "undefined") {
-        this.$store.commit("messages/show", { type: 'info', message: data.error });
+      if (data && data['error']) {
+        this.$store.getModule("messages").show({ type: 'info', message: data.error });
       }
-
       this.loading = false;
       return data.data;
     },
@@ -127,7 +125,7 @@ export default {
        * Fetch related item records
        * Used for preloaded autocomplete inputs
        */
-      let { data } = await this.$store.dispatch(`${this.reference}/getMany`, {
+      let { data } = await this.$store.getModule(this.reference).getMany({
         fields: {
           [this.reference]: this.getFields,
         },
@@ -137,8 +135,6 @@ export default {
           ...ids,
         },
       });
-
-
       this.loading = false;
       return data.data;
     },

@@ -69,10 +69,10 @@ export default {
   },
   // created() {
   //   if (this.itemsPerPage == null) {
-  //       this.itemsPerPage = get(this.admin.options, "list.itemsPerPage") || 15
+  //       this.itemsPerPage = get(this.$admin.options, "list.itemsPerPage") || 15
   //   }
   //   if (this.disableItemsPerPage == false) {
-  //       this.disableItemsPerPage = get(this.admin.options, "list.disableItemsPerPage") || false
+  //       this.disableItemsPerPage = get(this.$admin.options, "list.disableItemsPerPage") || false
   //   }
   // },
 };

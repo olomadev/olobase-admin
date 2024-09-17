@@ -12,14 +12,14 @@
         <v-btn
           color="red darken-1"
           text
-          @click.native="$store.dispatch('messages/agree')"
+          @click.native="$store.getModule('messages').agree()"
         >
           {{ $t("va.confirm.yes") }}
         </v-btn>
         <v-btn
           color="green darken-1"
           text
-          @click.native="$store.dispatch('messages/cancel')"
+          @click.native="$store.getModule('messages').cancel()"
         >
           {{ $t("va.confirm.no") }}
         </v-btn>
@@ -29,21 +29,36 @@
 </template>
 
 <script>
+import { storeToRefs } from 'pinia'
+import useStore from "olobase-admin/src/store/messages"
+
 export default {
+  // setup() {
+  //   //
+  //   // https://runthatline.com/pinia-watch-state-getters-inside-vue-components/
+  //   // 
+
+  //   // console.error(confirmObject);
+  // },
   data: () => ({
     dialog: false,
+    confirm: null,
     title: null,
     message: null,
   }),
+  created() {
+    const messages = useStore();
+    const { confirmObject } = storeToRefs(messages)
+    this.confirm = confirmObject;
+  },
   watch: {
-    "$store.state.messages.confirm"(newVal) {
+    "confirm"(newVal) {
       if (newVal) {
         this.dialog = true;
         this.title = newVal.title;
         this.message = newVal.message;
         return;
       }
-
       this.dialog = false;
     },
   },
