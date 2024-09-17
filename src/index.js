@@ -3,7 +3,7 @@
  * 
  * [olobase-admin] <https://github.com/olomadev/olobase-admin>
  *
- * Copyright (c) 2022-2024, Oloma Software.
+ * Copyright (c) 2022-2025, Oloma Software.
  *
  * https://oloma.dev/end-user-license-agreement
  */
