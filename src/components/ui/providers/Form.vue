@@ -75,7 +75,7 @@ export default {
     return {
       fields: { },
       originalValue: this.modelValue,
-      formItem: (this.$store.getResource(this.resource).getFormItem()) ? JSON.parse(this.$store.getResource(this.resource).getFormItem()) : null,
+      formItem: (this.$store.getResource(this.resource).getFormItem) ? JSON.parse(this.$store.getResource(this.resource).getFormItem) : null,
       formState: {
         edit: !!this.id,
         item: this.item,

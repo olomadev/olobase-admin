@@ -10,7 +10,7 @@
   "categories": {
     "title": "Ad",
     "parentId": "Üst Kategori",
-    "moveToHere": "Taşı"
+    "move": "Taşı"
   },
   "datatable": {
     "search": "Ara",

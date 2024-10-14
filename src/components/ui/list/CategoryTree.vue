@@ -48,7 +48,7 @@
                   class="mb-1"
                   v-model="categoryTreeForm['move']"
                   color="primary"
-                  :label="$t('va.categories.moveToHere')" 
+                  :label="$t('va.categories.move')" 
                   @click.stop
                   hide-details
                 >

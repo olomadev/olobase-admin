@@ -74,6 +74,7 @@ export default {
         this.$emit("delete");
         return;
       }
+
       /**
        * Disable delete
        */
@@ -87,10 +88,10 @@ export default {
           id: this.item.id,
         })
       )) {
-        this.$emit("delete");  
+        this.$emit("delete");
+        return;
       }
-      return;
-
+      
       if (
         await this.$admin.confirm(
           this.$t("va.confirm.delete_title", {

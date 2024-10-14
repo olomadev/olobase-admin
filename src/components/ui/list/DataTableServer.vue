@@ -322,6 +322,7 @@ import { useDisplay } from 'vuetify'
 import eventBus from "olobase-admin/src/utils/eventBus";
 import { useVuelidate } from "@vuelidate/core";
 import config from "@/_config";
+import useResource from "../../../store/resource";
 /**
  * Data table component, you will need data iterator as `VaList` in order to make it usable.
  * This component allows you to template all fields columns.
@@ -618,7 +619,7 @@ export default {
       immediate: true,
     },
     "selected"(val) {
-        this.$emit("selected", val);
+      this.$emit("selected", val);
     },
   },
   methods: {
@@ -667,11 +668,14 @@ export default {
         .getResource(this.listState.resource)
         .getTitle(action, hasItem ? item : null);
       let id = hasItem ? item.id : null;
+
+      const resource = useResource();
+      resource.setResource(this.listState.resource);
       /**
        * Get freshed item
        */
-      let { data } = await this.$store.getModule(this.listState.resource).getOne({id: item.id});
-      this.$store.getModule(this.listState.resource).setItem(data)
+      let { data } = await resource.getOne({id: item.id});
+      resource.setItem(data)
       /**
        * Triggered on action on specific row.
        * This event will return a freshed item Object from your API.
@@ -757,8 +761,10 @@ export default {
       this.saving = true;
       this.$emit("save");
       try {
-        if (this.editRowId) { // update
-          await this.$store.getModule(this.listState.resource).update({
+        if (this.editRowId) { // update        
+          const resource = useResource();
+          resource.setResource(this.listState.resource);
+          await resource.update({
               id: this.editRowId,
               data: { ...this.form, ...this.updateData },
           });
@@ -766,7 +772,7 @@ export default {
           let newCreateData = {}
           newCreateData.id = this.generateUid();
           Object.assign(newCreateData, this.createData)
-          await this.$store.getModule(this.listState.resource).create({
+          await resource.create({
             data: { ...this.form, ...newCreateData },
           });
         }

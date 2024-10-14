@@ -10,7 +10,7 @@
   "categories": {
     "title": "Name",
     "parentId": "Parent Category",
-    "moveToHere": "Move"
+    "move": "Move"
   },
   "datatable": {
     "search": "Search",
