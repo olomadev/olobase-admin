@@ -99,14 +99,14 @@ export default ({ app, admin, store, i18n, resource, title }) => {
           if (Array.isArray(strArray) && strArray.length > 0) {
               let lastItem = strArray[strArray.length - 1]
               if (lastItem.trim() == "edit") {
-                let formSaved = store.getModule("api").getFormSaved(); // if form had already saved
+                let formSaved = store.getModule("api").getFormSaved; // if form had already saved
                 if (formSaved) {
                   store.getModule("api").setFormSaved(false);
                   store.getModule("api").setFormStatus(false);
                   return next()
                 }
                 let disableExitWithoutSave = get(admin.options, "form.disableExitWithoutSave");
-                let formStateChanged = store.getModule("api").getFormStatus();
+                let formStateChanged = store.getModule("api").getFormStatus;
                 if (formStateChanged && !disableExitWithoutSave) {
                   let confirm = await store.openDialog();
                   if (confirm) {

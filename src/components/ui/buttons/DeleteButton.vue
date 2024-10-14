@@ -13,6 +13,7 @@
 
 <script>
 import Button from "../../../mixins/button";
+import useResource from "../../../store/resource";
 /**
  * Button for all delete resource action. Comes with confirm dialog.
  * Auto hide if no delete action available unless show prop is active.
@@ -30,6 +31,10 @@ export default {
      * Router queries
      */
     query: Object,
+    /**
+     * Disable delete
+     */
+    disableDelete: Boolean,
   },
   data() {
     return {
@@ -69,6 +74,22 @@ export default {
         this.$emit("delete");
         return;
       }
+      /**
+       * Disable delete
+       */
+      if (this.disableDelete && await this.$admin.confirm(
+        this.$t("va.confirm.delete_title", {
+          resource: this.currentResource.singularName.toLowerCase(),
+          id: this.item.id,
+        }),
+        this.$t("va.confirm.delete_message", {
+          resource: this.currentResource.singularName.toLowerCase(),
+          id: this.item.id,
+        })
+      )) {
+        this.$emit("delete");  
+      }
+      return;
 
       if (
         await this.$admin.confirm(
@@ -82,25 +103,34 @@ export default {
           })
         )
       ) {
-        
+        //
         // we need use await in here otherwise refresh will 
         // not work as we expected
         // 
-        let Self = this;
+        const Self = this;
+        const resource = useResource();
+        resource.setResource(this.resource);
 
-        await this.$store.getModule(this.resource).delete({
+        await resource.delete({
           id: this.item.id,
           query: this.query 
         }).then(function(){
-
+            /**
+             * Redirect
+             */
             if (Self.redirect) {
               Self.$router.push({ name: `${Self.resource}_list`})
               return
             }
-            setTimeout(function(){
-              Self.$store.getResource(Self.resource).refresh(); 
-            }, 200);
-            
+            /**
+             * Refresh
+             */
+            if (Self.item) {
+              Self.$emit("refresh", true);
+              setTimeout(function(){
+                resource.refresh(); 
+              }, 200);
+            }
             /**
              * Triggered on successful deletion of resource item.
              */

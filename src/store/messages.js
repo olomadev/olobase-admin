@@ -5,7 +5,7 @@ import useStore from "@/store"
 const messages = defineStore('messages', {
   state: () => {
     return { 
-      hideApiErrors: false,
+      apiErrors: false,
       confirmObject: null,
       resolve: null,
       reject: null,
@@ -28,12 +28,12 @@ const messages = defineStore('messages', {
       return state.snackbar;
     },
     getHideApiErrors(state) {
-      return state.hideApiErrors;
+      return state.apiErrors;
     },
   },
   actions: {
     hideApiErrors(status) {
-      this.hideApiErrors = status;
+      this.apiErrors = status;
     },
     showConfirm(state, { title, message }) {
       this.confirmObject = { title, message };

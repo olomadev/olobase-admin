@@ -68,6 +68,9 @@ const api = defineStore('api', {
     setFormStatus(changed) {
       this.status = changed
     },
+    setRowForm(item) {
+      this.rowForm = item;
+    },
     setLoading(loading) {
       this.loading = loading;
       if (!loading) {
@@ -76,9 +79,6 @@ const api = defineStore('api', {
     },
     setRefresh(refresh) {
       this.refresh = refresh;
-    },
-    setRowForm(item) {
-      this.rowForm = item;
     },
   },
 

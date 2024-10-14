@@ -13,7 +13,7 @@
 
 <script>
 import Button from "../../../mixins/button";
-
+import useResource from "../../../store/resource";
 /**
  * Button for all delete resource action. Comes with confirm dialog.
  * Auto hide if no delete action available unless show prop is active.
@@ -60,19 +60,27 @@ export default {
           })
         )
       ) {
-      
+        //
         // we need use await in here otherwise refresh will 
         // not work as we expected
         // 
-        let Self = this;
-        await this.$store.getResource(this.resource).copy({
+        const Self = this;
+        const resource = useResource();
+        resource.setResource(this.resource);
+
+        await resource.copy({
           id: this.item.id,
         }).then(function(){
           if (Self.redirect) {
             Self.$router.push({ name: `${Self.resource}_list` })
             return
           }
-          Self.$store.getResource(Self.resource).refresh();
+          /**
+           * Refresh
+           */
+          setTimeout(function(){
+            resource.refresh(); 
+          }, 200);
         });
 
         /**

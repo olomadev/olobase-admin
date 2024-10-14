@@ -15,13 +15,7 @@ const resource = defineStore('resource', {
       dialogItem: null
     }
   },
-  getters: {},
-  actions: {
-    init(params) {
-      this.i18n = params.i18n;
-      this.provider = params.provider;
-      this.resource = params.resource;
-    },
+  getters: {
     getItem() {
       return this.item;
     },
@@ -36,6 +30,13 @@ const resource = defineStore('resource', {
     },
     getDialogItem() {
       return this.dialogItem;
+    },
+  },
+  actions: {
+    init(params) {
+      this.i18n = params.i18n;
+      this.provider = params.provider;
+      this.resource = params.resource;
     },
     setSort(item) {
       this.sort = item
@@ -321,16 +322,16 @@ const resource = defineStore('resource', {
       }
     },
     async refresh() {
-      if (this.item) {
-        /**
-         * Refresh current resource and update item state
-         */
-        let { data } =  await this.provider.getList(this.resource.name, {
-          locale: this.locale,
-          id: this.item.id,
-        });
-        this.item = data;
-      }
+      const store = useStore();
+      /**
+       * Refresh current resource and update item state
+       */
+      // let { data } = await this.provider.getList(this.resource.name, {
+      //   locale: this.locale,
+      //   id: (this.item && this.item['id']) ? this.item.id : null,
+      // });
+      // this.item = data;
+      store.getModule("api").setRefresh(true);
     },
     showSuccess({ action, params }) {
       const store = useStore();

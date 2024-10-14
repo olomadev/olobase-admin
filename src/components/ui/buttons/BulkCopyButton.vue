@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import useResource from "../../../store/resource";
 /**
  * Button for delete bulk actions for VaList. Shown after items selections.
  * Keep all VaDeleteButton feature and use `deleteMany` data provider method under the hood.
@@ -41,8 +42,11 @@ export default {
         );
     
       if (confirm) {
-        let Self = this;
-        await this.$store.getResource(this.listState.resource).copyMany({
+        const Self = this;
+        const resource = useResource();
+        resource.setResource(this.listState.resource);
+
+        await resource.copyMany({
           ids: value, // value.map(({ id }) => id)
         }).then(function(){
           /**
@@ -50,7 +54,13 @@ export default {
            */
           Self.$emit("input", []);
           Self.listState.selected = [];
-          Self.$store.getResource(Self.listState.resource).refresh();
+          Self.$emit("refresh", true);
+          /**
+           * Refresh
+           */
+          setTimeout(function(){
+            resource.refresh(); 
+          }, 200);
         });
 
       }

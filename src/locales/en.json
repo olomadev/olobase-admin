@@ -7,6 +7,11 @@
   "close": "Close",
   "file_manager": "File manager",
   "about_us": "About Us",
+  "categories": {
+    "title": "Name",
+    "parentId": "Parent Category",
+    "moveToHere": "Move"
+  },
   "datatable": {
     "search": "Search",
     "group": " ",

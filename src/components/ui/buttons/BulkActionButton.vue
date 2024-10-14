@@ -11,7 +11,7 @@
 
 <script>
 import ActionButton from "../../../mixins/action-button";
-
+import useResource from "../../../store/resource";
 /**
  * Generic customizable button for update bulk actions in VaList component.
  * Shown after items selections. Use `updateMany` data provider method under the hood.
@@ -39,8 +39,11 @@ export default {
     async onBulkUpdate() {
       let value = this.value || this.listState.selected;
 
-      let Self = this;
-      await this.$store.getResource(this.listState.resource).updateMany({
+      const Self = this;
+      const resource = useResource();
+      resource.setResource(this.listState.resource);
+
+      await resource.updateMany({
         ids: value.map(({ id }) => id),
         data: Self.action,
       }).then(function() {
@@ -49,7 +52,13 @@ export default {
          */
         Self.$emit("input", []);
         Self.listState.selected = [];
-        Self.$store.getResource(Self.listState.resource).refresh();
+        Self.$emit("refresh", true);
+        /**
+         * Refresh
+         */
+        setTimeout(function(){
+          resource.refresh(); 
+        }, 200);
       });
     
     },

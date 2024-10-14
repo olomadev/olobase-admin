@@ -1,5 +1,5 @@
 <template>
-  <v-card variant="flat" :border="border">
+  <v-card variant="flat" :border="border" :loading="listState.loading">
     <v-card-text>
       <v-row :class="class">
         <v-col sm="4" v-if="!hideTitle">
@@ -10,7 +10,7 @@
         <v-col sm="8" class="text-right">
           <div class="d-flex justify-end">
             <v-btn 
-              v-if="!getDisableSettingsValue"
+              v-if="!disableFilters && !getDisableSettingsValue"
               variant="text"
               :icon="!lgAndUp"
               @click="toggleSettingsPanel"
@@ -50,7 +50,7 @@
         </v-col>
       </v-row>
 
-      <div v-if="getFilters.length != 0">
+      <div v-if="!disableFilters && getFilters.length != 0">
         <form-filter
           v-if="!getHideHeaderValue"
           :filters="getFilters"
@@ -65,8 +65,8 @@
           </template>
         </form-filter>
       </div>
-
-      <div v-if="toggleSettings" id="toggleSettings" class="mb-3">
+      
+      <div v-if="!disableFilters && toggleSettings" id="toggleSettings" class="mb-3">
         <v-row class="pt-3 pl-0 pb-3 pr-0">
           <v-col class="pb-0 pt-0" cols="12">
             <div class="align-center">
@@ -190,8 +190,8 @@
         {{ $t("va.datatable.selected_items", listState.selected.length) }}
         <v-spacer></v-spacer>
         <div>
-          <va-bulk-delete-button v-if="!hideBulkDelete" :value="listState.selected"></va-bulk-delete-button>
-          <va-bulk-copy-button v-if="!hideBulkCopy" :value="listState.selected"></va-bulk-copy-button>
+          <va-bulk-delete-button v-if="!hideBulkDelete" :value="listState.selected" @refresh="$emit('refresh', 1)"></va-bulk-delete-button>
+          <va-bulk-copy-button v-if="!hideBulkCopy" :value="listState.selected" @refresh="$emit('refresh', 1)"></va-bulk-copy-button>
 
           <!-- @slot Full template which contains all bulk actions. -->
           <slot name="bulk.actions" v-bind="{ selected: listState.selected }" />
@@ -215,6 +215,7 @@ import Draggable from 'vuedraggable'
 import isEmpty from "lodash/isEmpty";
 import config from "@/_config";
 import get from "lodash/get";
+import useResource from "../../../store/resource";
 /**
  * List data iterator component, perfect for list CRUD page as well as any resource browsing standalone component.
  * Allow resource paginating and filtering. Use current query string context for initial state by default.
@@ -226,7 +227,7 @@ export default {
   setup () {
     // Destructure only the keys we want to use
     const { lgAndUp, mdAndUp } = useDisplay()
-    return { lgAndUp, mdAndUp }
+    return { useResource: useResource(), lgAndUp, mdAndUp }
   },
   components: {
     FormFilter,
@@ -298,6 +299,20 @@ export default {
      * Hide bulk copy button
      */
     hideBulkCopy: Boolean,
+    /**
+     * Disable ajax fetch
+     */
+    disableFetch: {
+      type: Boolean,
+      default: null,
+    },
+    /**
+     * Disable filters globally
+     */
+    disableFilters: {
+      type: Boolean,
+      default: null,
+    },
     /**
      * Disable settings button
      */
@@ -381,6 +396,7 @@ export default {
   },
   data() {
     return {
+      api: null,
       loaded: false,
       headers: [],
       toggleSettings: false,
@@ -406,6 +422,7 @@ export default {
     };
   },
   async created() {
+    this.api = this.$store.getModule('api');
     this.headers = this.getHeadersMap()
     this.selectItems = this.headers.filter((f) => f.key !== "data-table-group");
     this.fillSettings();
@@ -414,7 +431,9 @@ export default {
   async mounted() {
     await this.initFiltersFromQuery();
     this.loaded = true;
-    this.fetchData();
+    if (! this.disableFetch) {
+      this.fetchData();  
+    }
   },
   computed: {
     getTitle() {
@@ -504,11 +523,11 @@ export default {
       immediate: true,
       deep: true,
     },
-    // "$store.state.api.refresh"(newVal) {
-    //   if (newVal) {
-    //     this.fetchData()
-    //   }
-    // },
+    "api.refresh"(newVal) {
+      if (newVal) {
+        this.fetchData()
+      }
+    },
     "listState.options"(val) {
       /**
        * Triggered on pagination change.
@@ -794,7 +813,8 @@ export default {
       /**
        * Load paginated and sorted data list
        */
-      let response = await this.$store.getResource(this.resource).getList(params);
+      this.useResource.setResource(this.resource);
+      let response = await this.useResource.getList(params);
       if (response && response["data"]) {
         let data = response.data.data
         let total = response.data.totalItems

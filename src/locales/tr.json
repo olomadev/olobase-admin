@@ -7,6 +7,11 @@
   "close": "Kapat",
   "file_manager": "Dosya Yöneticisi",
   "about_us": "Hakkımızda",
+  "categories": {
+    "title": "Ad",
+    "parentId": "Üst Kategori",
+    "moveToHere": "Taşı"
+  },
   "datatable": {
     "search": "Ara",
     "group": " ",

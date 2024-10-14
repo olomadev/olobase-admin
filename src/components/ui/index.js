@@ -11,6 +11,7 @@ import EditLayout from "./layouts/EditLayout";
 import AsideLayout from "./layouts/AsideLayout";
 import DataTableServer from "./list/DataTableServer";
 import DataIteratorServer from "./list/DataIteratorServer";
+import CategoryTree from "./list/CategoryTree";
 
 import ListButton from "./buttons/ListButton";
 import CreateButton from "./buttons/CreateButton";
@@ -78,6 +79,7 @@ export {
   Show,
   DataTableServer,
   DataIteratorServer,
+  CategoryTree,
   CreateLayout,
   ShowLayout,
   EditLayout,
