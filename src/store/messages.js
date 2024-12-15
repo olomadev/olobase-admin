@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import config from "@/_config";
-import useStore from "@/store"
 
 const messages = defineStore('messages', {
   state: () => {
@@ -9,6 +8,9 @@ const messages = defineStore('messages', {
       confirmObject: null,
       resolve: null,
       reject: null,
+      editDialog: false,
+      editResolve: null,
+      editReject: null,
       snackbar: {
         class: null,
         color: null,
@@ -26,6 +28,9 @@ const messages = defineStore('messages', {
   getters: {
     getSnackbar(state) {
       return state.snackbar;
+    },
+    getConfirmObject(state) {
+      return state.confirmObject;
     },
     getHideApiErrors(state) {
       return state.apiErrors;
@@ -95,6 +100,24 @@ const messages = defineStore('messages', {
     cancel() {
       this.resolve(false);
       this.confirmObject = null;
+    },
+    openUnsavedEditDialog() {
+      this.editDialog = true;
+      return new Promise((resolve, reject) => {
+        this.editResolve = resolve;
+        this.editReject = reject;
+      });
+    },
+    closeUnsavedEditDialog() {
+      this.editDialog = false;
+    },
+    agreeUnsavedEditDialog() {
+      this.editResolve(true);
+      this.editDialog = false;
+    },
+    cancelUnsavedEditDialog() {
+      this.editResolve(false);
+      this.editDialog = false;
     },
   }
 });

@@ -2,6 +2,7 @@ import get from "lodash/get"
 import camelCase from "lodash/camelCase";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
+import config from "@/_config";
 
 // https://stackoverflow.com/questions/66342500/vuejs-3-how-to-render-router-view-router-view-from-vue-router
 // 
@@ -98,6 +99,7 @@ export default ({ app, admin, store, i18n, resource, title }) => {
           let strArray = this.$route.name.split("_"); // check the current route is edit
           if (Array.isArray(strArray) && strArray.length > 0) {
               let lastItem = strArray[strArray.length - 1]
+
               if (lastItem.trim() == "edit") {
                 let formSaved = store.getModule("api").getFormSaved; // if form had already saved
                 if (formSaved) {
@@ -105,11 +107,10 @@ export default ({ app, admin, store, i18n, resource, title }) => {
                   store.getModule("api").setFormStatus(false);
                   return next()
                 }
-                let disableExitWithoutSave = get(admin.options, "form.disableExitWithoutSave");
                 let formStateChanged = store.getModule("api").getFormStatus;
-                if (formStateChanged && !disableExitWithoutSave) {
-                  let confirm = await store.openDialog();
-                  if (confirm) {
+                if (formStateChanged && !config.form.disableUnsavedFormDialog) {
+                  const confirmResult = await store.getModule("messages").openUnsavedEditDialog();
+                  if (confirmResult) {
                     store.getResource(name).removeItem();
                     store.getModule("api").setFormStatus(false);
                     return next();
@@ -121,9 +122,7 @@ export default ({ app, admin, store, i18n, resource, title }) => {
                   return next();
                 }
               }
-
           } // end checking edit route 
-          
           store.getResource(name).removeItem();
           return next()
         },
