@@ -1,6 +1,7 @@
 import Source from "./source"
 import InputWrapper from "./input-wrapper"
 import get from "lodash/get"
+import isEmpty from "lodash/isEmpty"
 
 /**
  * Main input mixin for all inputs used for resource property edition or creation.
@@ -106,7 +107,7 @@ export default {
       return {
         color: "primary",
         label: label,
-        modelValue: this.input,
+        modelValue: isEmpty(this.input) ? null : this.input,
         prependIcon: this.prependIcon,
         prependInnerIcon: this.prependInnerIcon,
         appendIcon: this.appendIcon,

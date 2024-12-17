@@ -120,12 +120,11 @@ export default {
       });
 
       this.loading = true;
-
       /**
        * Fetch related item records
        * Used for preloaded autocomplete inputs
        */
-      let { data } = await this.$store.getModule(this.reference).getMany({
+      let { data } = await this.$store.getResource(this.reference).getMany({
         fields: {
           [this.reference]: this.getFields,
         },
