@@ -36,12 +36,12 @@ export default {
   //   // 
   //   // console.error(confirmObject);
   // },
-  data: () => ({
-    dialog: false,
-    confirm: null,
-    title: null,
-    message: null,
-  }),
+  data() {
+    return {
+      title: null,
+      message: null,
+    };
+  },
   computed: {
     dialog: {
       get() {
