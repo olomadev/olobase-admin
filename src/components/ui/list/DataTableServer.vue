@@ -760,9 +760,9 @@ export default {
       }
       this.saving = true;
       this.$emit("save");
+      const resource = useResource();
       try {
         if (this.editRowId) { // update        
-          const resource = useResource();
           resource.setResource(this.listState.resource);
           await resource.update({
               id: this.editRowId,
