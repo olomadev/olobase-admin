@@ -49,8 +49,9 @@ export default {
         if (confirmObject) {
           this.title = confirmObject.title;
           this.message = confirmObject.message;
+          return true;
         }
-        return confirmObject;
+        return false;
       },
       set(bool) {
         this.cancel();
