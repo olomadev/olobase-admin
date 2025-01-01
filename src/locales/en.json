@@ -74,7 +74,7 @@
     "datatable_settings_reset": "Default settings restored successfully",
     "form_lost_changes" : "You did not save your changes. Are you sure want to leave out ?",
     "success": "Operation Succeeded",
-    "error": "An Error Occurred",
+    "error": "Error",
     "info": "Info",
     "warning": "Warning",
     "created": "New {resource} successfully created !",
