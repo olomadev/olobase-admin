@@ -73,7 +73,7 @@
     "datatable_settings_saved": "Your personal settings saved successfully",
     "datatable_settings_reset": "Default settings restored successfully",
     "form_lost_changes" : "You did not save your changes. Are you sure want to leave out ?",
-    "success": "Operation Succeeded",
+    "success": "Successful",
     "error": "Error",
     "info": "Info",
     "warning": "Warning",
