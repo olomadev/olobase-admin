@@ -114,9 +114,9 @@ export default {
         console.error("Please provide a reference table in attributes.");
         return;
       }
-      if (isEmpty(ids)) {
-        return;
-      }
+      // if (isEmpty(ids)) { // this prevents to fetch all data in standalone usage !!
+      //   return;
+      // }
       ids = ids.map(function(val){
         return { id: val }
       });
