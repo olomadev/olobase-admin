@@ -236,9 +236,9 @@ export default {
       return
     },
     filterText(value, search, item) {
-      if (item[this.groupBy].toLowerCase().indexOf(search.toLowerCase()) !== -1) { // search in the group
+      if (item && item[this.groupBy] && item[this.groupBy].toLowerCase().indexOf(search.toLowerCase()) !== -1) { // search in the group
         return true
-      }      
+      }
       return ( // search in other fields
         value != null &&
         search != null &&
