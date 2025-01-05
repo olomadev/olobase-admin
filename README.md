@@ -21,7 +21,7 @@ Every contribution, no matter the size, brings us closer to our vision. Thank yo
 
 Click below to donate and help us grow: ❤️
 
-<a href="https://www.patreon.com/olobase" target="_blank">Become a  sponsor</a> 🤝
+[**Become a  sponsor**](https://www.patreon.com/olobase). 🤝
 
 ## Higlighted Sponsors
 
@@ -32,7 +32,9 @@ Listed alphabetically.
 - Your company logo (208x58) will be published in our sponsors section on all documentation pages.
 - Your company logo and URL will be listed in the highlighted sponsors section on our github readme pages.
 
-Your company logo can be a here. <a href="https://www.patreon.com/olobase" target="_blank">Become a  sponsor</a>. 🙏
+Your company logo can be a here.
+
+[**Become a  sponsor**](https://www.patreon.com/olobase). 🙏
 
 ## Micro Sponsors
 
@@ -42,4 +44,6 @@ Listed alphabetically.
 
 - Your URL will be listed in the micro sponsors section on our github readme pages.
 
-Your company logo can be a here. <a href="https://www.patreon.com/olobase" target="_blank">Become a  sponsor</a>. 🙏
+Your company logo can be a here.
+
+[**Become a  sponsor**](https://www.patreon.com/olobase). 🙏
