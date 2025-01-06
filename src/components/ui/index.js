@@ -69,6 +69,7 @@ import CheckListInput from "./inputs/CheckListInput";
 import CurrencyInput from "./inputs/CurrencyInput";
 import AvatarInput from "./inputs/AvatarInput";
 import SheetInput from "./inputs/SheetInput";
+import TreeViewInput from "./inputs/TreeViewInput";
 import VueCurrencyComponent from "./inputs/VueCurrencyComponent";
 
 export {
@@ -137,5 +138,6 @@ export {
   CurrencyInput,
   AvatarInput,
   SheetInput,
+  TreeViewInput,
   VueCurrencyComponent
 };

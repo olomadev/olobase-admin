@@ -1,5 +1,5 @@
 <template>
-  <v-card border rounded flat class="pt-2 pl-0 pb-2 pr-0">
+  <v-row no-gutters>
     <v-col>
       <v-row no-gutters>
         <v-col cols="12" lg="6">
@@ -18,29 +18,29 @@
       </v-row>
       <v-row no-gutters>
         <v-col cols="12" lg="6">
-          <!-- v-model:selected="listState.selected" -->
           <v-treeview
+            :variant="variant"
             :search="search"
             :custom-filter="searchFilter"
             selected-color="primary"
             :density="density"
             :open-all="openAll"
             :items="items"
-            item-value="id"
+            :item-value="itemValue"
+            :item-title="itemText"
           >
             <template v-for="(_, scopedSlotName) in $slots" v-slot:[scopedSlotName]="slotData">
               <slot v-if="scopedSlotName" :name="scopedSlotName" v-bind="slotData" />
             </template>
-
             <template v-slot:title="{ item }">
               <div class="mt-2 mb-2" v-if="item.id === editRowId">
                 <va-text-input
-                  source="title"
+                  source="name"
                   :resource="listState.resource"
                   :item="item"
-                  v-model="categoryTreeForm['title']"
-                  :label="$t('va.categories.title')"
-                  :error-messages="getErrorMessage('title')"
+                  v-model="categoryTreeForm['name']"
+                  :label="$t('va.categories.name')"
+                  :error-messages="getNameErrorMessages"
                   hide-details
                 >
                 </va-text-input>
@@ -62,15 +62,15 @@
                   v-model="categoryTreeForm['parentId']"
                   reference="categories"
                   :label="$t('va.categories.parentId')"
-                  :error-messages="getErrorMessage('parentId')"
                   :return-object="false"
+                  :error-messages="getParentIdErrorMessages"
                   hide-details
                 >
                 </va-select-input>
                 <div>
                   <v-btn
+                    flat
                     class="mr-2"
-                    color="primary"
                     @click="saveItem($event)"
                   >{{ $t('va.actions.save') }}
                   </v-btn>
@@ -82,7 +82,7 @@
                 </div>
               </div>
               <div v-else>
-                <span>{{ item.title }}</span>
+                <span>{{ item.name }}</span>
                 <span>&nbsp;&nbsp;</span>
                 <span>
                   <va-edit-button
@@ -103,12 +103,11 @@
                 </span>
               </div>
             </template>
-
           </v-treeview>
         </v-col>
       </v-row>
     </v-col>
-  </v-card>
+  </v-row>
 </template>
 
 <script>
@@ -120,6 +119,23 @@ export default {
   mixins: [Utils],
   inject: ["listState"],
   props: {
+    /**
+     * Use different styles: 
+     * 
+     * | 'outlined' | 'plain' | 'underlined' | 'filled' | 'solo' | 'solo-inverted' | 'solo-filled'
+     */
+    variant: {
+      type: String,
+      default: 'outlined',
+    },
+    itemValue: {
+      type: [String, Array, Function],
+      default: "id",
+    },
+    itemText: {
+      type: [String, Array, Function],
+      default: "name",
+    },
     density: {
       type: String,
       default: "compact",
@@ -141,19 +157,20 @@ export default {
   validations() {
     return {
       categoryTreeForm: {
-        title: {
+        name: {
           required,
-        },  
+        },
+        parentId: {
+          required,
+        },
       }
     }
   },
   async created() {
     this.listState.loading = true;
     let response = await this.$admin.http.get(this.url);
-    if (response && 
-        response['data'] 
-        && response['data']['data']) {
-      this.items = response['data']['data'];
+    if (response && response?.data?.data) {
+      this.items = response.data.data;
     }
     //
     // Search filter
@@ -175,9 +192,9 @@ export default {
       editedItem: null,
       fields: [
         {
-          source: "title",
+          source: "name",
           type: "text",
-          label: this.$t("va.categories.title")
+          label: this.$t("va.categories.name")
         },
         {
           source: "move",
@@ -218,15 +235,22 @@ export default {
       fields['id'] = null;  
       return fields;
     },
-  },
-  methods: {
-    getErrorMessage(source) {
+    getNameErrorMessages() {
       const errors = [];
-      if (!this.tv$["categoryTreeForm"]['title'].$dirty) return errors;
-      this.tv$["categoryTreeForm"]['title'].required.$invalid &&
+      if (!this.tv$["categoryTreeForm"]['name'].$dirty) return errors;
+      this.tv$["categoryTreeForm"]['name'].required.$invalid &&
         errors.push(this.$t("v.text.required"));
       return errors;
     },
+    getParentIdErrorMessages() {
+      const errors = [];
+      if (!this.tv$["categoryTreeForm"]['parentId'].$dirty) return errors;
+      this.tv$["categoryTreeForm"]['parentId'].required.$invalid &&
+        errors.push(this.$t("v.text.required"));
+      return errors;
+    },
+  },
+  methods: {
     editItem(item) {
       this.editedItem = item;
       this.$emit("edit", item);
@@ -261,7 +285,7 @@ export default {
       if (this.tv$.$invalid) {
         return false;
       }
-      this.editedItem.title = this.categoryTreeForm.title;
+      this.editedItem.name = this.categoryTreeForm.name;
       this.editedItem.move = 0;
       if (this.categoryTreeForm['parentId']) {
         this.editedItem.parentId = this.categoryTreeForm['parentId'];
@@ -292,6 +316,3 @@ export default {
   },
 };
 </script>
-
-
-
