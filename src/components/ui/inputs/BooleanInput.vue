@@ -1,7 +1,7 @@
 <template>
   <v-switch
-    false-value="0"
-    true-value="1"
+    :false-value="0"
+    :true-value="1"
     v-bind="commonProps"
     @change="change"
     @update:modelValue="update"
