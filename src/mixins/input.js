@@ -107,7 +107,7 @@ export default {
       return {
         color: "primary",
         label: label,
-        modelValue: isEmpty(this.input) ? null : this.input,
+        modelValue: (Object.prototype.toString.call(this.input) === "[object String]" && isEmpty(this.input)) ? null : this.input,
         prependIcon: this.prependIcon,
         prependInnerIcon: this.prependInnerIcon,
         appendIcon: this.appendIcon,
