@@ -1,8 +1,7 @@
 <template>
   <v-switch
-    :false-value="0"
-    :true-value="1"
-    :input-value="input"
+    false-value="0"
+    true-value="1"
     v-bind="commonProps"
     @change="change"
     @update:modelValue="update"
@@ -26,18 +25,7 @@ export default {
      * Integer to be edited.
      * @model
      */
-    value: null,
-  },
-  data() {
-     return {
-        type: "boolean",
-     }
-  },
-  methods: {
-    // changeState(value) {
-    //   this.change(value);
-    //   this.update(value);
-    // },
-  },
+    value: Number,
+  }
 };
 </script>
