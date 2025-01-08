@@ -8,7 +8,7 @@
   "file_manager": "File manager",
   "about_us": "About Us",
   "categories": {
-    "title": "Name",
+    "name": "Name",
     "parentId": "Parent Category",
     "move": "Move"
   },

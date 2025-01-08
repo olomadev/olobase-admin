@@ -8,7 +8,7 @@
   "file_manager": "Dosya Yöneticisi",
   "about_us": "Hakkımızda",
   "categories": {
-    "title": "Ad",
+    "name": "Ad",
     "parentId": "Üst Kategori",
     "move": "Taşı"
   },
