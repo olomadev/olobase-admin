@@ -143,4 +143,5 @@ this.$store.getModule("auth").logout()
 - mapActions()
 - logout()
 
-**Added disableTitle prop to ActionPage.vue Layout
+**Added disableTitle prop to ActionPage.vue Layout**
+**Changed date format in date field**
