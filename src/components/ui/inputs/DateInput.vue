@@ -302,7 +302,7 @@ export default {
       if (this.format) {
         return this.format;
       }
-      return config.i18n[this.i18n.global.locale.value].dateFieldDisplayFormat;
+      return config.i18n[this.i18n.global.locale.value].dateFormat;
     },
     /**
      * date format
@@ -328,16 +328,16 @@ export default {
       }
       let year = date.getFullYear();
       switch (dateFormat) {
-        case 'dd' + s + 'mm' + s + 'YYYY':
+        case 'd' + s + 'm' + s + 'Y':
           return `${day}${s}${month}${s}${year}`;
           break;
-        case 'mm' + s + 'dd' + s + 'YYYY':
+        case 'm' + s + 'd' + s + 'Y':
           return `${month}${s}${day}${s}${year}`;
           break;
-        case 'YYYY' + s + 'mm' + s + 'dd':
+        case 'Y' + s + 'm' + s + 'd':
           return `${year}${s}${month}${s}${day}`;
           break;
-        case 'YYYY' + s + 'dd' + s + 'mm':
+        case 'Y' + s + 'd' + s + 'm':
           return `${year}${s}${day}${s}${month}`;
           break;
         default:
