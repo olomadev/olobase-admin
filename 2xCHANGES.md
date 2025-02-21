@@ -144,4 +144,9 @@ this.$store.getModule("auth").logout()
 - logout()
 
 **Added disableTitle prop to ActionPage.vue Layout**
+- disableTitle
+
 **Changed date format in date field**
+
+** Added disableSubmit prop and feature to ui/providers/Form.vue
+- disableSubmit

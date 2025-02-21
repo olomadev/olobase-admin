@@ -62,6 +62,10 @@ export default {
       default: "list",
     },
     /**
+     * Disable default submit behavior
+     */
+    disableSubmit: Boolean,
+    /**
      * Disable default redirect behavior
      */
     disableRedirect: Boolean,
@@ -176,6 +180,9 @@ export default {
   },
   methods: {
     async onSubmit() {
+      if (this.disableSubmit) {
+        return;
+      }
       if (this.disableRedirect) {
         await this.save()
         return;
