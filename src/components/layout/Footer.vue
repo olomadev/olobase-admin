@@ -10,8 +10,7 @@
         class="text-center mb-sm-0"
         cols="auto"
         >
-          <a :style="getAStyle()" 
-            :href="item.href"
+          <a :href="item.href"
             :to="item.link"
             class="px-3 grey--text text--darken-3"
             :target="item.href ? '_blank' : '_self'"
@@ -64,12 +63,6 @@ export default {
       this.leftPadding = 'padding-left: 256px';
     } else {
       this.leftPadding = 'padding-left: 0px';
-    }
-  },
-  methods: {
-    getAStyle() {
-      let themeColor = this.$vuetify.theme.themes.defaultTheme.colors.primary;
-      return 'color: ' + themeColor + ';';
     }
   }
 };
