@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters>
+  <v-row no-gutters :class="class">
     <v-col>
       <v-row no-gutters>
         <v-col cols="12" lg="6">
@@ -119,6 +119,12 @@ export default {
   mixins: [Utils],
   inject: ["listState"],
   props: {
+    class: {
+      type: String,
+      default() {
+        return "va-category-tree"
+      },
+    },
     /**
      * Use different styles: 
      * 

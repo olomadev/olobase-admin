@@ -49,6 +49,41 @@ npm i
 - Added CategoryTree list component
 - Added disableDelete property to DeleteButton
 
+**Updated Providers:** 
+- providers/auth/jwt.js
+- providers/auth/actions.js
+
+**Updated All Mixins:** 
+- mixins/resource.js  (currentResource() relaced this.admin as this.$admin)
+
+**Updated All Store Modules:** 
+- store/api.js
+- store/auth.js
+- store/guest.js
+- store/messages.js
+- store/resource.js
+
+**Updated Plugins & Files** 
+- plugins/index.js ( added pinia )
+- updated i18n/translation.js  setLocale() function
+
+**Updated Layouts/Admin.vue Computed Functions** 
+- getEmail()
+- getAvatar()
+- getFullname()
+- getCurrentLocale()
+- avatarExists()
+- mapActions()
+- logout()
+
+**Added disableTitle prop to ActionPage.vue Layout**
+- disableTitle
+
+**Changed date format in date field**
+
+** Added disableSubmit prop and feature to ui/providers/Form.vue
+- disableSubmit
+
 ```js
  app.config.globalProperties.$admin = admin; 
 ```
@@ -115,40 +150,3 @@ New Usage:
 ```sh
 this.$store.getModule("auth").logout()
 ```
-
-**Updated Providers:** 
-- providers/auth/jwt.js
-- providers/auth/actions.js
-
-**Updated All Mixins:** 
-- mixins/resource.js  (currentResource() relaced this.admin as this.$admin)
-
-**Updated All Store Modules:** 
-- store/api.js
-- store/auth.js
-- store/guest.js
-- store/messages.js
-- store/resource.js
-
-**Updated Plugins & Files** 
-- plugins/index.js ( added pinia )
-- updated i18n/translation.js  setLocale() function
-
-**Updated Layouts/Admin.vue Computed Functions** 
-- getEmail()
-- getAvatar()
-- getFullname()
-- getCurrentLocale()
-- avatarExists()
-- mapActions()
-- logout()
-
-**Added disableTitle prop to ActionPage.vue Layout**
-- disableTitle
-
-**Changed date format in date field**
-
-** Added disableSubmit prop and feature to ui/providers/Form.vue
-- disableSubmit
-
-** Added CategoryTree List component
