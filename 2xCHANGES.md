@@ -150,3 +150,5 @@ this.$store.getModule("auth").logout()
 
 ** Added disableSubmit prop and feature to ui/providers/Form.vue
 - disableSubmit
+
+** Added CategoryTree List component

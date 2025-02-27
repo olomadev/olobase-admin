@@ -10,16 +10,6 @@
     "vite-plugin-vuetify": "^2.0.1",
     "@vitejs/plugin-vue": "^5.2.1",
     "vuetify": "^3.7.14",
-    "portal-vue": "^3.0.0",
     "ejs": "^3.1.5"
-  },
-  "dependencies": {
-    "vuetify": "^3.7.14",
-    "portal-vue": "^3.0.0",
-    "@vuelidate/core": "^2.0.2",
-    "@vueuse/core": "^10.1.0",
-    "lodash": "^4.17.21",
-    "papaparse": "^5.4.1",
-    "qs": "^6.11.2"
   }
 }
