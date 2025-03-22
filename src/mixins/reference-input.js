@@ -1,6 +1,6 @@
-import isEmpty from "lodash/isEmpty";
 import Choices from "./choices";
 import Search from "./search";
+import { isEmpty } from '@/helpers/lodash';
 
 /**
  * For all input components that support resource reference, as `VaSelectInput`, `VaRadioGroupInput` or `VaAutocompleteInput`.
@@ -83,59 +83,62 @@ export default {
       /**
        * Load paginated and sorted data list
        */
-      let { data } = await this.$store.getResource(this.reference).getListAll({
-
-        fields: {
-          [this.reference]: this.getFields,
-        },
-        include: this.include,
-        // pagination: {
-        //   page: 1,
-        //   perPage: this.itemsPerPage,
-        // },
-        sort: this.sortBy.map((by, index) => {
-          return { by, desc: this.sortDesc[index] };
-        }),
-        filter: {
-          ...this.filter,
-          ...(this.searchQuery && search && { [this.searchQuery]: search }),
-        },
-      });
-      if (data && data['error']) {
-        this.$store.getModule("messages").show({ type: 'info', message: data.error });
+      try {
+        let { data } = await this.$store.getResource(this.reference).getListAll({
+          fields: {
+            [this.reference]: this.getFields,
+          },
+          include: this.include,
+          // pagination: {
+          //   page: 1,
+          //   perPage: this.itemsPerPage,
+          // },
+          sort: this.sortBy.map((by, index) => {
+            return { by, desc: this.sortDesc[index] };
+          }),
+          filter: {
+            ...this.filter,
+            ...(this.searchQuery && search && { [this.searchQuery]: search }),
+          },
+        });
+        this.loading = false;
+        return data.data;
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+        console.error('Url not found:',  error.config.baseURL + "/" + error.config.url);
       }
-      this.loading = false;
-      return data.data;
     },
     async fetchCurrentChoices(ids) {
       if (!this.reference) {
         console.error("Please provide a reference table in attributes.");
         return;
       }
-      // if (isEmpty(ids)) { // this prevents to fetch all data in standalone usage !!
-      //   return;
-      // }
       ids = ids.map(function(val){
         return { id: val }
       });
 
       this.loading = true;
-      /**
-       * Fetch related item records
-       * Used for preloaded autocomplete inputs
-       */
-      let { data } = await this.$store.getResource(this.reference).getMany({
-        fields: {
-          [this.reference]: this.getFields,
-        },
-        include: this.include,
-        filter: {
-          ...this.filter,
-          ...ids,
-        },
-      });
-      this.loading = false;
-      return data.data;
+      try {
+        /**
+         * Fetch related item records
+         * Used for preloaded autocomplete inputs
+         */
+        let { data } = await this.$store.getResource(this.reference).getMany({
+          fields: {
+            [this.reference]: this.getFields,
+          },
+          include: this.include,
+          filter: {
+            ...this.filter,
+            ...ids,
+          },
+        });
+        this.loading = false;
+        return data.data;
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+        console.error('Url not found:',  error.config.baseURL + "/" + error.config.url);
+      }
     },
   },
 };

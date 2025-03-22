@@ -3,18 +3,23 @@
  */
 export default {
   created() {
-    let results = []
-    let enumKey = `resources.${this.resource}.enums.${this.source}`;
-    let enums = this.$admin.i18n.global.tm(enumKey)
-    if (!enums) {
+    let enums = null;
+    let results = [];
+    //
+    // Added support for module names
+    //
+    if (this.resource.includes("_")) {
+      const parts = this.resource.includes("_") ? this.resource.split("_") : [null, this.resource];
+      const module = parts[0];
+      const resourceName = parts[1];
+      const enumKey = module 
+        ? `${module}.enums.${this.source}` 
+        : `${resourceName}.enums.${this.source}`;
+      results = this.$admin.i18n.global.tm(enumKey);
+    }
+    if (!results) {
       return;
     }
-    results = Object.keys(enums).map((key) => {
-      return {
-        id: key,
-        name: enums[key].source,
-      };
-    });
     if (Array.isArray(results) && results.length > 0) {
       let Self = this
       results.forEach(function(val, index){

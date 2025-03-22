@@ -4,8 +4,7 @@
 
 <script>
 import Field from "../../../mixins/field";
-import truncate from "lodash/truncate";
-import isObject from "lodash/isObject";
+import { isObject, truncate } from '@/helpers/lodash';
 
 /**
  * Show value as simple text, render a simple span. HTML tags will be stripped.

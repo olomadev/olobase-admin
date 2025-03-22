@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import Confirm from "../internal/Confirm";
+import Confirm from "../internal/Confirm.vue";
 /**
  * Internal VaMessages system for snackbar infos and confirm dialog.
  * Integrated with all resource modules for message API calls.

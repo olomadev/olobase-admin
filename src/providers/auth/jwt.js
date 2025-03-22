@@ -1,7 +1,5 @@
-
-import cookies from "olobase-admin/src/utils/cookies";
+import cookies from '@/helpers/cookies'
 import FetchHydra from "../utils/fetchHydra";
-const cookieKey = JSON.parse(import.meta.env.VITE_COOKIE);
 
 export default (httpClient, params = {}) => {
   if (typeof httpClient === "string") {
@@ -46,13 +44,13 @@ export default (httpClient, params = {}) => {
         routes.login,
         getCredentials({ username, password })
       );
-      cookies.remove(cookieKey.token);
-      cookies.remove(cookieKey.user);
+      cookies.remove("token");
+      cookies.remove("user");
       if (response.status < 200 || response.status >= 300) {
         throw new Error(response.statusText);
       }
-      cookies.set(cookieKey.user, JSON.stringify(response.data.data.user));
-      cookies.set(cookieKey.token, getToken(response.data.data));
+      cookies.set("user", JSON.stringify(response.data.data.user));
+      cookies.set("token", getToken(response.data.data));
       localStorage.setItem("avatar", response.data.data.avatar);
       return Promise.resolve(response);
     },
@@ -66,16 +64,16 @@ export default (httpClient, params = {}) => {
           console.error(err)
         }
       }
-      cookies.remove(cookieKey.user)
-      cookies.remove(cookieKey.token)
+      cookies.remove("user")
+      cookies.remove("token")
       return Promise.resolve(response);
     },
     async checkAuth() {
-      const token = cookies.get(cookieKey.token)
+      const token = cookies.get("token")
       if (typeof token == "undefined" || token == "undefined" || token == "") {
           return Promise.reject()
       }
-      let user = JSON.parse(cookies.get(cookieKey.user))
+      let user = JSON.parse(cookies.get("user"))
       if (user) {
         return Promise.resolve({
           data: {
@@ -83,8 +81,8 @@ export default (httpClient, params = {}) => {
               token: token,
               user: user,
               cookieKey: {
-                user:  cookieKey.user,
-                token: cookieKey.token,
+                user:  cookies.getCookieKey("user"),
+                token: cookies.getCookieKey("token"),
               }
           },
         })
@@ -94,8 +92,8 @@ export default (httpClient, params = {}) => {
     },
     checkError({ status }) {
       if (status === 401 || status === 403) {
-        cookies.remove(cookieKey.user)
-        cookies.remove(cookieKey.token);
+        cookies.remove("user")
+        cookies.remove("token");
         return Promise.reject();
       }
       return Promise.resolve();

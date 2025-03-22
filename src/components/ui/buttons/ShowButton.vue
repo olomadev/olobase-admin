@@ -5,7 +5,7 @@
       :item="item"
       :label="$t('va.actions.show')"
       icon="mdi-eye"
-      :color="color || 'info'"
+      :color="color"
       variant="text"
       exact
       :to="getRoute('show', { params: { id: item.id } })"

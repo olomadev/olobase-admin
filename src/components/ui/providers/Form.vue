@@ -6,9 +6,8 @@
 </template>
 
 <script>
+import { set } from '@/helpers/lodash';
 import Resource from "../../../mixins/resource"
-import set from "lodash/set"
-import isEmpty from "lodash/isEmpty"
 
 // import {required} from "vuelidate/lib/validators"
 // 
@@ -243,7 +242,7 @@ export default {
       */
       this.$emit("model", model);
       try {
-        let { data } = this.id
+        let response = this.id
           ? await this.$store.getResource(this.resource).update({
               id: this.id,
               data: this.formState.model,
@@ -251,54 +250,57 @@ export default {
           : await this.$store.getResource(this.resource).create({
               data: this.formState.model,
             });
-        /**
-         * Sent after success saving.
-         */
-        this.$emit("saved", data);
-        this.$store.getModule("api").setFormSaved(true);
-        this.formState.errors = null
-        //
-        // post process must be in a set timeout function
-        // otherwise these functions does not work well !
-        // 
-        if (! this.disableSaveMessage) {
-          let Self = this;
-          setTimeout(function(){
-            Self.$store.getModule("messages").show({ type: 'success', message: Self.$t("form.saved") });
-          }, 100);
+
+        if (response.status == 200) {
+          const data = response.data.data;
+          /**
+           * Sent after success saving.
+           */
+          this.$emit("saved", data);
+          this.$store.getModule("api").setFormSaved(true);
+          this.formState.errors = null
+          //
+          // post process must be in a set timeout function
+          // otherwise these functions does not work well !
+          // 
+          if (! this.disableSaveMessage) {
+            let Self = this;
+            setTimeout(function(){
+              Self.$store.getModule("messages").show({ type: 'success', message: Self.$t("form.saved") });
+            }, 100);
+          }
+          switch (redirect) {
+            case "list":
+              let listQuery = null;
+              if (localStorage.getItem("listQuery")) {
+                listQuery = JSON.parse(localStorage.getItem("listQuery"));  
+              }
+              if (listQuery && listQuery['filter']) {
+                this.$router.push({ name: `${this.resource}_list`, query: { filter: listQuery['filter'] } })  
+              } else {
+                this.$router.push({ name: `${this.resource}_list` })
+              }
+              break;
+            case "create":
+              // Reset form in case of same route
+              this.formState.item = null;
+              this.formState.model = this.originalValue;
+              this.$router.push({ name: `${this.resource}_create` })
+              break;
+            case "show":
+              this.$router.push({
+                name: `${this.resource}_show`,
+                params: { id: data.id },
+              });
+              break;
+            case "edit":
+              this.$router.push({
+                name: `${this.resource}_edit`,
+                params: { id: data.id },
+              });
+              break;
+          }
         }
-        switch (redirect) {
-          case "list":
-            let listQuery = null;
-            if (localStorage.getItem("listQuery")) {
-              listQuery = JSON.parse(localStorage.getItem("listQuery"));  
-            }
-            if (listQuery && listQuery['filter']) {
-              this.$router.push({ name: `${this.resource}_list`, query: { filter: listQuery['filter'] } })  
-            } else {
-              this.$router.push({ name: `${this.resource}_list` })
-            }
-            break;
-          case "create":
-            // Reset form in case of same route
-            this.formState.item = null;
-            this.formState.model = this.originalValue;
-            this.$router.push({ name: `${this.resource}_create` })
-            break;
-          case "show":
-            this.$router.push({
-              name: `${this.resource}_show`,
-              params: { id: data.id },
-            });
-            break;
-          case "edit":
-            this.$router.push({
-              name: `${this.resource}_edit`,
-              params: { id: data.id },
-            });
-            break;
-        }
-        
       } catch (e) {
         if (e.errors) {
           this.formState.errors = e.errors

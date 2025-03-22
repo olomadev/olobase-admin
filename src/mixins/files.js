@@ -1,5 +1,5 @@
 import Field from "./field";
-import get from "lodash/get";
+import { get } from '@/helpers/lodash';
 
 /**
  * Common props for all file upload inputs.

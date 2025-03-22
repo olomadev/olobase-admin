@@ -68,8 +68,8 @@
 </template>
 
 <script>
-import InputFilter from "./InputFilter"
-import size from "lodash/size"
+import InputFilter from "./InputFilter.vue"
+import { size } from '@/helpers/lodash';
 import { useDisplay } from 'vuetify'
 
 export default {

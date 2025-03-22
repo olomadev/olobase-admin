@@ -1,6 +1,4 @@
-
-import cookies from "olobase-admin/src/utils/cookies";
-const cookieKey = JSON.parse(import.meta.env.VITE_COOKIE);
+import cookies from '@/helpers/cookies'
 
 /**
  * Fake login for testing purpose without need of real auth server
@@ -49,14 +47,14 @@ export default () => {
               "admin"
           ]
       },
-      cookies.set(cookieKey.user, JSON.stringify(user));
-      cookies.set(cookieKey.token, null);
+      cookies.set("user", JSON.stringify(user));
+      cookies.set("token", null);
       localStorage.setItem("avatar", null);
     },
     logout() {
       let response = null;
-      cookies.remove(cookieKey.user)
-      cookies.remove(cookieKey.token)
+      cookies.remove("user")
+      cookies.remove("token")
       return Promise.resolve(response);
     },
     checkAuth() {
@@ -68,8 +66,8 @@ export default () => {
               token: null,
               user: user,
               cookieKey: {
-                user:  cookieKey.user,
-                token: cookieKey.token,
+                user:  cookies.getCookieKey("user"),
+                token: cookies.getCookieKey("token"),
               }
           },
         })

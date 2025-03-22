@@ -83,7 +83,7 @@
                 :options="getOptions(field)"
                 v-bind="field.attributes"
                 :error-messages="getErrorMessages(field.source)"
-                class="mt-6"
+                :class="(field.type == 'boolean') ? '' : 'mt-6'"
                 @click.stop
               ></component>
            </div>
@@ -160,7 +160,7 @@
                 <template v-slot:activator="{ props }">
                   <v-btn
                     variant="text"
-                    color="success"
+                    color="primary"
                     icon
                     v-bind="props"
                     :loading="saving"
@@ -313,13 +313,12 @@
 </template>
 
 <script>
-import size from "lodash/size"
+import { size, upperFirst } from '@/helpers/lodash';
 import Resource from "../../../mixins/resource"
 import Search from "../../../mixins/search"
 import Utils from "../../../mixins/utils"
-import upperFirst from "lodash/upperFirst";
 import { useDisplay } from 'vuetify'
-import eventBus from "olobase-admin/src/utils/eventBus";
+import eventBus from "@/helpers/eventbus";
 import { useVuelidate } from "@vuelidate/core";
 import config from "@/_config";
 import useResource from "../../../store/resource";
@@ -340,6 +339,7 @@ export default {
       default: {}
     },
   },
+  emits: ['save', 'saved'],
   provide() {
     return {
       admin: this.$admin
@@ -759,12 +759,16 @@ export default {
         return false;
       }
       this.saving = true;
-      this.$emit("save");
+      const emitData = {
+        response: null,
+        form: {...this.form, ...{ id: this.editRowId}},
+      };
+      this.$emit("save", emitData);
       const resource = useResource();
       resource.setResource(this.listState.resource);
       try {
-        if (this.editRowId) { // update        
-          await resource.update({
+        if (this.editRowId) { // update
+          emitData.response = await resource.update({
               id: this.editRowId,
               data: { ...this.form, ...this.updateData },
           });
@@ -772,7 +776,7 @@ export default {
           let newCreateData = {}
           newCreateData.id = this.generateUid();
           Object.assign(newCreateData, this.createData)
-          await resource.create({
+          emitData.response = await resource.create({
             data: { ...this.form, ...newCreateData },
           });
         }
@@ -788,7 +792,7 @@ export default {
         }
       } finally {
         this.saving = false;
-        this.$emit("saved");
+        this.$emit("saved", emitData);
       }
     },
     getFieldFilters(field) {

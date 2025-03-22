@@ -13,7 +13,7 @@
 
 <script>
 import RedirectButton from "../../../mixins/redirect-button";
-import eventBus from "olobase-admin/src/utils/eventBus";
+import eventBus from "@/helpers/eventbus";
 
 /**
  * Button for all edit resource action. Redirect to edit page by default.

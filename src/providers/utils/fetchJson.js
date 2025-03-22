@@ -1,4 +1,4 @@
-import trimEnd from "lodash/trimEnd";
+import { trimEnd } from '@/helpers/lodash';
 
 const createHeadersFromOptions = (options) => {
   const requestHeaders =

@@ -6,7 +6,7 @@
     :label="$t('va.actions.edit')"
     icon="mdi-pencil"
     icon-size="x-small"
-    :color="color || 'blue'"
+    :color="color"
     variant="text"
     exact
     :to="getRoute('edit', { params: { id: item.id } })"

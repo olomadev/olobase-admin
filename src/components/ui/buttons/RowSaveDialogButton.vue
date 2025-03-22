@@ -5,7 +5,7 @@
     :item="item"
     :label="$t('va.actions.edit')"
     icon="mdi-table-edit"
-    :color="color || 'blue'"
+    :color="color"
     text
     exact
     @click="onClick"

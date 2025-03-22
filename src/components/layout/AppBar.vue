@@ -69,12 +69,6 @@
       :color="sidebarColor"
       v-model="drawer"
     >
-      <!--
-        Apply a specific background image to the component.
-      <template v-slot:img="props">
-        <slot name="img" v-bind="props"></slot>
-      </template> -->
-
       <template v-slot:prepend>
         <slot name="navbar-logo"></slot>
       </template>
@@ -109,21 +103,20 @@
               :key="'vlist-item_' + i"
               link
               :to="child.link"
-              >
-                <v-list-item-action v-if="child.icon">
-                  <!-- <v-icon>{{ child.icon }}</v-icon> -->
-                </v-list-item-action>
-                <div class="list-item-content">
-                  <v-list-item-title>
-                    <div v-if="child.href">
-                      <a :href="child.href" target="_blank" style="text-decoration: none;">{{ child.text }}</a>
-                    </div>
-                    <div v-else>
-                      {{ child.text }}
-                    </div>
-                  </v-list-item-title>
+            >
+              <template v-slot:prepend>
+                <v-icon size="small" :icon="child.icon"></v-icon>
+              </template>            
+              <v-list-item-title>
+                <div v-if="child.href">
+                  <a :href="child.href" target="_blank" style="text-decoration: none;">{{ child.text }}</a>
                 </div>
+                <div v-else>
+                  {{ child.text }}
+                </div>
+              </v-list-item-title>
             </v-list-item>
+
           </v-list-group>
 
           <v-list-item 
@@ -135,7 +128,7 @@
             :to="item.link"
           >
             <template v-slot:prepend>
-              <v-icon>{{ item.icon }}</v-icon>
+              <v-icon :icon="item.icon"></v-icon>
             </template>
             <v-list-item-title v-text="item.text"></v-list-item-title>
           </v-list-item>
@@ -146,9 +139,8 @@
 </template>
 
 <script>
-import nav from "@/_nav";
 import { useDisplay } from 'vuetify';
-import { storeToRefs } from 'pinia';
+
 /**
  * Default customizable admin VAppBar.
  * Contains main app title, header menus, direct resource creation links, global refresh action, profile menu.
@@ -244,7 +236,7 @@ export default {
     /**
      * Build dynamic sidebar menu
      */
-    this.sidebarMenu = await nav.build(this.$t, this.$admin);
+    this.sidebarMenu = await this.$store.buildNavs(this.$t, this.$admin);
   },
   computed: {
     getLoading() {

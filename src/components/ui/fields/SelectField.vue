@@ -24,7 +24,7 @@
 import Field from "../../../mixins/field";
 import Choices from "../../../mixins/choices";
 import Chip from "../../../mixins/chip";
-import isObject from "lodash/isObject"
+import { isObject } from '@/helpers/lodash';
 
 /**
  * Show value as text selected from a predefined key-value choices.

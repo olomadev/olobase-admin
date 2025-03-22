@@ -1,4 +1,4 @@
-import en from "./en.json" assert { type: "json" };
-import tr from "./tr.json" assert { type: "json" };
+import en from "./en.json";
+import tr from "./tr.json";
 
 export { en, tr };

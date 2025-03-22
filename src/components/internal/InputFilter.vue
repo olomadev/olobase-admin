@@ -18,7 +18,7 @@
 
 <script>
 import Source from "../../mixins/source";
-import debounce from "lodash/debounce";
+import { debounce } from '@/helpers/lodash';
 
 export default {
   mixins: [Source],

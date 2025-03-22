@@ -1,6 +1,5 @@
-
-import isObject from "lodash/isObject"
-
+import { isObject } from '@/helpers/lodash';
+import qs from '@/helpers/qs';
 import {
   GET_LIST,
   GET_LIST_ALL,
@@ -17,7 +16,6 @@ import {
 } from "./actions";
 
 import FetchJson from "../utils/fetchJson";
-import qs from "qs";
 
 export default (httpClient) => {
   if (typeof httpClient === "string") {
@@ -39,7 +37,7 @@ export default (httpClient) => {
   };
 
   return {
-    [GET_LIST]: async (resource, params) => {
+    [GET_LIST]: async (module, resource, params) => {
         const { pagination, sort, filter } = params;
 
         // if the filter has array lets write them
@@ -67,9 +65,6 @@ export default (httpClient) => {
               ...params.defaultQueryString
             }
         }
-        
-        // console.log(params)
-        // console.log(params)
 
         if (pagination) {
         let { page, perPage } = pagination;
@@ -89,9 +84,10 @@ export default (httpClient) => {
               "_order[]": sort.map((item) => (item.desc ? "desc" : "asc")),
             }
         }
-        let response = await httpClient.get(
-            `${resource}/findAllByPaging?${qs.stringify(query, { arrayFormat: "repeat" })}`
-        );
+        let url = module ? `${module}/${resource}/findAllByPaging?${qs.stringify(query, { arrayFormat: "repeat" })}` 
+                         : `${resource}/findAllByPaging?${qs.stringify(query, { arrayFormat: "repeat" })}`;
+                         
+        let response = await httpClient.get(url);
         if (response && response["data"]) {
           let { data, headers } = response;
           return {
@@ -104,7 +100,7 @@ export default (httpClient) => {
           total: 0,
         };
     },
-    [GET_LIST_ALL]: async (resource, params) => {
+    [GET_LIST_ALL]: async (module, resource, params) => {
 
       const { filter } = params;
 
@@ -117,9 +113,11 @@ export default (httpClient) => {
         ...withInclude(params),
         ...filter,
       };
-      let response = await httpClient.get(
-        `${resource}/findAll?${qs.stringify(query, { arrayFormat: "repeat" })}`
-      );
+      let url = module 
+         ? `${module}/${resource}/findAll?${qs.stringify(query, { arrayFormat: "repeat" })}` 
+         : `${resource}/findAll?${qs.stringify(query, { arrayFormat: "repeat" })}`;
+
+      let response = await httpClient.get(url);
       if (response && response["data"]) {
         let { data, headers } = response;
         return {
@@ -133,7 +131,7 @@ export default (httpClient) => {
       };
     },
 
-    [GET_MANY]: async (resource, params) => {
+    [GET_MANY]: async (module, resource, params) => {
 
       const { filter } = params;
 
@@ -152,10 +150,11 @@ export default (httpClient) => {
           ...withInclude(params),
           ...newFilter,
       }
+      let url = module 
+         ? `${module}/${resource}/findAll?${qs.stringify(query, { arrayFormat: "repeat" })}` 
+         : `${resource}/findAll?${qs.stringify(query, { arrayFormat: "repeat" })}`;
 
-      return httpClient.get(
-          `${resource}/findAll?${qs.stringify(query, { arrayFormat: "repeat" })}`
-      )
+      return httpClient.get(url)
 
       // const { filter } = params;
 
@@ -167,45 +166,97 @@ export default (httpClient) => {
       //     `${resource}/findAll?${qs.stringify(query, { arrayFormat: "repeat" })}`
         // )
     },
-    [GET_ONE]: async (resource, params) => {
-      let response = await httpClient.get(
-        `${resource}/findOneById/${params.id}?${qs.stringify(withInclude(params))}`
-      )
+    [GET_ONE]: async (module, resource, params) => {
+      let url = module 
+         ? `${module}/${resource}/findOneById/${params.id}?${qs.stringify(withInclude(params))}`
+         : `${resource}/findOneById/${params.id}?${qs.stringify(withInclude(params))}`
+
+      let response = await httpClient.get(url)
       if (response && response["data"]) {
         let { data } = response;
         return data;
       }
     },
-    [CREATE]: (resource, params) => httpClient.post(`${resource}/create`, params.data),
-    [UPDATE]: (resource, params) =>
-      httpClient.put(`${resource}/update/${params.id}`, params.data),
-    [UPDATE_ROW]: (resource, params) =>
-      httpClient.put(`${resource}/updateRow/${params.id}`, params.data),
-    [UPDATE_MANY]: (resource, params) =>
-      Promise.all(
-        params.ids.map((id) => httpClient.put(`${resource}/update/${id}`, params.data))
-      ).then(() => Promise.resolve()),
+    [CREATE]: (module, resource, params) => { 
+      let url = module 
+        ? `${module}/${resource}/create`
+        : `${resource}/create`;
 
-    [DELETE]: (resource, params) => {
+      return httpClient.post(url, params.data)
+    },
+    [UPDATE]: (module, resource, params) => {
+      let url = module 
+        ? `${module}/${resource}/update/${params.id}` 
+        : `${resource}/update/${params.id}`;
+
+      return httpClient.put(url, params.data);
+    },
+    [UPDATE_ROW]: (module, resource, params) => {
+      let url = module 
+        ? `${module}/${resource}/updateRow/${params.id}`
+        : `${resource}/updateRow/${params.id}`;
+
+      return httpClient.put(url, params.data);
+    },
+    [UPDATE_MANY]: (module, resource, params) => {
+      const updatePromises = params.ids.map((id) => {
+        let url = module ? `${module}/${resource}/update/${id}` : `${resource}/update/${id}`;
+
+        return httpClient.put(url, params.data);
+      });
+      return Promise.all(updatePromises)
+       .then(() => {
+         return Promise.resolve();
+       });
+    },
+    [DELETE]: (module, resource, params) => {
       if (params['query'] && typeof params['query'] === 'object') {
         const queryString = Object.entries(params['query']).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
-        httpClient.delete(`${resource}/delete/${params.id}?` + queryString);
+
+        let url = module 
+          ? `${module}/${resource}/delete/${params.id}?` 
+          : `${resource}/delete/${params.id}?`;
+
+        httpClient.delete(url + queryString);
+
       } else {
-        httpClient.delete(`${resource}/delete/${params.id}`);  
+
+        let url = module 
+          ? `${module}/${resource}/delete/${params.id}` 
+          : `${resource}/delete/${params.id}`;
+
+        httpClient.delete(url);
       }
     },
+    [DELETE_MANY]: (module, resource, params) => {
+      const deletePromises = params.ids.map((id) => {
+        let url = module 
+          ? `${module}/${resource}/delete/${id}` 
+          : `${resource}/delete/${id}`;
 
-    [DELETE_MANY]: (resource, params) =>
-      Promise.all(
-        params.ids.map((id) => httpClient.delete(`${resource}/delete/${id}`))
-      ).then(() => Promise.resolve()),
+        return httpClient.delete(url);
+      });
+      return Promise.all(deletePromises)
+        .then(() => {
+          return Promise.resolve();
+      });
+    },
+    [COPY]: (module, resource, params) => {
+      let url = module ? `${module}/${resource}/copy/${params.id}` : `${resource}/copy/${params.id}`;
 
-    [COPY]: (resource, params) =>
-      httpClient.post(`${resource}/copy/${params.id}`, params.data),
-    [COPY_MANY]: (resource, params) =>
-      Promise.all(
-        params.ids.map((id) => httpClient.post(`${resource}/copy/${id}`, params.data))
-      ).then(() => Promise.resolve()),
-      
+      return httpClient.post(url, params.data);
+    },
+    [COPY_MANY]: (module, resource, params) => {
+      const copyPromises = params.ids.map((id) => {
+        let url = module ? `${module}/${resource}/copy/${id}` : `${resource}/copy/${id}`;
+
+        return httpClient.post(url, params.data);
+      });
+      return Promise.all(copyPromises)
+        .then(() => {
+          return Promise.resolve();
+      });
+    },
+
   };
 };

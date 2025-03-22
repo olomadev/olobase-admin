@@ -72,7 +72,7 @@
             <div class="align-center">
               <v-row>
                 <v-col cols="12">
-                  <v-table density="compact">
+                  <v-table class="table-settings" density="compact">
                     <thead>
                       <tr>
                         <th style="border: none"></th>
@@ -87,12 +87,12 @@
                         <template v-for="item in selectItems">
                           <td>
                             <v-switch
+                              density="compact"
                               :key="settingsKey"
                               v-model="visibilities[item.key]"
                               @change="updateVisibility(item.key, visibilities[item.key])"
                               color="primary"
                               hide-details
-                              class="mt-2 mb-2"
                             ></v-switch>
                           </td>
                         </template>
@@ -102,13 +102,13 @@
                         <template v-for="item in selectItems">
                           <td>
                             <v-switch 
+                              density="compact"
                               v-if="item.key !== 'actions'"
                               :key="settingsKey"
                               v-model="filterabilities[item.key]"
                               @change="updateFilterability(item.key, filterabilities[item.key])"
                               color="primary"
                               hide-details
-                              class="mt-2 mb-2"
                             ></v-switch>
                           </td>
                         </template>
@@ -116,16 +116,18 @@
                       <tr v-if="!disablePositioning">
                         <td>{{ $t('va.datatable.positioning') }}</td>
                         <td :colspan="selectItems.length" style="border-bottom: none">
-                          <v-table v-if="selectItems.length > 0" density="compact" class="mt-6 mb-6" width="%100">
-                            <draggable v-model="selectedHeaders" tag="tr" :item-key="key => key">
-                              <template #item="item">
-                                <th style="cursor:pointer;padding:4px;" scope="col">
-                                  {{ item.element.title }}
-                                  <span class="circle">{{ item.index + 1 }}</span>
-                                </th>
-                              </template>
-                            </draggable>
-                          </v-table>
+                          <div class="table-draggable">
+                            <v-table v-if="selectItems.length > 0" density="compact" class="mt-6 mb-6" width="%100">
+                              <draggable v-model="selectedHeaders" tag="tr" :item-key="key => key">
+                                <template #item="item">
+                                  <th style="cursor:pointer;padding:4px;" scope="col">
+                                    {{ item.element.title }}
+                                    <span class="circle">{{ item.index + 1 }}</span>
+                                  </th>
+                                </template>
+                              </draggable>
+                            </v-table>
+                          </div>
                         </td>
                       </tr>
                       <tr>
@@ -207,14 +209,13 @@
 
 <script>
 import { useDisplay } from 'vuetify'
+import { isEmpty } from '@/helpers/lodash';
 import Resource from "../../../mixins/resource";
-import eventBus from "olobase-admin/src/utils/eventBus";
+import eventBus from "@/helpers/eventbus";
 import Search from "../../../mixins/search";
-import FormFilter from "../../internal/FormFilter";
-import Draggable from 'vuedraggable'
-import isEmpty from "lodash/isEmpty";
+import FormFilter from "../../internal/FormFilter.vue";
 import config from "@/_config";
-import get from "lodash/get";
+import Draggable from 'vue3-draggable-next'
 import useResource from "../../../store/resource";
 /**
  * List data iterator component, perfect for list CRUD page as well as any resource browsing standalone component.
@@ -432,12 +433,18 @@ export default {
     await this.initFiltersFromQuery();
     this.loaded = true;
     if (! this.disableFetch) {
-      this.fetchData();  
+      this.fetchData();
     }
   },
   computed: {
     getTitle() {
-      return (this.title) ? this.title : this.$t("titles." + this.resource);
+      const parts = this.resource.includes("_") ? this.resource.split("_") : [null, this.resource];
+      const module = parts[0];
+      const resourceName = parts[1];
+      let key = module 
+        ? `${module}.${resourceName}.title` 
+        : `${resourceName}.${resourceName}.title` ;
+      return (this.title) ? this.title : this.$t(key);
     },
     getHideHeaderValue() {
       if (this.hideHeader == null) {
@@ -778,21 +785,22 @@ export default {
     },
     async fetchData() {
       if (!this.loaded || isEmpty(this.listState.options)) {
-        return
+        return;
       }
-      this.listState.loading = 'primary'
+      this.listState.loading = 'primary';
       //
       // !!! sortDesc deprecated in vuetify 3.0
       //
-      let newSortBy = []
-      let newSortDesc = []
-      const { sortBy, page, itemsPerPage } = this.listState.options
-      let Self = this    
-      sortBy.forEach(function(arr) {
-          newSortBy.push(arr.key)
-          newSortDesc.push(arr.order == 'asc' ? false : true)
-          Self.sortData[arr.key] = arr.order;
-      })
+      let newSortBy = [];
+      let newSortDesc = [];
+      const { sortBy, page, itemsPerPage } = this.listState.options;
+      let Self = this;
+      sortBy.forEach(function (arr) {
+        newSortBy.push(arr.key);
+        newSortDesc.push(arr.order == 'asc' ? false : true);
+        Self.sortData[arr.key] = arr.order;
+      });
+
       let params = {
         fields: this.getFieldsQuery(this.resource, this.fields),
         include: isEmpty(this.include)
@@ -803,7 +811,8 @@ export default {
         }),
         defaultQueryString: this.defaultQueryString,
         filter: this.getCurrentFilter,
-      }
+      };
+
       if (!this.disablePagination) {
         params.pagination = {
           page,
@@ -814,10 +823,19 @@ export default {
        * Load paginated and sorted data list
        */
       this.useResource.setResource(this.resource);
-      let response = await this.useResource.getList(params);
+
+      let response = null;
+      try {
+        response = await this.useResource.getList(params);
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+        console.error('Url not found:',  error.config.baseURL + "/" + error.config.url);
+        this.listState.loading = false;
+        return;
+      }
       if (response && response["data"]) {
-        let data = response.data.data
-        let total = response.data.totalItems
+        let data = response.data.data;
+        let total = response.data.totalItems;
         /**
          * Update state without cloning
          */
@@ -826,9 +844,9 @@ export default {
           total,
           selected: [],
           options: this.listState.options,
-        }
+        };
         for (let key in newState) {
-          this.listState[key] = newState[key]
+          this.listState[key] = newState[key];
         }
         this.listState.loading = false;
         this.$emit('listState', this.listState);

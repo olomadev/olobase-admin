@@ -3,7 +3,7 @@
     :hide-label="icon"
     :label="$t('va.actions.batch')"
     icon="mdi-console"
-    :color="color || 'success'"
+    :color="color"
     text
     @click="onClick"
   ></va-action-button>

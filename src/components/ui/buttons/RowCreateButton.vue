@@ -5,7 +5,7 @@
     :item="item"
     :label="$t('va.actions.addRow')"
     icon="mdi-plus"
-    :color="color || 'success'"
+    :color="color"
     text
     :to="getRoute('create')"
     @click="onClick"

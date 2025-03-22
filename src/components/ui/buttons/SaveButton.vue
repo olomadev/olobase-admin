@@ -4,7 +4,7 @@
     :label="label || defaultLabel"
     :item="item"
     icon="mdi-content-save"
-    :color="color || 'primary'"
+    :color="color"
     :type="redirect ? 'button' : 'submit'"
     :loading="formState && formState.saving"
     :variant="null"

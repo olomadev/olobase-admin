@@ -11,7 +11,7 @@
         :item="item"
         :label="$t('va.actions.show')"
         icon="mdi-eye"
-        :color="color || 'info'"
+        :color="color"
         variant="text"
         exact
         :externalProps="props"

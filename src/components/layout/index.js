@@ -1,17 +1,15 @@
-import Layout from "./Layout";
-import AppBar from "./AppBar";
-import Footer from "./Footer";
-import Aside from "./Aside";
-import Breadcrumbs from "./Breadcrumbs";
-import Messages from "./Messages";
-import ActionPage from "./ActionPage";
+import Layout from "./Layout.vue";
+import AppBar from "./AppBar.vue";
+import Footer from "./Footer.vue";
+import Aside from "./Aside.vue";
+import Messages from "./Messages.vue";
+import ActionPage from "./ActionPage.vue";
 
 export {
   Layout,
   AppBar,
   Footer,
   Aside,
-  Breadcrumbs,
   ActionPage,
   Messages,
 };

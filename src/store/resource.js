@@ -60,7 +60,10 @@ const resource = defineStore('resource', {
       this.dialogItem = item;
     },
     setResource(name) {
-      this.resource = { name: name };
+      const parts = name.includes("_") ? name.split("_") : [null, name];
+      const moduleName = parts[0];
+      const resourceName = parts[1];
+      this.resource = { module: moduleName, name: resourceName };
     },
     removeDialogItem() {
       this.dialogItem = null;
@@ -78,7 +81,7 @@ const resource = defineStore('resource', {
           throw new Error(`Data provider action getList not implemented`);
         }
         api.setLoading(true, { root: true });
-        let response = await this.provider.getList(this.resource.name, {
+        let response = await this.provider.getList(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });
@@ -105,7 +108,7 @@ const resource = defineStore('resource', {
         if (!this.provider["getOne"]) {
           throw new Error(`Data provider action getOne not implemented`);
         }
-        let response = await this.provider.getOne(this.resource.name, {
+        let response = await this.provider.getOne(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });
@@ -125,7 +128,7 @@ const resource = defineStore('resource', {
         if (!this.provider["getListAll"]) {
           throw new Error(`Data provider action getListAll not implemented`);
         }
-        let response = await this.provider.getListAll(this.resource.name, {
+        let response = await this.provider.getListAll(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });
@@ -146,7 +149,7 @@ const resource = defineStore('resource', {
         if (!this.provider["getMany"]) {
           throw new Error(`Data provider action getMany not implemented`);
         }
-        let response = await this.provider.getMany(this.resource.name, {
+        let response = await this.provider.getMany(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });
@@ -168,7 +171,7 @@ const resource = defineStore('resource', {
         if (!this.provider["create"]) {
           throw new Error(`Data provider action create not implemented`);
         }
-        let response = await this.provider.create(this.resource.name, {
+        let response = await this.provider.create(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });
@@ -188,7 +191,7 @@ const resource = defineStore('resource', {
         if (!this.provider["update"]) {
           throw new Error(`Data provider action update not implemented`);
         }
-        let response = await this.provider.update(this.resource.name, {
+        let response = await this.provider.update(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });
@@ -208,7 +211,7 @@ const resource = defineStore('resource', {
         if (!this.provider["updateRow"]) {
           throw new Error(`Data provider action updateRow not implemented`);
         }
-        let response = await this.provider.updateRow(this.resource.name, {
+        let response = await this.provider.updateRow(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });
@@ -228,7 +231,7 @@ const resource = defineStore('resource', {
         if (!this.provider["updateMany"]) {
           throw new Error(`Data provider action updateMany not implemented`);
         }
-        let response = await this.provider.updateMany(this.resource.name, {
+        let response = await this.provider.updateMany(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });
@@ -248,7 +251,7 @@ const resource = defineStore('resource', {
         if (!this.provider["delete"]) {
           throw new Error(`Data provider action delete not implemented`);
         }
-        let response = await this.provider.delete(this.resource.name, {
+        let response = await this.provider.delete(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });
@@ -269,7 +272,7 @@ const resource = defineStore('resource', {
         if (!this.provider["deleteMany"]) {
           throw new Error(`Data provider action deleteMany not implemented`);
         }
-        let response = await this.provider.deleteMany(this.resource.name, {
+        let response = await this.provider.deleteMany(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });
@@ -290,7 +293,7 @@ const resource = defineStore('resource', {
         if (!this.provider["copy"]) {
           throw new Error(`Data provider action copy not implemented`);
         }
-        let response = await this.provider.copy(this.resource.name, {
+        let response = await this.provider.copy(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });
@@ -310,7 +313,7 @@ const resource = defineStore('resource', {
         if (!this.provider["copyMany"]) {
           throw new Error(`Data provider action copyMany not implemented`);
         }
-        let response = await this.provider.copyMany(this.resource.name, {
+        let response = await this.provider.copyMany(this.resource.module, this.resource.name, {
           locale: this.locale,
           ...params,
         });

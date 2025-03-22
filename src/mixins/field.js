@@ -1,5 +1,5 @@
 import Source from "./source";
-import get from "lodash/get";
+import { get } from '@/helpers/lodash';
 
 /**
  * Main field mixin for all fields used for data show.

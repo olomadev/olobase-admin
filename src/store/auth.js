@@ -1,10 +1,6 @@
 import { defineStore } from "pinia";
-import cookies from "olobase-admin/src/utils/cookies";
+import cookies from '@/helpers/cookies'
 import useStore from "@/store"
-/**
- * Get cookie constants object
- */
-const cookieKey = JSON.parse(import.meta.env.VITE_COOKIE);
 //
 // export factory function 
 // 
@@ -79,7 +75,7 @@ const auth = defineStore('auth', {
        * Called after each URL navigation
        */
       async checkAuth() {
-        if (! cookies.get(cookieKey.token)) {
+        if (! cookies.get("token")) {
           this.response = null;
           return false
         }

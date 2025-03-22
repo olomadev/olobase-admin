@@ -26,6 +26,9 @@ export default {
     translatable() {
       return useRoute().meta.translatable
     },
+    currentModule() {
+      return useRoute().meta.module
+    },
     currentResource() {
       return this.$admin.getResource(this.resource)
     },

@@ -1,4 +1,4 @@
-import get from "lodash/get"
+import config from "@/_config";
 
 /**
  * Common props for resource search components, as `VaList` or `VaAutocompleteInput`.
@@ -53,7 +53,7 @@ export default {
     itemsPerPage: {
       type: Number,
       default() {
-        return 15
+        return config.list.itemsPerPage
       },
     },
     /**
@@ -66,13 +66,5 @@ export default {
         return null
       },
     },
-  },
-  // created() {
-  //   if (this.itemsPerPage == null) {
-  //       this.itemsPerPage = get(this.$admin.options, "list.itemsPerPage") || 15
-  //   }
-  //   if (this.disableItemsPerPage == false) {
-  //       this.disableItemsPerPage = get(this.$admin.options, "list.disableItemsPerPage") || false
-  //   }
-  // },
+  }
 };

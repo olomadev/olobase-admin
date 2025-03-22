@@ -6,7 +6,7 @@
     :label="$t('va.actions.clone')"
     icon="mdi-content-duplicate"
     icon-size="x-small"    
-    :color="color || 'success'"
+    :color="color"
     text
     exact
     :to="getRoute('create', { query: { source: item.id } })"
