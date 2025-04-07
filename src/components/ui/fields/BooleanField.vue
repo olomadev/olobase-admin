@@ -22,14 +22,14 @@ export default {
      */
     labelTrue: {
       type: String,
-      default: "va.confirm.yes",
+      default: "i18n.confirm.yes",
     },
     /**
      * False text for tooltip.
      */
     labelFalse: {
       type: String,
-      default: "va.confirm.no",
+      default: "i18n.confirm.no",
     },
     /**
      * Icon for true value. Must be a valid MDI.

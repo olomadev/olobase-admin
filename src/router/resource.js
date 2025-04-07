@@ -1,5 +1,5 @@
 import { camelCase, kebabCase, upperFirst } from '@/helpers/lodash';
-import config from "@/_config";
+import config from "@/@config";
 
 // https://stackoverflow.com/questions/66342500/vuejs-3-how-to-render-router-view-router-view-from-vue-router
 // 
@@ -44,7 +44,7 @@ export default ({ app, admin, store, i18n, resource, title }) => {
           let componentName = standalone 
             ? `${upperFirst(camelCase(resourceName))}${upperFirst(action)}` 
             : `${upperFirst(camelCaseModuleName)}${upperFirst(camelCase(resourceName))}${upperFirst(action)}`;
-
+            
           let props = {
             id: this.id,
             title: this.$route.meta.title,

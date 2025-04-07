@@ -19,7 +19,7 @@
             >
               <v-icon size="small">mdi-cog</v-icon>
               <span v-if="lgAndUp" class="ml-2">
-                {{ $t("va.datatable.settings") }}
+                {{ $t("i18n.datatable.settings") }}
               </span>
             </v-btn>
 
@@ -83,7 +83,7 @@
                     </thead>
                     <tbody>
                       <tr v-if="!disableVisibility">
-                        <td width="20%">{{ $t('va.datatable.visible') }}</td>
+                        <td width="20%">{{ $t('i18n.datatable.visible') }}</td>
                         <template v-for="item in selectItems">
                           <td>
                             <v-switch
@@ -98,7 +98,7 @@
                         </template>
                       </tr>
                       <tr>
-                        <td>{{ $t('va.datatable.filterable') }}</td>
+                        <td>{{ $t('i18n.datatable.filterable') }}</td>
                         <template v-for="item in selectItems">
                           <td>
                             <v-switch 
@@ -114,7 +114,7 @@
                         </template>
                       </tr>
                       <tr v-if="!disablePositioning">
-                        <td>{{ $t('va.datatable.positioning') }}</td>
+                        <td>{{ $t('i18n.datatable.positioning') }}</td>
                         <td :colspan="selectItems.length" style="border-bottom: none">
                           <div class="table-draggable">
                             <v-table v-if="selectItems.length > 0" density="compact" class="mt-6 mb-6" width="%100">
@@ -143,7 +143,7 @@
                           >
                             <v-icon size="small">mdi-content-save</v-icon>
                             <span v-if="lgAndUp" class="ml-2 pb-0 mb-0">{{
-                              $t("va.datatable.save_settings")
+                              $t("i18n.datatable.saveSettings")
                             }}</span>
                           </v-btn>
                           <v-btn
@@ -156,7 +156,7 @@
                           >
                             <v-icon size="small">mdi-restore</v-icon>
                             <span v-if="lgAndUp" class="ml-2 pb-0 mb-0">{{
-                              $t("va.datatable.restore_defaults")
+                              $t("i18n.datatable.restoreDefaults")
                             }}</span>
                           </v-btn>
                           <v-btn
@@ -169,7 +169,7 @@
                           >
                             <v-icon size="small">mdi-close</v-icon>
                             <span v-if="lgAndUp" class="ml-2 pb-0 mb-0">{{
-                              $t("va.datatable.close_settings")
+                              $t("i18n.datatable.closeSettings")
                             }}</span>
                           </v-btn>
                         </td>
@@ -189,7 +189,7 @@
         color="blue lighten-5" 
         v-if="listState.selected.length"
       >
-        {{ $t("va.datatable.selected_items", listState.selected.length) }}
+        {{ $t("i18n.datatable.selectedItems", listState.selected.length) }}
         <v-spacer></v-spacer>
         <div>
           <va-bulk-delete-button v-if="!hideBulkDelete" :value="listState.selected" @refresh="$emit('refresh', 1)"></va-bulk-delete-button>
@@ -214,7 +214,7 @@ import Resource from "../../../mixins/resource";
 import eventBus from "@/helpers/eventbus";
 import Search from "../../../mixins/search";
 import FormFilter from "../../internal/FormFilter.vue";
-import config from "@/_config";
+import config from "@/@config";
 import Draggable from 'vue3-draggable-next'
 import useResource from "../../../store/resource";
 /**
@@ -485,7 +485,7 @@ export default {
           {
             source: this.globalSearchQuery,
             enabled: this.getDisableGlobalSearchValue() ? false : true,
-            label: this.$t("va.datatable.search"),
+            label: this.$t("i18n.datatable.search"),
             attributes: { appendInnerIcon: "mdi-magnify" },
           },
         ];
@@ -613,7 +613,7 @@ export default {
       })
       if (!this.disableActions) {
         fields.push({
-          title: this.$t('va.datatable.actions'),
+          title: this.$t('i18n.datatable.actions'),
           key: "actions",
           visible: true,
           sortable: false,
@@ -704,7 +704,7 @@ export default {
     },
     saveSettings() {
       localStorage.setItem('col_' + this.resource, JSON.stringify(this.selectedHeaders));
-      this.$store.getModule("messages").show({ type: 'info', message: this.$t("va.messages.datatable_settings_saved") });
+      this.$store.getModule("messages").show({ type: 'info', message: this.$t("i18n.messages.datatableSettingsSaved") });
     },
     restoreSettings() {
       localStorage.removeItem('col_' + this.resource);
@@ -712,7 +712,7 @@ export default {
       this.$store.getModule("api").setHeaders(this.selectedHeaders);
       this.fillSettings();
       ++this.settingsKey;
-      this.$store.getModule("messages").show({ type: 'info', message: this.$t("va.messages.datatable_settings_reset"), });
+      this.$store.getModule("messages").show({ type: 'info', message: this.$t("i18n.messages.datatableSettingsReset"), });
     },
     async initFiltersFromQuery() {
       let options = {

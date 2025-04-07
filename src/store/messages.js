@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import config from "@/_config";
+import config from "@/@config";
 
 const messages = defineStore('messages', {
   state: () => {

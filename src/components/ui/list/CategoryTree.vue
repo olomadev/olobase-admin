@@ -8,7 +8,7 @@
             v-model="search"
             variant="outlined"
             clear-icon="mdi-close-circle-outline"
-            :label="$t('va.actions.q')"
+            :label="$t('i18n.actions.q')"
             clearable
             hide-details
             solo-inverted
@@ -39,7 +39,7 @@
                   :resource="listState.resource"
                   :item="item"
                   v-model="categoryTreeForm['name']"
-                  :label="$t('va.categories.name')"
+                  :label="$t('i18n.categories.name')"
                   :error-messages="getNameErrorMessages"
                   hide-details
                 >
@@ -48,7 +48,7 @@
                   class="mb-1"
                   v-model="categoryTreeForm['move']"
                   color="primary"
-                  :label="$t('va.categories.move')" 
+                  :label="$t('i18n.categories.move')" 
                   @click.stop
                   hide-details
                 >
@@ -61,7 +61,7 @@
                   :item="item"
                   v-model="categoryTreeForm['parentId']"
                   reference="categories"
-                  :label="$t('va.categories.parentId')"
+                  :label="$t('i18n.categories.parentId')"
                   :return-object="false"
                   :error-messages="getParentIdErrorMessages"
                   hide-details
@@ -72,12 +72,12 @@
                     flat
                     class="mr-2"
                     @click="saveItem($event)"
-                  >{{ $t('va.actions.save') }}
+                  >{{ $t('i18n.actions.save') }}
                   </v-btn>
                   <v-btn
                     color="secondary"
                     @click="cancel($event)"
-                  >{{ $t('va.actions.cancel') }}
+                  >{{ $t('i18n.actions.cancel') }}
                   </v-btn>
                 </div>
               </div>
@@ -200,12 +200,12 @@ export default {
         {
           source: "name",
           type: "text",
-          label: this.$t("va.categories.name")
+          label: this.$t("i18n.categories.name")
         },
         {
           source: "move",
           type: "boolean",
-          label: this.$t("va.categories.move")
+          label: this.$t("i18n.categories.move")
         },
         {
           source: "parentId",
@@ -213,7 +213,7 @@ export default {
           attributes: {
             reference: "categories",
           },
-          label: this.$t("va.categories.parentId")
+          label: this.$t("i18n.categories.parentId")
         },
       ],
     }

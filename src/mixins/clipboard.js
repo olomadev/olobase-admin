@@ -16,16 +16,16 @@ export default {
     let Self = this;
     copyCode.on('success', function(event) {
         event.clearSelection();
-        event.trigger.textContent = Self.i18n.global.t("va.actions.copied");
+        event.trigger.textContent = Self.i18n.global.t("i18n.actions.copied");
         window.setTimeout(function() {
-            event.trigger.textContent = Self.i18n.global.t("va.actions.copy");
+            event.trigger.textContent = Self.i18n.global.t("i18n.actions.copy");
         }, 2300);
     });
     copyCode.on('error', function(event) { 
         console.error(event);
-        event.trigger.textContent = Self.i18n.global.t("va.actions.copyNotSupported");
+        event.trigger.textContent = Self.i18n.global.t("i18n.actions.copyNotSupported");
         window.setTimeout(function() {
-            event.trigger.textContent = Self.i18n.global.t("va.actions.copy");
+            event.trigger.textContent = Self.i18n.global.t("i18n.actions.copy");
         }, 2000);
     });    
   }

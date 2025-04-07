@@ -123,11 +123,11 @@ export default class Olobase {
             if (item) {
               return this.i18n.global.te(key)
                   ? this.i18n.global.t(key, item.raw)
-                  : this.i18n.global.t(`va.pages.${action}`);
+                  : this.i18n.global.t(`i18n.pages.${action}`);
             }
             return this.i18n.global.te(key)
               ? this.i18n.global.t(key)
-              : this.i18n.global.t(`va.pages.${action}`, {
+              : this.i18n.global.t(`i18n.pages.${action}`, {
                   resource: getName(action === "list" ? 10 : 1).toLowerCase(),
                 })
           },

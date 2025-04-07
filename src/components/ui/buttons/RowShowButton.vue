@@ -9,7 +9,7 @@
         v-if="item && visible"
         :hide-label="true"
         :item="item"
-        :label="$t('va.actions.show')"
+        :label="$t('i18n.actions.show')"
         icon="mdi-eye"
         :color="color"
         variant="text"
@@ -35,7 +35,7 @@
           variant="text"
           @click="menu = false"
         >
-          {{ $t("va.actions.close") }}
+          {{ $t("i18n.actions.close") }}
         </v-btn>
       </v-card-actions>
     </v-card>

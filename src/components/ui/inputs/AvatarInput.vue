@@ -81,7 +81,7 @@
                   color="primary"
                   @click="reset"
                 >
-                  {{ $t("va.actions.close") }}
+                  {{ $t("i18n.actions.close") }}
                 </v-btn>
               </v-col>
               <v-col class="text-right">
@@ -89,7 +89,7 @@
                     color="primary"
                     @click="cropImage"
                   >
-                  {{ $t("va.actions.crop") }}
+                  {{ $t("i18n.actions.crop") }}
                 </v-btn>
               </v-col>
             </v-row>

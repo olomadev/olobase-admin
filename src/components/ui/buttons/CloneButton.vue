@@ -3,7 +3,7 @@
     v-if="item && visible"
     :hide-label="icon"
     :item="item"
-    :label="$t('va.actions.clone')"
+    :label="$t('i18n.actions.clone')"
     icon="mdi-content-duplicate"
     icon-size="x-small"    
     :color="color"

@@ -22,7 +22,7 @@
 
           <div v-if="loading">
             <p>
-              {{ $t("va.sheetImport.loadingMessage") }}
+              {{ $t("i18n.sheetImport.loadingMessage") }}
             </p>
           </div>
 
@@ -38,20 +38,20 @@
                 class="mr-2"
                 @click="cancelUpload()"
                 >
-                {{ $t("va.actions.cancel") }}
+                {{ $t("i18n.actions.cancel") }}
               </v-btn>
               <v-btn
                 :loading="loadingPreview"
                 @click="remove()"
               >
-               {{ $t("va.actions.remove") }}
+               {{ $t("i18n.actions.remove") }}
               </v-btn>
             </div>
 
             <label v-if="!file && items.length == 0" for="sheetFileInput" style="color:gray; cursor: pointer;">
               <v-icon v-if="icon" :size="iconSize" :icon="icon"></v-icon>
               <div class="mt-2 text-caption">
-                {{ $t("va.sheetImport.dragDropMessage") }}
+                {{ $t("i18n.sheetImport.dragDropMessage") }}
               </div>
             </label>
 
@@ -64,7 +64,7 @@
         type="error"
         class="mt-4"
       >
-        {{ $t("va.sheetImport.errorMessage") }}
+        {{ $t("i18n.sheetImport.errorMessage") }}
       </v-alert>
 
       <div class="sheet-input-datatable">
@@ -91,7 +91,7 @@
                         style="font-size: 11px;text-transform: none;font-weight:400;"
                       >
                         <span v-if="item[field.key].value">{{ item[field.key].value }}</span>
-                        <span v-else>{{ $t("va.sheetImport.requiredField") }}</span>
+                        <span v-else>{{ $t("i18n.sheetImport.requiredField") }}</span>
                       </v-btn>
                     </template>
                     <v-list>

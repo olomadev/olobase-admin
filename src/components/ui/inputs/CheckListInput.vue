@@ -19,7 +19,7 @@
     
       <template v-slot:no-data>
         <div class="text-center py-4">
-          {{ $t('va.datatable.no_data_available') }}
+          {{ $t('i18n.datatable.noDataAvailable') }}
         </div>
       </template>
 
@@ -33,7 +33,7 @@
               :color="color"
               :variant="variant"
               clearable
-              :label="$t('va.actions.q')"
+              :label="$t('i18n.actions.q')"
             ></v-text-field>
           </v-col>
         </v-row>

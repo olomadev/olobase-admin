@@ -8,7 +8,7 @@
     <template v-for="(_, scopedSlotName) in $slots" v-slot:[scopedSlotName]="slotData">
       <slot :name="scopedSlotName" v-bind="slotData" />
     </template>
-    <v-radio v-if="clearable" value="none" class="mr-2" :label="$t('va.forms.none')"></v-radio>
+    <v-radio v-if="clearable" value="none" class="mr-2" :label="$t('i18n.forms.none')"></v-radio>
     <v-radio
       class="mr-2"
       v-for="(c, i) in items || choices"

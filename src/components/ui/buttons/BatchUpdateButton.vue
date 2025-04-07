@@ -1,7 +1,7 @@
 <template>
   <va-action-button
     :hide-label="icon"
-    :label="$t('va.actions.batch')"
+    :label="$t('i18n.actions.batch')"
     icon="mdi-console"
     :color="color"
     text

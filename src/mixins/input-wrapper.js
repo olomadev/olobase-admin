@@ -1,4 +1,4 @@
-import config from "@/_config";
+import config from "@/@config";
 
 /**
  * Common props for all inputs.

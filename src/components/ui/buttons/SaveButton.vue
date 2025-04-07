@@ -48,12 +48,12 @@ export default {
     defaultLabel() {
       if (this.redirect) {
         return this.$t(
-          `va.actions.save_and_${
-            this.redirect === "create" ? "add" : this.redirect
+          `i18n.actions.saveAnd${
+            this.redirect === "create" ? "Add" : this.redirect
           }`
         );
       }
-      return this.$t("va.actions.save");
+      return this.$t("i18n.actions.save");
     },
   },
   methods: {

@@ -6,7 +6,7 @@
       :density="density"
       :width="width"
       :height="height"
-      :items-per-page-text="$t('va.datatable.items_per_page_text')"
+      :items-per-page-text="$t('i18n.datatable.itemsPerPageText')"
       :headers="getHeaders"
       :items="getItems"
       :modelValue="listState.selected"
@@ -15,7 +15,7 @@
       :select-strategy="selectStrategy"
       :disable-sort="disableSort"
       :loading="listState.loading"
-      :loading-text="$t('va.datatable.loading_text')"
+      :loading-text="$t('i18n.datatable.loadingText')"
       :multi-sort="multiSort"
       :expanded="expanded"
       :expand-on-click="expandOnClick"
@@ -170,7 +170,7 @@
                    <v-icon style="font-size: 1.5rem !important;">mdi-floppy</v-icon>
                   </v-btn>
                 </template>
-                <span>{{ $t("va.actions.save") }}</span>
+                <span>{{ $t("i18n.actions.save") }}</span>
               </v-tooltip>
               <v-tooltip bottom>
                 <template v-slot:activator="{ props }">
@@ -184,7 +184,7 @@
                     <v-icon style="font-size: 1.5rem !important;">mdi-close</v-icon>
                   </v-btn>
                 </template>
-                <span>{{ $t("va.actions.cancel") }}</span>
+                <span>{{ $t("i18n.actions.cancel") }}</span>
               </v-tooltip>
             </template>
             <template v-else>
@@ -271,7 +271,7 @@
       </template>
       <template v-slot:no-data>
         <div style="font-size: 12px;color: #7a7a7a; padding-top: 20px; padding-bottom: 20px">
-          {{ $t("datatable.no_data_available") }}
+          {{ $t("i18n.datatable.noDataAvailable") }}
         </div>
       </template>
     </v-data-table-server>
@@ -286,7 +286,7 @@
         >
           <v-card>
             <v-card-title class="mt-2 ml-1">
-              <span class="h2">{{ $t("titles." + resource) }}</span>
+              <span class="h2">{{ getPageTitle }}</span>
             </v-card-title>
             <v-card-text>
               <component
@@ -301,7 +301,7 @@
                 variant="text"
                 @click="dialog = false"
               >
-                {{ $t("va.actions.close") }}
+                {{ $t("i18n.actions.close") }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -313,6 +313,7 @@
 </template>
 
 <script>
+import { useRoute } from 'vue-router'
 import { size, upperFirst } from '@/helpers/lodash';
 import Resource from "../../../mixins/resource"
 import Search from "../../../mixins/search"
@@ -320,7 +321,7 @@ import Utils from "../../../mixins/utils"
 import { useDisplay } from 'vuetify'
 import eventBus from "@/helpers/eventbus";
 import { useVuelidate } from "@vuelidate/core";
-import config from "@/_config";
+import config from "@/@config";
 import useResource from "../../../store/resource";
 /**
  * Data table component, you will need data iterator as `VaList` in order to make it usable.
@@ -567,6 +568,9 @@ export default {
     });
   },
   computed: {
+    getPageTitle() {
+      return useRoute().meta.title;
+    },
     getHeaders: {
       get() {
         return this.$store.getModule("api").getHeaders;

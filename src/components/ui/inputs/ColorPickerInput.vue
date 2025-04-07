@@ -47,7 +47,7 @@
         <v-btn
           @click="close"
           >
-          {{ $t("va.actions.close") }}
+          {{ $t("i18n.actions.close") }}
         </v-btn>
       </v-menu>
     </template>

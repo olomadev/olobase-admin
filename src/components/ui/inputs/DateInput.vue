@@ -43,7 +43,7 @@
         :rounded="rounded"
         :showAdjacentMonths="showAdjacentMonths"
         :showWeek="showWeek"
-        :title="$t('va.datepicker.title')"
+        :title="$t('i18n.datepicker.title')"
         :hide-actions="hideActions"
         :hide-weekdays="hideWeekdays"
         :input-placeholder="inputPlaceholder"
@@ -54,8 +54,8 @@
         :modelValue="getDate"
         @update:modelValue="updateDate"
         @change="change"
-        :cancel-text="$t('va.datepicker.cancel')"
-        :ok-text="$t('va.datepicker.select')"
+        :cancel-text="$t('i18n.datepicker.cancel')"
+        :ok-text="$t('i18n.datepicker.select')"
       ></v-date-picker>
       </v-locale-provider>
     </v-menu>
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import config from "@/_config";
+import i18nConfig from "@/modules/i18n/src/@config";
 import Input from "../../../mixins/input";
 
 /**
@@ -302,7 +302,7 @@ export default {
       if (this.format) {
         return this.format;
       }
-      return config.i18n[this.i18n.global.locale.value].dateFormat;
+      return i18nConfig[this.i18n.global.locale.value].dateFormat;
     },
     /**
      * date format
@@ -316,7 +316,6 @@ export default {
       if (Array.isArray(seperatorArray)) {
         s = seperatorArray[0];
       }
-      const locale = this.i18n.global.locale.value;
       const date = new Date(val);
       let month = 1 + date.getMonth();
       if (month < 10) {

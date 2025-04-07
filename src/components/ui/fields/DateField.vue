@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import config from "@/_config";
+import i18nConfig from "@/modules/i18n/src/@config";
 import Field from "../../../mixins/field";
 
 /**
@@ -31,7 +31,7 @@ export default {
       if (this.format) {
         return this.format;
       }
-      return config.i18n[this.i18n.global.locale.value].dateFormat;
+      return i18nConfig[this.i18n.global.locale.value].dateFormat;
     },
     dateFormatted(val) {
       if (val) {
@@ -45,7 +45,6 @@ export default {
       if (Array.isArray(seperatorArray)) {
         s = seperatorArray[0];
       }
-      const locale = this.i18n.global.locale.value;
       const date = new Date(val);
       let month = 1 + date.getMonth();
       if (month < 10) {

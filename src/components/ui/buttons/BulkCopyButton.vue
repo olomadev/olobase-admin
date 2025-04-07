@@ -31,11 +31,11 @@ export default {
     async onBulkCopy() {
       let value = this.value;
       let confirm = await this.$admin.confirm(
-          this.$t("va.confirm.copy_many_title", {
+          this.$t("i18n.confirm.copyManyTitle", {
             resource: this.currentResource.getName(value.length).toLowerCase(),
             count: value.length,
           }),
-          this.$t("va.confirm.copy_many_message", {
+          this.$t("i18n.confirm.copyManyMessage", {
             resource: this.currentResource.getName(value.length).toLowerCase(),
             count: value.length,
           })

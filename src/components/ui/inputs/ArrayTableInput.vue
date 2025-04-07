@@ -121,7 +121,7 @@
 
       <template v-slot:no-data>
         <div style="font-size: 12px;color: #7a7a7a; padding-top: 20px; padding-bottom: 20px">
-          {{ $t("datatable.no_data_available") }}
+          {{ $t("i18n.datatable.noDataAvailable") }}
         </div>
       </template>
     </v-data-table>

@@ -2,7 +2,7 @@
   <va-action-button
     v-if="visible && !isItMine"
     :hide-label="icon"
-    :label="$t('va.actions.delete')"
+    :label="$t('i18n.actions.delete')"
     icon="mdi-delete-forever"
     icon-size="x-small"
     :color="color || 'red'"
@@ -79,11 +79,11 @@ export default {
        * Disable delete
        */
       if (this.disableDelete && await this.$admin.confirm(
-        this.$t("va.confirm.delete_title", {
+        this.$t("i18n.confirm.deleteTitle", {
           resource: this.currentResource.singularName.toLowerCase(),
           id: this.item.id,
         }),
-        this.$t("va.confirm.delete_message", {
+        this.$t("i18n.confirm.deleteMessage", {
           resource: this.currentResource.singularName.toLowerCase(),
           id: this.item.id,
         })
@@ -94,11 +94,11 @@ export default {
       
       if (
         await this.$admin.confirm(
-          this.$t("va.confirm.delete_title", {
+          this.$t("i18n.confirm.deleteTitle", {
             resource: this.currentResource.singularName.toLowerCase(),
             id: this.item.id,
           }),
-          this.$t("va.confirm.delete_message", {
+          this.$t("i18n.confirm.deleteMessage", {
             resource: this.currentResource.singularName.toLowerCase(),
             id: this.item.id,
           })

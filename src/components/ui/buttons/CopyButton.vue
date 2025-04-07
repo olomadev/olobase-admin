@@ -2,7 +2,7 @@
   <va-action-button
     v-if="visible"
     :hide-label="icon"
-    :label="$t('va.actions.copy')"
+    :label="$t('i18n.actions.copy')"
     icon="mdi-content-copy"
     icon-size="x-small"
     :color="color || 'green'"
@@ -50,11 +50,11 @@ export default {
 
       if (
         await this.admin.confirm(
-          this.$t("va.confirm.copy_title", {
+          this.$t("i18n.confirm.copy_title", {
             resource: this.currentResource.singularName.toLowerCase(),
             id: this.item.id,
           }),
-          this.$t("va.confirm.copy_message", {
+          this.$t("i18n.confirm.copy_message", {
             resource: this.currentResource.singularName.toLowerCase(),
             id: this.item.id,
           })

@@ -3,7 +3,7 @@
     v-if="item && visible"
     :hide-label="icon"
     :item="item"
-    :label="$t('va.actions.edit')"
+    :label="$t('i18n.actions.edit')"
     icon="mdi-pencil"
     icon-size="x-small"
     :color="color"

@@ -3,7 +3,7 @@
     v-if="visible"
     :hide-label="icon"
     :item="item"
-    :label="$t('va.actions.excelExport')"
+    :label="$t('i18n.actions.excelExport')"
     icon="mdi-export"
     :color="color || 'success'"
     text

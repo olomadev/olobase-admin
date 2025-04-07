@@ -14,14 +14,14 @@
           text
           @click.native="agree"
         >
-          {{ $t("va.confirm.yes") }}
+          {{ $t("i18n.confirm.yes") }}
         </v-btn>
         <v-btn
           color="green darken-1"
           text
           @click.native="cancel"
         >
-          {{ $t("va.confirm.no") }}
+          {{ $t("i18n.confirm.no") }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -30,12 +30,6 @@
 
 <script>
 export default {
-  // setup() {
-  //   //
-  //   // https://runthatline.com/pinia-watch-state-getters-inside-vue-components/
-  //   // 
-  //   // console.error(confirmObject);
-  // },
   data() {
     return {
       title: null,

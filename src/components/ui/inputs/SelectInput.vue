@@ -20,7 +20,7 @@
         <v-table density="compact">
           <tbody>
             <tr>
-              <td>{{ $t("va.datatable.nodata")}}</td>
+              <td>{{ $t("i18n.datatable.nodata")}}</td>
             </tr>
           </tbody>
         </v-table>

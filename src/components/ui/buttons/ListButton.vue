@@ -3,7 +3,7 @@
     v-if="visible"
     :hide-label="icon"
     :item="item"
-    :label="$t('va.actions.list')"
+    :label="$t('i18n.actions.list')"
     icon="mdi-view-list"
     :color="color || 'success'"
     text

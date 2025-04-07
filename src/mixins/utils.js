@@ -1,4 +1,5 @@
-import config from "@/_config";
+import config from "@/@config";
+import i18nConfig from "@/modules/i18n/src/@config";
 
 /**
  * Utility functions 
@@ -127,7 +128,7 @@ export default {
       if (!val) {
         return
       }
-      const dateFormat = config.i18n[locale].dateFieldDisplayFormat;
+      const dateFormat = i18nConfig[locale].dateFormat;
       const seperatorArray = dateFormat.match(/(\.)|(-)|(\/)|(\\)/);
       let s = "-"; // default seperator
       if (Array.isArray(seperatorArray)) {
@@ -144,16 +145,16 @@ export default {
       }
       let year = date.getFullYear();
       switch (dateFormat) {
-        case 'dd' + s + 'mm' + s + 'YYYY':
+        case 'd' + s + 'm' + s + 'Y':
           return `${day}${s}${month}${s}${year}`;
           break;
-        case 'mm' + s + 'dd' + s + 'YYYY':
+        case 'm' + s + 'd' + s + 'Y':
           return `${month}${s}${day}${s}${year}`;
           break;
-        case 'YYYY' + s + 'mm' + s + 'dd':
+        case 'Y' + s + 'm' + s + 'd':
           return `${year}${s}${month}${s}${day}`;
           break;
-        case 'YYYY' + s + 'dd' + s + 'mm':
+        case 'Y' + s + 'd' + s + 'm':
           return `${year}${s}${day}${s}${month}`;
           break;
         default:

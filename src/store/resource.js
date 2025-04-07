@@ -340,46 +340,46 @@ const resource = defineStore('resource', {
       const store = useStore();
       let messages = {
         create: () =>
-          i18n.global.t("va.messages.created", {
+          i18n.global.t("i18n.messages.created", {
             resource: getName(1),
           }),
         update: () =>
-          i18n.global.t("va.messages.updated", {
+          i18n.global.t("i18n.messages.updated", {
             resource: this.resource.getName(1),
             id: params.id,
           }),
         updateRow: () =>
-          i18n.global.t("va.messages.updated", {
+          i18n.global.t("i18n.messages.updated", {
             resource: this.resource.getName(1),
             id: params.id,
           }),
         updateMany: () =>
-          i18n.global.t("va.messages.updated_many", {
+          i18n.global.t("i18n.messages.updatedMany", {
             resource: this.resource.getName(params.ids.length).toLowerCase(),
             count: params.ids.length,
           }),
         delete: () =>
-          i18n.global.t("va.messages.deleted", {
+          i18n.global.t("i18n.messages.deleted", {
             resource: this.resource.getName(1),
             id: params.id,
           }),
         deleteMany: () =>
-          i18n.global.t("va.messages.deleted_many", {
+          i18n.global.t("i18n.messages.deletedMany", {
             resource: this.resource.getName(params.ids.length).toLowerCase(),
             count: params.ids.length,
           }),
         copy: () =>
-          i18n.global.t("va.messages.copied", {
+          i18n.global.t("i18n.messages.copied", {
             resource: this.resource.getName(1),
             id: params.id,
           }),
         copyMany: () =>
-          i18n.global.t("va.messages.copied_many", {
+          i18n.global.t("i18n.messages.copiedMany", {
             resource: this.resource.getName(params.ids.length).toLowerCase(),
             count: params.ids.length,
           }),
         moveNode: () =>
-          i18n.global.t("va.messages.moved", {
+          i18n.global.t("i18n.messages.moved", {
             resource: this.resource.getName(1),
             id: params.id,
           }),

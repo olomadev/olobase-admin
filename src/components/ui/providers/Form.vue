@@ -266,7 +266,7 @@ export default {
           if (! this.disableSaveMessage) {
             let Self = this;
             setTimeout(function(){
-              Self.$store.getModule("messages").show({ type: 'success', message: Self.$t("form.saved") });
+              Self.$store.getModule("messages").show({ type: 'success', message: Self.$t("i18n.form.saved") });
             }, 100);
           }
           switch (redirect) {

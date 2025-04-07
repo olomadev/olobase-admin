@@ -2,7 +2,7 @@
   <va-action-button
     v-if="visible"
     :hide-label="icon"
-    :label="$t('va.actions.addNew')"
+    :label="$t('i18n.actions.addNew')"
     icon="mdi-dock-window"
     :color="color || 'success'"
     text

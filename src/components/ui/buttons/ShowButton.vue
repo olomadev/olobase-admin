@@ -3,7 +3,7 @@
       v-if="item && visible"
       :hide-label="icon"
       :item="item"
-      :label="$t('va.actions.show')"
+      :label="$t('i18n.actions.show')"
       icon="mdi-eye"
       :color="color"
       variant="text"
