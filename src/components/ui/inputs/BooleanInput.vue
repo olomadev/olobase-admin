@@ -25,7 +25,23 @@ export default {
      * Integer to be edited.
      * @model
      */
-    value: Number,
+    value: {
+      type: [String, Number, Boolean], 
+    },
+    /**
+     * false value
+     */
+    falseValue: {
+      type: [String, Number, Boolean],
+      default: "0",
+    },
+    /**
+     * true value
+     */
+    trueValue: {
+      type: [String, Number, Boolean],
+      default: "1",
+    },
   }
 };
 </script>
