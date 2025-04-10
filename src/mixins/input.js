@@ -105,7 +105,7 @@ export default {
       return {
         color: "primary",
         label: label,
-        modelValue: (Object.prototype.toString.call(this.input) === "[object String]" && isEmpty(this.input)) ? null : this.input,
+        modelValue: this.getModelValue(this.input),
         prependIcon: this.prependIcon,
         prependInnerIcon: this.prependInnerIcon,
         appendIcon: this.appendIcon,
@@ -122,6 +122,19 @@ export default {
   methods: {
     getItem(value) {
       return value === undefined ? this.modelValue : value;
+    },
+    getModelValue(input) {
+      if (input === "true" || input === true || input === 1) {
+        return 1;
+      }
+      if (input === "false" || input === false || input === 0) {
+        return 0;
+      }
+      if (Object.prototype.toString.call(this.input) === "[object String]" 
+        && isEmpty(this.input)) {
+        return null;
+      }
+      return this.input;
     },
     change(event) {
       /**
