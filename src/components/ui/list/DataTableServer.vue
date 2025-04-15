@@ -340,7 +340,7 @@ export default {
       default: {}
     },
   },
-  emits: ['save', 'saved'],
+  emits: ['save', 'saved', 'deleted'],
   provide() {
     return {
       admin: this.$admin
