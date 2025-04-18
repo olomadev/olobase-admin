@@ -80,11 +80,11 @@ export default {
        */
       if (this.disableDelete && await this.$admin.confirm(
         this.$t("i18n.confirm.deleteTitle", {
-          resource: this.currentResource.singularName.toLowerCase(),
+          resource: this.currentResource.singularName,
           id: this.item.id,
         }),
         this.$t("i18n.confirm.deleteMessage", {
-          resource: this.currentResource.singularName.toLowerCase(),
+          resource: this.currentResource.singularName,
           id: this.item.id,
         })
       )) {
@@ -95,11 +95,11 @@ export default {
       if (
         await this.$admin.confirm(
           this.$t("i18n.confirm.deleteTitle", {
-            resource: this.currentResource.singularName.toLowerCase(),
+            resource: this.currentResource.singularName,
             id: this.item.id,
           }),
           this.$t("i18n.confirm.deleteMessage", {
-            resource: this.currentResource.singularName.toLowerCase(),
+            resource: this.currentResource.singularName,
             id: this.item.id,
           })
         )
