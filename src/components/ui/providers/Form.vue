@@ -107,6 +107,11 @@ export default {
               value = null;
               oldValue = null;
             }
+            // fixes null and empty string problems ..
+            if ((value == null || value == "") && (oldValue == null || oldValue == "")) {
+              value = null;
+              oldValue = null;
+            }
             if (oldValue && (Array.isArray(oldValue) || typeof oldValue === 'object')) {  
               if (JSON.stringify(oldValue) != JSON.stringify(value)) {
                 this.$store.getModule("api").setFormStatus(true); // true == form state changed    
