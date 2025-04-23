@@ -754,7 +754,7 @@ export default {
       }
     },
     updateQuery() {
-      if (this.disableQueryString || isEmpty(this.listState.options)) {
+      if (this.disableQueryString || isEmpty(this.useListStore.options)) {
         return
       }
       /**
