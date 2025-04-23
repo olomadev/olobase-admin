@@ -72,6 +72,10 @@ export default {
      * Disable default save behavior
      */
     disableSaveMessage: Boolean,
+    /**
+     * Disable unsaved form dialog
+     */
+    disableUnsavedFormDialog: Boolean,
   },
   validations: {},
   data() {
@@ -93,7 +97,7 @@ export default {
           /**
            * Let's check the form changes one by one
            */
-          if (typeof this.formState.model[source] !== 'undefined' && this.id && this.item) {
+          if (!this.disableUnsavedFormDialog && typeof this.formState.model[source] !== 'undefined' && this.id && this.item) {
             //
             // Is something changed in the form ?
             // 
@@ -112,6 +116,10 @@ export default {
               value = null;
               oldValue = null;
             }
+            // console.error("source:" + source);
+            // console.error("old:" + oldValue);
+            // console.error("new:" + value);            
+
             if (oldValue && (Array.isArray(oldValue) || typeof oldValue === 'object')) {  
               if (JSON.stringify(oldValue) != JSON.stringify(value)) {
                 this.$store.getModule("api").setFormStatus(true); // true == form state changed    
@@ -280,11 +288,11 @@ export default {
               if (localStorage.getItem("listQuery")) {
                 listQuery = JSON.parse(localStorage.getItem("listQuery"));  
               }
-              if (listQuery && listQuery['filter']) {
-                this.$router.push({ name: `${this.resource}_list`, query: { filter: listQuery['filter'] } })  
-              } else {
-                this.$router.push({ name: `${this.resource}_list` })
+              const queryParams = { ...listQuery };
+              if (!queryParams.filter) {
+                delete queryParams.filter;
               }
+              this.$router.push({ name: `${this.resource}_list`, query: queryParams });
               break;
             case "create":
               // Reset form in case of same route
