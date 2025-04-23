@@ -53,8 +53,6 @@ export default ({ app, admin, store, i18n, resource, title }) => {
             item: store.getResource(name).item,
             roles: store.getModule("auth").getPermissions,
           }
-          // console.error(componentName);
-
           //
           // https://stackoverflow.com/questions/72975779/vuejs-3-see-all-globally-registered-components-this-options-components-is-empt
           // 
@@ -64,7 +62,7 @@ export default ({ app, admin, store, i18n, resource, title }) => {
           //   });
           // }
           //
-          // vue 3.0
+          // vue 3.0"
           //
           if (app.component(componentName)) { // check component is exists
             return h(resolveComponent(componentName), props)  
@@ -78,6 +76,17 @@ export default ({ app, admin, store, i18n, resource, title }) => {
            * Initialize from query if available
            */
           let id = to.params.id || to.query.source;
+
+          let componentName = standalone 
+            ? `${upperFirst(camelCase(resourceName))}${upperFirst(action)}` 
+            : `${upperFirst(camelCaseModuleName)}${upperFirst(camelCase(resourceName))}${upperFirst(action)}`;
+
+          // If the component is not present, PageNotFound will be displayed, no data will be retrieved
+          if (!app.component(componentName)) {
+            to.meta.title = "Page Not Found";
+            document.title = "Page Not Found";
+            return next();
+          }
 
           if (id) {
             /**
