@@ -20,14 +20,16 @@
       :expanded="expanded"
       :expand-on-click="expandOnClick"
       :show-expand="showExpand"
-      :items-per-page="listState.options.itemsPerPage"
+      :items-per-page="useListStore.options.itemsPerPage"
       :group-by="groupBy"
       :items-per-page-options="getItemsPerPageOptionsValue"
-      :options.sync="listState.options"
-      :sort-by.sync="listState.options.sortBy"
+      :options.sync="useListStore.options"
+      :page.sync="useListStore.options.page"
+      :sort-by.sync="useListStore.options.sortBy"
       @click:row="onRowClick"
       @update:modelValue="(v) => (listState.selected = v)"
-      @update:options="updateOptions($event)"
+      @update:options="updateOptions"
+      @update:page="updatePage"
       @update:items-per-page="updateItemsPerPage($event)"
     >
       <template v-slot:[`group.header`]="{ isOpen, toggle, groupBy, group, isMobile }">
@@ -323,6 +325,7 @@ import eventBus from "@/helpers/eventbus";
 import { useVuelidate } from "@vuelidate/core";
 import config from "@/@config";
 import useResource from "../../../store/resource";
+import useListStore from "../../../store/list";
 /**
  * Data table component, you will need data iterator as `VaList` in order to make it usable.
  * This component allows you to template all fields columns.
@@ -349,7 +352,7 @@ export default {
   setup () {
     // Destructure only the keys we want to use
     const { lgAndUp, mdAndUp } = useDisplay();
-    return { v$: useVuelidate(), lgAndUp, mdAndUp }
+    return { v$: useVuelidate(), useListStore: useListStore(), lgAndUp, mdAndUp }
   },
   validations() {
     return this.validations
@@ -618,7 +621,8 @@ export default {
   watch: {
     multiSort: {
       handler(val) {
-        this.listState.options.multiSort = val;
+        this.useListStore.updateOptions({ multiSort: val})
+        // this.useListStore.options.multiSort = val;
       },
       immediate: true,
     },
@@ -740,12 +744,16 @@ export default {
         return this.errors[errorFunc](this.v$)
       }
     },
+    updatePage(newPage) {
+      this.useListStore.options.page = newPage
+      this.listState.reload()
+    },
     updateOptions(event) {
-      this.listState.options = event
+      this.useListStore.updateOptions(event)
       this.listState.reload()
     },
     updateItemsPerPage(page) {
-      this.listState.options.itemsPerPage = page
+      this.useListStore.options.itemsPerPage = page
       this.listState.reload()
     },
     updateDialogModel(val) {
