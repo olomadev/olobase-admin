@@ -217,6 +217,7 @@ import FormFilter from "../../internal/FormFilter.vue";
 import config from "@/@config";
 import Draggable from 'vue3-draggable-next'
 import useResource from "../../../store/resource";
+import useListStore from "../../../store/list";
 /**
  * List data iterator component, perfect for list CRUD page as well as any resource browsing standalone component.
  * Allow resource paginating and filtering. Use current query string context for initial state by default.
@@ -228,7 +229,7 @@ export default {
   setup () {
     // Destructure only the keys we want to use
     const { lgAndUp, mdAndUp } = useDisplay()
-    return { useResource: useResource(), lgAndUp, mdAndUp }
+    return { useResource: useResource(), useListStore: useListStore(), lgAndUp, mdAndUp }
   },
   components: {
     FormFilter,
@@ -410,11 +411,11 @@ export default {
       sortData: {},
       listState: {
         resource: this.resource,
-        items: [],
         loading: false,
+        items: [],
         total: 0,
         selected: [],
-        options: {},
+        // options: {},
         reload: () => {
           this.fetchData();
           this.updateQuery();
@@ -535,33 +536,31 @@ export default {
         this.fetchData()
       }
     },
-    "listState.options"(val) {
-      /**
-       * Triggered on pagination change.
-       */
-      this.$emit("update:options", val);
+    "useListStore.options": {
+      handler(val) {
+        /**
+         * Triggered on pagination change.
+         */
+        this.$emit("update:options", val);
+      },
+      deep: true,
     },
-    currentFilter(newVal) {
-      this.fetchData()
-      this.updateQuery()
-      /**
-       * Triggered on filter change.
-       */
-      this.$emit("update:filter", newVal);
+    "currentFilter": {
+      handler(val) {
+        this.fetchData()
+        this.updateQuery()
+        /**
+         * Triggered on filter change.
+         */
+        this.$emit("update:filter", val);
+      },
+      deep: true,
     },
     selectedHeaders(newVal) {
       this.$store.getModule("api").setHeaders(newVal);
     }
   },
   methods: {
-    updateOptions(event) {
-      this.listState.options = event
-      this.listState.reload()
-    },
-    updateItemsPerPage(page) {
-      this.listState.options.itemsPerPage = page
-      this.listState.reload()
-    },
     updateVisibility(key, val) {
       let Self = this
       this.headers.forEach(function(item, headerIndex) {
@@ -746,7 +745,7 @@ export default {
         })
         options.sortBy = newSortBy
       }
-      this.listState.options = options
+      this.useListStore.updateOptions(options);
       /**
        * Enable active filters from query
        */
@@ -761,7 +760,7 @@ export default {
       /**
        * Update query router
        */
-      let { itemsPerPage, page, sortBy } = this.listState.options
+      let { itemsPerPage, page, sortBy } = this.useListStore.options;
       let query = {
         page,
         ...(!this.getDisableItemsPerPageValue() && { perPage: itemsPerPage }),
@@ -784,7 +783,7 @@ export default {
       this.$router.push({ query }).catch(() => {});
     },
     async fetchData() {
-      if (!this.loaded || isEmpty(this.listState.options)) {
+      if (!this.loaded || isEmpty(this.useListStore.options)) {
         return;
       }
       this.listState.loading = 'primary';
@@ -793,7 +792,7 @@ export default {
       //
       let newSortBy = [];
       let newSortDesc = [];
-      const { sortBy, page, itemsPerPage } = this.listState.options;
+      const { sortBy, page, itemsPerPage } = this.useListStore.options;
       let Self = this;
       sortBy.forEach(function (arr) {
         newSortBy.push(arr.key);
@@ -843,13 +842,15 @@ export default {
           items: data,
           total,
           selected: [],
-          options: this.listState.options,
+          // options: this.listState.options,
         };
         for (let key in newState) {
           this.listState[key] = newState[key];
         }
         this.listState.loading = false;
         this.$emit('listState', this.listState);
+
+        // this.$emit('update.options', this.useListStore.options);
       }
     },
     getFieldsQuery(resource, sources, fields = {}) {
