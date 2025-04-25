@@ -16,6 +16,9 @@ export default {
         ? `${module}.enums.${this.source}` 
         : `${resourceName}.enums.${this.source}`;
       results = this.$admin.i18n.global.tm(enumKey);
+    } else {
+      const enumKey = `${this.resource}.enums.${this.source}`;
+      results = this.$admin.i18n.global.tm(enumKey);
     }
     if (!results) {
       return;
