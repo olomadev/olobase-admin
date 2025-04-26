@@ -1,31 +1,42 @@
-import Resource from "./resource"
+import Button from "./button"
 
 /**
- * Common props for generic button.
+ * For buttons that support redirect.
+ * Button will auto hide if no create action available unless `disableRedirect` prop is active.
  */
 export default {
-  mixins: [Resource],
+  mixins: [Button],
   props: {
     /**
-     * Item attached to the button.
+     * Disable default redirect behavior for compatible buttons
+     * Force button to be shown, prevent hiding it according to default behavior if no action exist.
      */
-    item: null,
-    /**
-     * If true, show button with icon only, label will be shown as tooltip.
-     */
-    icon: Boolean,
-    /**
-     * Customizable background or text color, dependably of text prop value.
-     */
-    color: String,
+    disableRedirect: Boolean
   },
   methods: {
-    onClick() {
-        
-      /**
-       * Triggered on click, send related item if available.
-       */
-      this.$emit("click", this.item)
+    async canShow(action) {
+      let visible = await this.hasAction(action)
+      return (
+        (this.disableRedirect || this.hasRoute(action)) && visible)
+    },
+    getRoute(action, params) {
+      if (!this.disableRedirect && this.hasRoute(action)) {
+
+        if (action == "edit") {
+          //  
+          //  store list redirect query params we will use it for save
+          //  operations which is located
+          //  in form provider / this.formState.submit(redirect?querParams)
+          //  
+          localStorage.setItem("listQuery", JSON.stringify(this.$route.query));
+        }
+
+        return {
+          name: `${this.resource}_${action}`,
+          ...params,
+        }
+      }
+      return null
     },
   },
 };
