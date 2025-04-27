@@ -202,6 +202,7 @@ export default {
       await this.save(this.redirect)
     },
     async save(redirect) {
+
       /**
        * Vuelidate validations
        * It allows multiple form validations
@@ -222,6 +223,7 @@ export default {
           return;
         }
       }
+
       /**
        * Set saving to childs.
        */
@@ -292,7 +294,12 @@ export default {
               if (!queryParams.filter) {
                 delete queryParams.filter;
               }
-              this.$router.push({ name: `${this.resource}_list`, query: queryParams });
+              if (localStorage.getItem("path")) {
+                this.$router.push({ path: localStorage.getItem("path"), query: queryParams });
+                localStorage.removeItem("path");
+              } else {
+                this.$router.push({ name: `${this.resource}_list`, query: queryParams });  
+              }
               break;
             case "create":
               // Reset form in case of same route
