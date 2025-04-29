@@ -256,6 +256,9 @@ export default class Olobase {
       parts = to.meta.resource.includes("_") ? to.meta.resource.split("_") : [null, to.meta.resource];
       return this.getPageTitleValue(parts);
     }
+    if (to.meta.title) {
+      return to.meta.title();
+    } 
     if (to.name) {
       parts = to.name.includes("_") ? to.name.split("_") : [null, to.name];
       return this.getPageTitleValue(parts);
