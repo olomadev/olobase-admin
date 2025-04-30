@@ -11,7 +11,7 @@
     :item-title="getItemText"
     :item-value="getItemValue"
     :items="items || choices"
-    v-on:keyup="asyncSearch($event)"
+    @update:search="asyncSearch"
     @update:modelValue="update"
     :clearable="clearable"
     return-object
@@ -76,8 +76,8 @@ export default {
         );
       }
     },
-    async asyncSearch(e) {
-      this.search = e.target.value;
+    async asyncSearch(str) {
+      this.search = str;
     }
   },
   watch: {
