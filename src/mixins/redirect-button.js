@@ -21,6 +21,17 @@ export default {
     },
     getRoute(action, params) {
       if (!this.disableRedirect && this.hasRoute(action)) {
+
+        if (action == "edit") {
+          localStorage.removeItem("path");  // reset other custom redirects
+          //  
+          //  store list redirect query params we will use it for save
+          //  operations which is located
+          //  in form provider / this.formState.submit(redirect?querParams)
+          //  
+          localStorage.setItem("listQuery", JSON.stringify(this.$route.query));
+        }
+
         return {
           name: `${this.resource}_${action}`,
           ...params,
