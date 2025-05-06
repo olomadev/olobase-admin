@@ -9,16 +9,48 @@
     closable-chips
     :loading="loading"
     :item-title="getItemText"
-    :item-value="getItemValue"
+    item-value="id"
     :items="items || choices"
     @update:search="asyncSearch"
     @update:modelValue="update"
     :clearable="clearable"
     return-object
   >
+    <template v-slot:item="{ props, item }">
+      <v-list-item v-bind="props">
+        <template v-if="appendLogo?.field && item.raw[appendLogo.field]" #prepend>
+          <v-avatar class="me-2" size="32">
+            <img
+              :src="appendLogo.base64
+                ? item.raw[appendLogo.field]
+                : `${appendLogo.baseUrl}/${item.raw[appendLogo.field]}`"
+              alt="logo"
+            />
+          </v-avatar>
+        </template>
+      </v-list-item>
+    </template>
+
+<!--     <template v-slot:selection="{ item }">
+      {{ item.name }}
+    </template> -->
+
     <template v-for="(_, scopedSlotName) in $slots" v-slot:[scopedSlotName]="slotData">
       <slot :name="scopedSlotName" v-bind="slotData" />
     </template>
+
+    <template v-slot:no-data>
+      <div>
+        <v-table density="compact">
+          <tbody>
+            <tr>
+              <td>{{ $t("i18n.datatable.nodata")}}</td>
+            </tr>
+          </tbody>
+        </v-table>
+      </div>
+    </template>
+    
   </component>
 </template>
 <!-- https://blog.devgenius.io/vuetify-customize-autocomplete-c298033784d2 -->
@@ -35,6 +67,21 @@ import ReferenceInput from "../../../mixins/reference-input";
 export default {
   mixins: [Input, Multiple, ReferenceInput],
   props: {
+    /**
+     * Enable/disable current - selected item queries
+     */
+    loadCurrentItems: true,
+    /**
+     * Append logo path
+     */
+    appendLogo: {
+      type: Object,
+      default: () => ({
+        base64: false,
+        baseUrl: null,
+        field: 'logo'   // örn: item.logo
+      }),
+    },
     /**
      * Minimum characters to tap before search query launch.
      */
@@ -83,10 +130,12 @@ export default {
   watch: {
     input: {
       handler(newVal) {
-        /**
-         * Fetch full object as soon as we get input value
-         */
-        this.loadCurrentChoices(newVal);
+        if (this.loadCurrentItems) {
+          /**
+           * Fetch full object as soon as we get input value
+           */
+          this.loadCurrentChoices(newVal);
+        }
       },
       immediate: true,
     },
