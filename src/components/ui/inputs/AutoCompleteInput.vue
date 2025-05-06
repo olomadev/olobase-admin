@@ -24,7 +24,11 @@
               :src="appendLogo.base64
                 ? item.raw[appendLogo.field]
                 : `${appendLogo.baseUrl}/${item.raw[appendLogo.field]}`"
-              alt="logo"
+              alt="logo" 
+              :style="{
+                width: appendLogo.width ? appendLogo.width + 'px' : undefined,
+                height: appendLogo.height ? appendLogo.height + 'px' : undefined
+              }"
             />
           </v-avatar>
         </template>
@@ -79,7 +83,9 @@ export default {
       default: () => ({
         base64: false,
         baseUrl: null,
-        field: 'logo'   // örn: item.logo
+        field: 'logo',
+        width: null,
+        height: null,
       }),
     },
     /**
@@ -151,7 +157,6 @@ export default {
         ...((await this.fetchChoices(val)) || []),
       ];
     },
-
   },
 };
 </script>
