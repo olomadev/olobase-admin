@@ -34,7 +34,9 @@ export default {
       default: () => ({
         base64: false,
         baseUrl: null,
-        field: 'logo'   // örn: item.logo
+        field: 'logo',   // örn: item.logo
+        width: null,
+        height: null,
       }),
     },
     value: {
