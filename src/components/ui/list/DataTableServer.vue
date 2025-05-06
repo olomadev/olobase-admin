@@ -607,7 +607,7 @@ export default {
       return this.listState.items;
     },
     getRowSaveComponentName() {
-      return this.resource + "RowSave"
+      return this.toPascalCase(this.resource) + "RowSave"
     },
     getItemsPerPageOptionsValue() {
       if (Array.isArray(this.itemsPerPageOptions) 
@@ -631,6 +631,12 @@ export default {
     },
   },
   methods: {
+    toPascalCase(str) {
+      return str
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(''); // 'StationsCheckins'
+    },
     getDefaultAlign(field) {
       if (["number"].includes(field.type)) {
         return "right";
