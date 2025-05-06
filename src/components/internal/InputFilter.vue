@@ -4,11 +4,13 @@
     :resource="resource"
     :source="source"
     :label="label"
+    :appendLogo="appendLogo"
     v-bind="$attrs"
     hide-details
     :filled="false"
     small-chips
     variant="outlined"
+    :loadCurrentItems="false"
     v-model="input"
     color="primary"
     :return-object="returnObject"
@@ -23,6 +25,18 @@ import { debounce } from '@/helpers/lodash';
 export default {
   mixins: [Source],
   props: {
+    loadCurrentItems: false,
+    /**
+     * Append logo path
+     */
+    appendLogo: {
+      type: Object,
+      default: () => ({
+        base64: false,
+        baseUrl: null,
+        field: 'logo'   // örn: item.logo
+      }),
+    },
     value: {
       default: null,
     },
