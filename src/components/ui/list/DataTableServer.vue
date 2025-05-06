@@ -288,7 +288,7 @@
         >
           <v-card>
             <v-card-title class="mt-2 ml-1">
-              <span class="h2">{{ getPageTitle }}</span>
+              <span class="h2">{{ rowSaveDialogTitle }}</span>
             </v-card-title>
             <v-card-text>
               <component
@@ -399,6 +399,10 @@ export default {
      * Allow editable row.
      */
     rowSaveDialog: Boolean,
+    /**
+     * Dialog title
+     */
+    rowSaveDialogTitle: String,
     /**
      * Dialog width
      */
