@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2022-2025, Oloma Software.
  */
-import { upperFirst, lowerCase, isEmpty } from '@/helpers/lodash'
+import { upperFirst, lowerCase, isEmpty, camelCase } from '@/helpers/lodash'
 import cookies from '@/helpers/cookies'
 import messages from "olobase-admin/src/store/messages"
 import auth from "olobase-admin/src/store/auth"
@@ -116,10 +116,13 @@ export default class Olobase {
           pluralName: getName(10),
           getTitle: (action, item = null) => {
             const module = r.module ? r.module.toLowerCase() : null;
-            const resourceName = r.name;
+            const parts = r.name.includes("_") ? r.name.split("_") : [null, r.name];
+            const resourceName = parts[1];
+
             let key = module 
               ? `${module}.${resourceName}.title` 
               : `${resourceName}.${resourceName}.title`;
+
             if (item) {
               return this.i18n.global.te(key)
                   ? this.i18n.global.t(key, item.raw)
@@ -256,9 +259,6 @@ export default class Olobase {
       parts = to.meta.resource.includes("_") ? to.meta.resource.split("_") : [null, to.meta.resource];
       return this.getPageTitleValue(parts);
     }
-    if (to.meta.title) {
-      return to.meta.title();
-    } 
     if (to.name) {
       parts = to.name.includes("_") ? to.name.split("_") : [null, to.name];
       return this.getPageTitleValue(parts);
