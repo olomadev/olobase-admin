@@ -1,16 +1,28 @@
-import get from "lodash/get"
-import camelCase from "lodash/camelCase";
-import kebabCase from "lodash/kebabCase";
-import upperFirst from "lodash/upperFirst";
-import config from "@/_config";
+import { camelCase, kebabCase, upperFirst } from '@/helpers/lodash';
+import config from "@/@config";
 
 // https://stackoverflow.com/questions/66342500/vuejs-3-how-to-render-router-view-router-view-from-vue-router
 // 
 import { h, resolveComponent } from 'vue' // vue 3.0 support
 
+const toPascalCase = function(str) {
+  if (!str.includes('-')) return str;
+  return str
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+}
+
 export default ({ app, admin, store, i18n, resource, title }) => {
-  let { name, include, routes, translatable, getTitle, pluralName } = resource
-  let isSameErrors = []
+  let { name, module, standalone, include, routes, translatable, getTitle, pluralName } = resource
+
+  const parts = name.includes("_") ? name.split("_") : [null, name];
+  const resourceName = parts[1];
+
+  const camelCaseModuleName = standalone ? camelCase(name) : camelCase(module.toLowerCase());
+  const resourcePath = standalone 
+    ? `${camelCase(resourceName)}` 
+    : `${camelCaseModuleName}/${camelCase(resourceName)}`;
 
   const setTitle = (to, action, item = null) => {
     to.meta.title = getTitle(action, item);
@@ -20,24 +32,34 @@ export default ({ app, admin, store, i18n, resource, title }) => {
     // document.title = `${to.meta.title} | ${title}`;
     return title;
   }
+
   /**
    * Action route builder
    */
   const buildRoute = (action, path) => {
+
+    const routeName = standalone 
+      ? `${camelCase(resourceName)}_${action}` 
+      : `${camelCaseModuleName}_${camelCase(resourceName)}_${action}`
+
     return {
       path,
-      name: `${name}_${action}`,
+      name: routeName,
       props: true,
       component: {
         props: ["id"],
         render() {
-          let componentName = `${upperFirst(camelCase(name))}${upperFirst(
-            action
-          )}`
+          let componentName = standalone 
+            ? `${upperFirst(camelCase(resourceName))}${upperFirst(action)}` 
+            : `${upperFirst(camelCaseModuleName)}${upperFirst(camelCase(resourceName))}${upperFirst(action)}`;
+            
+          componentName = toPascalCase(componentName);
+
           let props = {
             id: this.id,
             title: this.$route.meta.title,
-            resource: resource.name,
+            module: camelCaseModuleName, 
+            resource: name,
             item: store.getResource(name).item,
             roles: store.getModule("auth").getPermissions,
           }
@@ -50,20 +72,31 @@ export default ({ app, admin, store, i18n, resource, title }) => {
           //   });
           // }
           //
-          // vue 3.0
+          // vue 3.0"
           // 
           if (app.component(componentName)) { // check component is exists
             return h(resolveComponent(componentName), props)  
           } else {
+            // console.error(componentName);
             return h(resolveComponent("PageNotFound")) 
           }
         },
         async beforeRouteEnter(to, from, next) {
-          
           /**
            * Initialize from query if available
            */
           let id = to.params.id || to.query.source;
+
+          let componentName = standalone 
+            ? `${upperFirst(camelCase(resourceName))}${upperFirst(action)}` 
+            : `${upperFirst(camelCaseModuleName)}${upperFirst(camelCase(resourceName))}${upperFirst(action)}`;
+
+          // If the component is not present, PageNotFound will be displayed, no data will be retrieved
+          if (!app.component(componentName)) {
+            to.meta.title = "Page Not Found";
+            document.title = "Page Not Found";
+            return next();
+          }
 
           if (id) {
             /**
@@ -129,6 +162,8 @@ export default ({ app, admin, store, i18n, resource, title }) => {
       },
       meta: {
         authenticated: true,
+        module,
+        standalone,
         resource: name,
         translatable
       },
@@ -139,7 +174,7 @@ export default ({ app, admin, store, i18n, resource, title }) => {
    * Return crud routes for this resource
    */
   return {
-    path: `/${kebabCase(name)}`,
+    path: `/${resourcePath}`,
     component: {
       render() {
         return h(resolveComponent('router-view'))
