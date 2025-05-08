@@ -5,6 +5,21 @@ import config from "@/@config";
 // 
 import { h, resolveComponent } from 'vue' // vue 3.0 support
 
+const kebabToPascalCase = function(str) {
+  if (!str.includes('-')) return str;
+  return str
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+}
+const kebabToCamelCase = function(str) {
+  if (!str.includes('-')) return camelCase(str);
+  const words = str.split('-');
+  return words[0].toLowerCase() + words.slice(1)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+};
+
 export default ({ app, admin, store, i18n, resource, title }) => {
   let { name, module, standalone, include, routes, translatable, getTitle, pluralName } = resource
 
@@ -31,8 +46,8 @@ export default ({ app, admin, store, i18n, resource, title }) => {
   const buildRoute = (action, path) => {
 
     const routeName = standalone 
-      ? `${camelCase(resourceName)}_${action}` 
-      : `${camelCaseModuleName}_${camelCase(resourceName)}_${action}`
+      ? `${kebabCase(resourceName)}_${action}` 
+      : `${camelCaseModuleName}_${kebabCase(resourceName)}_${action}`;
 
     return {
       path,
@@ -45,6 +60,8 @@ export default ({ app, admin, store, i18n, resource, title }) => {
             ? `${upperFirst(camelCase(resourceName))}${upperFirst(action)}` 
             : `${upperFirst(camelCaseModuleName)}${upperFirst(camelCase(resourceName))}${upperFirst(action)}`;
             
+          componentName = kebabToPascalCase(componentName);
+
           let props = {
             id: this.id,
             title: this.$route.meta.title,
@@ -63,7 +80,7 @@ export default ({ app, admin, store, i18n, resource, title }) => {
           // }
           //
           // vue 3.0"
-          //
+          // 
           if (app.component(componentName)) { // check component is exists
             return h(resolveComponent(componentName), props)  
           } else {
