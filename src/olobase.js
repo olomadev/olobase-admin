@@ -255,15 +255,19 @@ export default class Olobase {
 
   getPageTitle(to) {
     let parts = [];
+    let translated = false;
     if (to.meta.resource) {
       parts = to.meta.resource.includes("_") ? to.meta.resource.split("_") : [null, to.meta.resource];
-      return this.getPageTitleValue(parts);
+      translated = this.getPageTitleValue(parts);
     }
-    if (to.name) {
+    if (false == translated && to.name) {
       parts = to.name.includes("_") ? to.name.split("_") : [null, to.name];
-      return this.getPageTitleValue(parts);
+      translated = this.getPageTitleValue(parts);
     }
-    return "undefined"
+    if (false == translated && to.meta.title) { // return to default route title
+      return to.meta.title;
+    }
+    return translated;
   }
 
   getPageTitleValue(parts) {
@@ -273,9 +277,12 @@ export default class Olobase {
       const key = module 
         ? `${module}.${resourceName}.title` 
         : `${resourceName}.${resourceName}.title`;
-      return this.i18n.global.t(key);
+
+      if (this.i18n.global.te(key)) {
+        return this.i18n.global.t(key);  // Eğer tanımlıysa, çeviriyi al
+      }
     }
-    return "undefined"
+    return false;
   }
 
   getAppInstance() {
