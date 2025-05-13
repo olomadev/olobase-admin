@@ -71,7 +71,7 @@
             </div>
           </template>
           <template v-else>
-            <div>
+            <div v-if="!field?.readable">
               <component
                 :key="getKey(field)"
                 :is="`va-${field.input || field.type || 'text'}-input`"
@@ -88,6 +88,25 @@
                 :class="(field.type == 'boolean') ? '' : 'mt-6'"
                 @click.stop
               ></component>
+           </div>
+           <div v-else>
+              <component
+                :key="field.source"
+                :is="`va-${field.type}-field`"
+                :source="field.sourceLabel ? field.sourceLabel : field.source"
+                :resource="listState.resource"
+                :item="item"
+                variant="outlined"
+                :options="getOptions(field)"
+                v-bind="field.attributes"
+                v-slot="props"
+              >
+                <slot
+                  :name="`field.${field.source}`"
+                  :item="props.item || item"
+                  v-bind="props"
+                ></slot>
+              </component>
            </div>
           </template>
         </template>
