@@ -36,6 +36,7 @@ import TextField from "./fields/TextField.vue";
 import NumberField from "./fields/NumberField.vue";
 import RatingField from "./fields/RatingField.vue";
 import DateField from "./fields/DateField.vue";
+import DateTimeField from "./fields/DateTimeField.vue";
 import BooleanField from "./fields/BooleanField.vue";
 import ColorPickerField from "./fields/ColorPickerField.vue";
 import RichTextField from "./fields/RichTextField.vue";
@@ -105,6 +106,7 @@ export {
   NumberField,
   RatingField,
   DateField,
+  DateTimeField,
   ColorPickerField,
   BooleanField,
   RichTextField,
