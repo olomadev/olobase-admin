@@ -5,8 +5,10 @@
  *
  * Copyright (c) 2022-2025, Oloma Software.
  */
-import { upperFirst, lowerCase, isEmpty, camelCase } from '@/helpers/lodash'
-import cookies from '@/helpers/cookies'
+import upperFirst from "lodash/upperFirst"
+import lowerCase from "lodash/lowerCase"
+import isEmpty from "lodash/isEmpty"
+import cookies from "olobase-admin/src/utils/cookies"
 import messages from "olobase-admin/src/store/messages"
 import auth from "olobase-admin/src/store/auth"
 import guest from "olobase-admin/src/store/guest"
@@ -16,6 +18,10 @@ import routeResource from "olobase-admin/src/router/resource"
 
 export default class Olobase {
 
+  constructor(env) {
+    this.env = env
+  }
+
   setOptions({
     app,
     router,
@@ -24,6 +30,7 @@ export default class Olobase {
     i18n,
     downloadUrl,
     readFileUrl,
+    title,
     routes,
     locales,
     authProvider,
@@ -32,9 +39,20 @@ export default class Olobase {
     canAction,
     http
   }) {
-    if (typeof process.env.COOKIE == "undefined") {
-      throw new Error("Configuration error: ENV_COOKIE value is undefined in your project or .env file is missing.");
+    if (typeof this.env.VITE_SUPPORTED_LOCALES == "undefined") {
+      throw new Error("Configuration error: .env.local or .env.prod environment file missed in your project !");
     }
+    const supportedLocales = this.env.VITE_SUPPORTED_LOCALES;
+    let translations = [];
+    if (supportedLocales 
+      && Object.prototype.toString.call(supportedLocales) === "[object String]") 
+    {
+      const split = supportedLocales.split(",");
+      if (Array.isArray(split)) {
+        translations = split;
+      }
+    }
+    this.cookieKey = JSON.parse(this.env.VITE_COOKIE);
     /**
      * Options properties
      */
@@ -42,11 +60,13 @@ export default class Olobase {
     this.router = router
     this.store = store
     this.i18n = i18n
-    this.apiUrl = process.env.API_URL
+    this.apiUrl = this.env.VITE_API_URL
     this.downloadUrl = downloadUrl
     this.readFileUrl = readFileUrl
+    this.title = title
     this.routes = routes
     this.locales = locales
+    this.translations = translations
     this.authProvider = authProvider
     this.dataProvider = dataProvider
     this.config = config || {}
@@ -97,17 +117,8 @@ export default class Olobase {
             ? this.i18n.global.tc(nameKey, count)
             : upperFirst(lowerCase(r.name))
 
-        //---- module changes start --------------------------
-
-        let moduleName = r.module || null; // default null
-        let resourcePath = r['standalone'] ? `${r.name}` :  `${moduleName}/${r.name}`;
-
-        //---- module changes end --------------------------
-
         return {
           ...r,
-          module: moduleName,
-          resourcePath,
           icon: r.icon || "mdi-view-grid",
           routes,
           actions,
@@ -115,22 +126,15 @@ export default class Olobase {
           singularName: getName(1),
           pluralName: getName(10),
           getTitle: (action, item = null) => {
-            const module = r.module ? r.module.toLowerCase() : null;
-            const parts = r.name.includes("_") ? r.name.split("_") : [null, r.name];
-            const resourceName = parts[1];
-
-            let key = module 
-              ? `${module}.${resourceName}.title` 
-              : `${resourceName}.${resourceName}.title`;
-
+            let titleKey = `resources.${r.name}.titles.${action}`
             if (item) {
-              return this.i18n.global.te(key)
-                  ? this.i18n.global.t(key, item.raw)
-                  : this.i18n.global.t(`i18n.pages.${action}`);
+              return this.i18n.global.te(titleKey)
+                  ? this.i18n.global.t(titleKey, item.raw)
+                  : this.i18n.global.t(`va.pages.${action}`);
             }
-            return this.i18n.global.te(key)
-              ? this.i18n.global.t(key)
-              : this.i18n.global.t(`i18n.pages.${action}`, {
+            return this.i18n.global.te(titleKey)
+              ? this.i18n.global.t(titleKey)
+              : this.i18n.global.t(`va.pages.${action}`, {
                   resource: getName(action === "list" ? 10 : 1).toLowerCase(),
                 })
           },
@@ -179,6 +183,7 @@ export default class Olobase {
             let result = permissions.length && await this.can(permissions)
             
             // console.error(result)
+        
             // Test if current user can access
             return result
           },
@@ -211,7 +216,6 @@ export default class Olobase {
         provider: this.dataProvider,       
       });
     }
-
     /**
      * Add resources routes dynamically
      */
@@ -223,12 +227,12 @@ export default class Olobase {
           store: this.store,
           i18: this.i18n,
           resource,
-          title: null, 
+          title: this.i18n.global.t("titles." + this.title),
         })
       )
       .concat(
         (this.routes.children || []).map((r) => {
-          r.meta = { ...(r.meta || {}), auth: true }
+          r.meta = { ...(r.meta || {}), authenticated: true }
           return r;
         })
       )
@@ -247,47 +251,15 @@ export default class Olobase {
       /**
        * Set main and document title
        */
-      document.title = this.getPageTitle(to)
+      document.title = to.meta.title
+        ? `${this.i18n.global.t("titles." + lowerCase(to.meta.title))} | ${this.i18n.global.t("titles." + lowerCase(this.title))}`
+        : this.i18n.global.t("titles." + lowerCase(this.title))
       next();
     })
 
+    // this.router.push({ "name": "roles_list" });
+
   } // end init function
-
-  getPageTitle(to) {
-    let parts = [];
-    let translated = false;
-    if (to.meta.resource) {
-      parts = to.meta.resource.includes("_") ? to.meta.resource.split("_") : [null, to.meta.resource];
-      translated = this.getPageTitleValue(parts);
-    }
-    if (false == translated && to.name) {
-      parts = to.name.includes("_") ? to.name.split("_") : [null, to.name];
-      translated = this.getPageTitleValue(parts);
-    }
-    if (false == translated && to.meta.title) { // returns to default route title
-      return to.meta.title;
-    }
-    return ""; // undefined
-  }
-
-  getPageTitleValue(parts) {
-    if (Array.isArray(parts) && parts.length > 0) {
-      const module = parts[0];
-      const resourceName = parts[1];
-      const key = module 
-        ? `${module}.${resourceName}.title` 
-        : `${resourceName}.${resourceName}.title`;
-
-      if (this.i18n.global.te(key)) {
-        return this.i18n.global.t(key);  // Eğer tanımlıysa, çeviriyi al
-      }
-    }
-    return false;
-  }
-
-  getAppInstance() {
-    return this.app;
-  }
 
   /**
   * Permissions helper & directive
@@ -299,7 +271,7 @@ export default class Olobase {
     const Self = this;
     let result = false;
     let user = await new Promise(function (resolve) {
-      let res = cookies.get("user") 
+      let res = cookies.get(Self.cookieKey.user) 
       if (res) {
         res = JSON.parse(res)    
         return resolve(res)
@@ -319,6 +291,15 @@ export default class Olobase {
   }
 
   /**
+   * Get global admin config object
+   * 
+   * @return 
+   */
+  getConfig() {
+    return this.config;
+  }
+
+  /**
   * Get full resource object meta from name
   */
   getResource(name) {
@@ -329,21 +310,71 @@ export default class Olobase {
   * Get label source, humanize it if not found
   */
   getSourceLabel(resource, source)  {
-    const parts = resource.includes("_") ? resource.split("_") : [null, resource];
-    const module = parts[0];
-    const resourceName = parts[1];
-
-    if (resourceName && source) {
-      let key = module 
-        ? `${module}.${resourceName}.fields.${source}` 
-        : `${resourceName}.${resourceName}.fields.${source}`;
-
-      let translatedValue = this.i18n.global.te(key)
-        ? this.i18n.global.t(key)
-        : upperFirst(lowerCase(source.replace(".", " ")));
-      return translatedValue
+    if (resource && source) {
+        let key = `resources.${resource}.fields.${source}`;
+        return this.i18n.global.te(key)
+          ? this.i18n.global.t(key)
+          : upperFirst(lowerCase(source.replace(".", " ")));    
     }
     return null
+  }
+
+  /**
+  * Resource link helper with action permission test
+  */
+  getResourceLink(link) {
+    let getLink = ({ name, icon, text, action }) => {
+      action = action || "list";
+      let resource = this.getResource(name);
+
+      if (!resource) {
+        return false;
+      }
+
+      let { routes, canAction, singularName, pluralName } = resource
+
+      /**
+       * Route must exist
+       */
+      if (!routes.includes(action)) {
+        return false;
+      }
+
+      /**
+       * Current user must have permission for this action
+       */
+      if (!canAction(action)) {
+        return false;
+      }
+
+      return {
+        icon: icon || resource.icon,
+        text: text || (action === "list" ? pluralName : singularName),
+        link: { name: `${name}_${action}` },
+      };
+    }
+    if (typeof link === "object") {
+      return getLink(link);
+    }
+    return getLink({ name: link });
+  }
+
+  /**
+  * Resource links list helper
+  */
+  getResourceLinks(links) {
+    return links
+      .map((link) => {
+        if (typeof link === "object") {
+          if (link.children) {
+            return link;
+          }
+
+          return this.getResourceLink(link);
+        }
+        return this.getResourceLink({ name: link })
+      })
+      .filter((r) => r)
   }
 
   /**
@@ -375,4 +406,3 @@ export default class Olobase {
   }
 
 } // end class
-
