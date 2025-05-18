@@ -228,7 +228,7 @@ export default class Olobase {
       )
       .concat(
         (this.routes.children || []).map((r) => {
-          r.meta = { ...(r.meta || {}), authenticated: true }
+          r.meta = { ...(r.meta || {}), auth: true }
           return r;
         })
       )
@@ -264,7 +264,7 @@ export default class Olobase {
       parts = to.name.includes("_") ? to.name.split("_") : [null, to.name];
       translated = this.getPageTitleValue(parts);
     }
-    if (false == translated && to.meta.title) { // return to default route title
+    if (false == translated && to.meta.title) { // returns to default route title
       return to.meta.title;
     }
     return translated;
