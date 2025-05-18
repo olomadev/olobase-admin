@@ -267,7 +267,7 @@ export default class Olobase {
     if (false == translated && to.meta.title) { // returns to default route title
       return to.meta.title;
     }
-    return translated;
+    return ""; // undefined
   }
 
   getPageTitleValue(parts) {
@@ -375,4 +375,3 @@ export default class Olobase {
   }
 
 } // end class
-
