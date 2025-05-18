@@ -98,6 +98,8 @@ export default ({ app, admin, store, i18n, resource, title }) => {
             ? `${upperFirst(camelCase(resourceName))}${upperFirst(action)}` 
             : `${upperFirst(camelCaseModuleName)}${upperFirst(camelCase(resourceName))}${upperFirst(action)}`;
 
+          componentName = kebabToPascalCase(componentName);
+          
           // If the component is not present, PageNotFound will be displayed, no data will be retrieved
           if (!app.component(componentName)) {
             to.meta.title = "Page Not Found";
@@ -168,7 +170,7 @@ export default ({ app, admin, store, i18n, resource, title }) => {
         },
       },
       meta: {
-        authenticated: true,
+        auth: true,
         module,
         standalone,
         resource: name,
