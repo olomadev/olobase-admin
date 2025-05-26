@@ -16,7 +16,7 @@
           :modelValue="dateFormatted"
           :variant="variant"
           :readonly="true"
-          :hide-details="true"
+          :hide-details="hideDetails"
           append-inner-icon="mdi-calendar"
           @click:clear="cleanInput"
           @change="change"
@@ -74,6 +74,17 @@ export default {
   mixins: [Input],
   inject: ['i18n'],
   props: {
+    /**
+     * Remove validation errors default = true
+     * 
+     * @type bool
+     */
+    hideDetails: {
+      type: Boolean,
+      default() {
+        return true
+      },
+    },
     /**
      * Sets a text under date tile
      */
