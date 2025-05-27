@@ -7,6 +7,7 @@
     :appendLogo="appendLogo"
     v-bind="$attrs"
     hide-details
+    hide-margin-bottom
     :filled="false"
     small-chips
     variant="outlined"
