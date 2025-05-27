@@ -1,5 +1,5 @@
 <template>
-  <div class="va-date-input mb-5">
+  <div :class="getClass">
     <v-menu
       v-model="menu"
       :close-on-content-click="false"
@@ -83,6 +83,17 @@ export default {
       type: Boolean,
       default() {
         return true
+      },
+    },
+    /**
+     * Disable margin bottom padding
+     * 
+     * @type bool
+     */
+    hideMarginBottom: {
+      type: Boolean,
+      default() {
+        return false
       },
     },
     /**
@@ -276,6 +287,16 @@ export default {
     }
   },
   computed: {
+    getClass() {
+      let classString = "va-date-input";
+      if (this.hideDetails && ! this.hideMarginBottom) {
+        classString += " mb-5";
+      }
+      if (this.hideDetails && this.hideMarginBottom) {
+        classString = "va-date-input";
+      }
+      return classString;
+    },
     getHideDetailsValue() {
       if (this.hideDetailsAction) {
         return true;
