@@ -1,5 +1,3 @@
-import Button from "./button"
-
 /**
  * For buttons that support redirect.
  * Button will auto hide if no create action available unless `disableRedirect` prop is active.
