@@ -3,7 +3,7 @@
  * Button will auto hide if no create action available unless `disableRedirect` prop is active.
  */
 export default {
-  mixins: [Button],
+  mixins: [],
   props: {
     /**
      * Disable default redirect behavior for compatible buttons
